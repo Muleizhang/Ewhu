@@ -1,5 +1,4 @@
 #include "ClassLexer.cpp"
-using namespace std;
 
 inline char Lexer::read()
 {
@@ -79,11 +78,11 @@ void Lexer::processLetter(char inpt) // 处理字母
     kw[pk] = '\0';
     if (isKeywords(kw) == -1)
     {
-        cout << kw << "[identifier] id=" << 2 << endl;
+        std::cout << kw << "[identifier] id=" << 2 << std::endl;
     }
     else
     {
-        cout << kw << "[keywords, type " << isKeywords(kw) << "] id=" << 1 << endl;
+        std::cout << kw << "[keywords, type " << isKeywords(kw) << "] id=" << 1 << std::endl;
     }
 }
 
@@ -98,7 +97,7 @@ void Lexer::processNumber(char inpt) // 处理数字
     }
     fseek(file, -1, SEEK_CUR);
     digit[pd] = '\0';
-    cout << digit << "[value] id=" << 3 << endl;
+    std::cout << digit << "[value] id=" << 3 << std::endl;
 }
 
 int Lexer::processRelationalOperator(char inpt) // 处理关系运算符
@@ -120,7 +119,7 @@ int Lexer::processRelationalOperator(char inpt) // 处理关系运算符
         if (strcmp(relationop, relation_calcu_table[type]))
             break;
     }
-    cout << relationop << "[relational_operator type " << type << "] id=5" << endl;
+    std::cout << relationop << "[relational_operator type " << type << "] id=5" << std::endl;
     return type;
 }
 
@@ -141,7 +140,7 @@ int Lexer::processMathematicalOperator(char inpt)
         if (!strcmp(maticaliop, cal_sign[type]))
             break;
     }
-    cout << maticaliop << "[matical_operator type " << type << "] id=4" << endl;
+    std::cout << maticaliop << "[matical_operator type " << type << "] id=4" << std::endl;
     return type;
 }
 
@@ -156,6 +155,6 @@ int Lexer::processDelimiter(char inpt)
         if (!strcmp(deli, space_word_table[type]))
             break;
     }
-    cout << deli << "[delimiter type " << type << "]" << " id=6" << endl;
+    std::cout << deli << "[delimiter type " << type << "]" << " id=6" << std::endl;
     return type;
 }

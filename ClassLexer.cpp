@@ -1,7 +1,6 @@
 #include <iostream>
 #include <stdio.h>
 #include <cstring>
-using namespace std;
 
 class Lexer
 {
@@ -15,7 +14,7 @@ class Lexer
 public:
     Lexer()
     {
-        cout << "id=1 关键字;   id=2 标识符;   id=3 常数;   id=4 数学运算符;   id=5 关系运算符;   id=6 界限符" << endl;
+        std::cout << "id=1 关键字;   id=2 标识符;   id=3 常数;   id=4 数学运算符;   id=5 关系运算符;   id=6 界限符" << std::endl;
         file = freopen(filepath, "r", stdin);
     }
     char read();                                // 读取单个字符
