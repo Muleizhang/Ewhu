@@ -1,9 +1,46 @@
 #include "ClassLexer.cpp"
-#include "Token.cpp"
 
-inline char Lexer::read()
+/*inline char Lexer::read()
 {
     char inpt = fgetc(file);
+    return inpt;
+}*/
+
+std::vector<Token> Lexer::scan_tokens()
+{
+    char inpt = nextChar();
+
+    while (current <= length)
+    {
+        switch (findType(inpt))
+        {
+        case 1:
+            processLetter(inpt);
+            break;
+        case 3:
+            processNumber(inpt);
+            break;
+        case 4:
+            processMathematicalOperator(inpt);
+            break;
+        case 5:
+            processRelationalOperator(inpt);
+            break;
+        case 6:
+            processDelimiter(inpt);
+            break;
+        default:
+            break;
+        }
+        inpt = nextChar();
+    }
+    return tokens;
+}
+
+inline char Lexer::nextChar()
+{
+    char inpt = source[current];
+    current++;
     return inpt;
 }
 
@@ -73,9 +110,11 @@ void Lexer::processLetter(char inpt) // 处理字母
     while (isNumber(inpt) || isLetter(inpt) || inpt == '_')
     {
         kw[pk++] = inpt;
-        inpt = this->read();
+        inpt = this->nextChar();
     }
-    fseek(file, -1, SEEK_CUR);
+    // fseek(file, -1, SEEK_CUR);
+    current--;
+
     kw[pk] = '\0';
     if (isKeywords(kw) == -1)
     {
@@ -94,9 +133,10 @@ void Lexer::processNumber(char inpt) // 处理数字
     while (isNumber(inpt))
     {
         digit[pd++] = inpt;
-        inpt = this->read();
+        inpt = this->nextChar();
     }
-    fseek(file, -1, SEEK_CUR);
+    current--;
+    // fseek(file, -1, SEEK_CUR);
     digit[pd] = '\0';
     std::cout << digit << "[value] id=" << 3 << std::endl;
 }
@@ -105,13 +145,13 @@ int Lexer::processRelationalOperator(char inpt) // 处理关系运算符
 {
     char relationop[3];
     relationop[0] = inpt;
-    char nextchar = this->read();
+    char nextchar = nextChar();
     if (isRelationalOperator(nextchar))
     {
         relationop[1] = nextchar;
     }
     else
-        fseek(file, -1, SEEK_CUR);
+        current--;
     relationop[2] = '\0';
 
     int type;
@@ -131,9 +171,10 @@ int Lexer::processMathematicalOperator(char inpt)
     while (isMathematicalOperator(inpt))
     {
         maticaliop[pr++] = inpt;
-        inpt = this->read();
+        inpt = nextChar();
     }
-    fseek(file, -1, SEEK_CUR);
+    current--;
+    // fseek(file, -1, SEEK_CUR);
     maticaliop[pr] = '\0';
     int type;
     for (type = 0; type < 5; type++)
