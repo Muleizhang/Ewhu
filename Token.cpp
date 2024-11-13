@@ -1,5 +1,7 @@
 #include <string>
 #include <variant>
+#include <vector>
+#include <variant>
 
 // 定义 TokenType 枚举类型，表示标记的类型
 enum class TokenType
@@ -9,10 +11,12 @@ enum class TokenType
     RIGHT_PAREN, // )
     LEFT_BRACE,  // {
     RIGHT_BRACE, // }
+                 // [
+                 // ]
     COMMA,       // ,
     DOT,         // .
     MINUS,       // -
-    PLUS,        //+
+    PLUS,        // +
     SEMICOLON,   // ;
     SLASH,       // /
     STAR,        // *
@@ -33,24 +37,24 @@ enum class TokenType
     NUMBER,     // 1
 
     // Keywords.
-    AND,    // and
-    CLASS,  // class
-    ELSE,   // else
-    FALSE,  // false
-            // FUNCTION, //
-    FOR,    // for
-    IF,     // if
-    NIL,    // NULL
-    OR,     // or
-    PRINT,  // print
-    RETURN, // return
-    THIS,   // this
-    TRUE,   // true
-    VAR,    // var
-    WHILE,  // while
-    DO,     // do
-
+    AND,       // and
+    CLASS,     // class
+    ELSE,      // else
+    FALSE,     // false
+               // FUNCTION, //
+    FOR,       // for
+    IF,        // if
+    NIL,       // NULL
+    OR,        // or
+    PRINT,     // print
+    RETURN,    // return
+    THIS,      // this
+    TRUE,      // true
+    VAR,       // var
+    WHILE,     // while
+    DO,        // do
     EOF_TOKEN, // end of file
+    ERR,       // error
 };
 
 // 定义 Token 类
@@ -58,8 +62,9 @@ class Token
 {
     friend class Lexer;
     friend class Parser;
+    friend class Tokens;
 
-private:
+public:
     TokenType type;                                            // 标记的类型
     std::string lexeme;                                        // 标记对应的源代码文本
     std::variant<std::monostate, double, std::string> literal; // 字面量的值
@@ -69,6 +74,7 @@ private:
     Token(TokenType type, const std::string &lexeme, std::variant<std::monostate, double, std::string> literal, int line)
         : type(type), lexeme(lexeme), literal(literal), line(line) {}
 
+    Token() : type(TokenType::ERR), lexeme(""), literal(std::monostate()), line(0) {}
     // 返回 Token 的字符串表示
     std::string toString() const
     {
@@ -91,6 +97,4 @@ private:
         // 将 Token 的信息拼接成字符串
         return std::string("[") + std::to_string(static_cast<int>(type)) + " " + lexeme + " " + literalStr + "]";
     }
-
-private:
 };

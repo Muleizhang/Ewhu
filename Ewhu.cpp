@@ -5,6 +5,7 @@
 
 class Ewhu
 {
+private:
 public:
     static void runFile(const std::string &path)
     {
@@ -13,13 +14,14 @@ public:
         if (!file.is_open())
         {
             std::cerr << "Error: Could not open file " << path << std::endl;
-            exit(1); // 文件打开失败，退出程序
+            exit(-1); // 文件打开失败，退出程序
         }
 
         std::string line;
         while (std::getline(file, line))
         {
             run(line);
+            std::cout << std::endl;
         }
 
         file.close();
@@ -28,6 +30,7 @@ public:
     static void runPrompt()
     {
         std::string line;
+
         while (true)
         {
             std::cout << "> ";
@@ -41,13 +44,17 @@ public:
 
     static void run(const std::string &source)
     {
+
         // 解释 Ewhu 代码的逻辑
         std::cout << "Running: " << source << std::endl;
+        Lexer lx(source);
+        lx.scan_tokens();
     }
 };
 
 int main(int argc, char *argv[])
 {
+
     if (argc > 2)
     {
         std::cerr << "Run File Usage: Ewhu [script]" << std::endl;
