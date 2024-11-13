@@ -1,4 +1,5 @@
 #include "ClassLexer.cpp"
+#include "Token.cpp"
 
 inline char Lexer::read()
 {
