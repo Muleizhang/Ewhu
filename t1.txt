@@ -1,0 +1,10 @@
+func main() #
+{
+    var a = 5+3i; 
+    var b = 4/5;
+    var c = [];  
+    int b=6;
+    if(a>=b) a=a+100;
+    else b=b+100;
+    return 0;
+}
