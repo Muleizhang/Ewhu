@@ -12,6 +12,7 @@ std::vector<Token> Lexer::scan_tokens()
 
     while (current <= length)
     {
+        // std::cout << findType(inpt) << std::endl;
         switch (findType(inpt))
         {
         case 1:
@@ -29,7 +30,11 @@ std::vector<Token> Lexer::scan_tokens()
         case 6:
             processDelimiter(inpt);
             break;
+        case 0:
+            // empty
+            break;
         default:
+            std::cerr << inpt << "[error] id=-1" << std::endl;
             break;
         }
         inpt = nextChar();
@@ -86,6 +91,8 @@ int Lexer::findType(char inpt)
         return 5;
     else if (this->isDelimiter(inpt))
         return 6;
+    else if (this->isEmpty(inpt))
+        return 0;
     else
         return -1;
 }
