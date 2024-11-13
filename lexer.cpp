@@ -1,4 +1,4 @@
-#include "ClassLexer.cpp"
+#include "lexer.h"
 
 /*inline char Lexer::read()
 {

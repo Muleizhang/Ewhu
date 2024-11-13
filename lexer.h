@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <cstring>
 #include <vector>
-#include "Token.cpp"
+#include "Token.h"
 
 class Lexer
 {
