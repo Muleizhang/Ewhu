@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include "lexer.cpp"
 
 class Ewhu
 {
