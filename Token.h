@@ -26,6 +26,11 @@ enum TokenType
     SLASH,         // /
     BACK_SLASH,    // '\'
     STAR,          // *
+    HASH,          // #
+    AT,            // @
+    AMPERSAND,     // &
+    PIPE,          // |
+    PERCENT,       // %
 
     // One or two character tokens.
     BANG,          // !
@@ -65,7 +70,7 @@ enum TokenType
     ERR,       // error
 };
 
-std::map<TokenType, std::string> TokenTypeToString = {
+static std::map<TokenType, std::string> TokenTypeToString = {
     // Single-character tokens.
     {TokenType::LEFT_PAREN, "LEFT_PAREN"},
     {TokenType::RIGHT_PAREN, "RIGHT_PAREN"},
@@ -85,6 +90,11 @@ std::map<TokenType, std::string> TokenTypeToString = {
     {TokenType::SLASH, "SLASH"},
     {TokenType::BACK_SLASH, "BACK_SLASH"},
     {TokenType::STAR, "STAR"},
+    {TokenType::HASH, "HASH"},
+    {TokenType::AT, "AT"},
+    {TokenType::AMPERSAND, "AMPERSAND"},
+    {TokenType::PIPE, "PIPE"},
+    {TokenType::PERCENT, "PERCENT"},
 
     // One or two character tokens.
     {TokenType::BANG, "BANG"},
