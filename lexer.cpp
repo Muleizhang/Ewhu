@@ -2,7 +2,7 @@
 #include <string>
 #include <map>
 
-std::map<std::string, TokenType> keyWords = {
+static std::map<std::string, TokenType> keyWords = {
     {"and", TokenType::AND},
     {"or", TokenType::OR},
     {"xor", TokenType::XOR},
@@ -48,7 +48,6 @@ void Lexer::scan_token(char inpt)
     case ' ':
         break;
     case '\t':
-
         break;
     case '\n':
         line++;
@@ -106,6 +105,21 @@ void Lexer::scan_token(char inpt)
         break;
     case '*':
         addToken(STAR);
+        break;
+    case '#':
+        addToken(HASH);
+        break;
+    case '@':
+        addToken(AT);
+        break;
+    case '&':
+        addToken(AMPERSAND);
+        break;
+    case '|':
+        addToken(PIPE);
+        break;
+    case '%':
+        addToken(PERCENT);
         break;
     case '!':
         if (nextChar() == '=')
