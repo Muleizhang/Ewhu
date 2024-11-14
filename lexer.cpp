@@ -1,45 +1,167 @@
 #include "lexer.h"
+#include <string>
+#include <map>
 
-/*inline char Lexer::read()
-{
-    char inpt = fgetc(file);
-    return inpt;
-}*/
+std::map<std::string, TokenType> keyWords = {
+    {"and", TokenType::AND},
+    {"or", TokenType::OR},
+    {"xor", TokenType::XOR},
+    {"if", TokenType::IF},
+    {"else", TokenType::ELSE},
+    {"true", TokenType::TRUE},
+    {"false", TokenType::FALSE},
+    {"for", TokenType::FOR},
+    {"continue", TokenType::CONTINUE},
+    {"break", TokenType::BREAK},
+    {"while", TokenType::WHILE},
+    {"class", TokenType::CLASS},
+    {"print", TokenType::PRINT},
+    {"return", TokenType::RETURN},
+    {"this", TokenType::THIS},
+    {"var", TokenType::VAR},
+    {"do", TokenType::DO},
+    {"EOF", TokenType::EOF_TOKEN},
+    {"nil", TokenType::NIL},
+    {"ERR", TokenType::ERR},
+};
 
 std::vector<Token> Lexer::scan_tokens()
 {
-    char inpt = nextChar();
-
-    while (current <= length)
+    char inpt;
+    while (current < length)
     {
-        // std::cout << findType(inpt) << std::endl;
+        start = current;
+        inpt = nextChar();
+        scan_token(inpt);
+    }
+    return tokens;
+}
+
+void Lexer::scan_token(char inpt)
+{
+
+    switch (inpt)
+    {
+    case EOF:
+        addToken(EOF_TOKEN);
+        break;
+    case ' ':
+        break;
+    case '\t':
+
+        break;
+    case '\n':
+        line++;
+        break;
+    case '(':
+        addToken(LEFT_PAREN);
+        break;
+    case ')':
+        addToken(RIGHT_PAREN);
+        break;
+    case '{':
+        addToken(LEFT_BRACE);
+        break;
+    case '}':
+        addToken(RIGHT_BRACE);
+        break;
+    case '[':
+        addToken(LEFT_BRACKET);
+        break;
+    case ']':
+        addToken(RIGHT_BRACKET);
+        break;
+    case ',':
+        addToken(COMMA);
+        break;
+    case '.':
+        addToken(DOT);
+        break;
+    case ':':
+        addToken(COLON);
+        break;
+    case ';':
+        addToken(SEMICOLON);
+        break;
+    case '?':
+        addToken(QUESTION);
+        break;
+    case '-':
+        addToken(MINUS);
+        break;
+    case '+':
+        addToken(PLUS);
+        break;
+    case '/':
+        addToken(SLASH);
+        break;
+    case '*':
+        addToken(STAR);
+        break;
+    case '!':
+        if (nextChar() == '=')
+        {
+            addToken(BANG_EQUAL);
+        }
+        else
+        {
+            current--;
+            addToken(BANG);
+        }
+        break;
+    case '=':
+        if (nextChar() == '=')
+        {
+            addToken(EQUAL_EQUAL);
+        }
+        else
+        {
+            current--;
+            addToken(EQUAL);
+        }
+        break;
+    case '>':
+        if (nextChar() == '=')
+        {
+            addToken(GREATER_EQUAL);
+        }
+        else
+        {
+            current--;
+            addToken(GREATER);
+        }
+        break;
+    case '<':
+        if (nextChar() == '=')
+        {
+            addToken(LESS_EQUAL);
+        }
+        else
+        {
+            current--;
+            addToken(LESS);
+        }
+        break;
+
+    default:
         switch (findType(inpt))
         {
         case 1:
-            processLetter(inpt);
+            tokens.push_back(tokenLetter(inpt));
             break;
         case 3:
-            processNumber(inpt);
-            break;
-        case 4:
-            processMathematicalOperator(inpt);
-            break;
-        case 5:
-            processRelationalOperator(inpt);
-            break;
-        case 6:
-            processDelimiter(inpt);
-            break;
-        case 0:
-            // empty
+            tokens.push_back(tokenNumber(inpt));
             break;
         default:
-            std::cerr << inpt << "[error] id=-1" << std::endl;
-            break;
+            std::cerr << inpt << "[error] id=" << findType(inpt) << std::endl;
+            tokens.push_back(Token(TokenType::ERR, std::to_string(inpt), std::monostate(), line));
         }
-        inpt = nextChar();
     }
-    return tokens;
+}
+void Lexer::addToken(TokenType type)
+{
+    std::string text = source.substr(start, current - start);
+    tokens.push_back(Token(type, text, std::monostate(), line));
 }
 
 inline char Lexer::nextChar()
@@ -110,26 +232,62 @@ int Lexer::isKeywords(char *kw)
     return -1;
 }
 
-void Lexer::processLetter(char inpt) // 处理字母
+Token Lexer::tokenLetter(char inpt)
 {
-    char kw[20];
-    int pk = 0;
+    std::string letters;
     while (isNumber(inpt) || isLetter(inpt) || inpt == '_')
     {
-        kw[pk++] = inpt;
+        letters += inpt;
         inpt = this->nextChar();
     }
-    // fseek(file, -1, SEEK_CUR);
     current--;
 
-    kw[pk] = '\0';
-    if (isKeywords(kw) == -1)
+    auto it = keyWords.find(letters); // 查找输入字符串
+
+    if (it != keyWords.end())
     {
-        std::cout << kw << "[identifier] id=" << 2 << std::endl;
+        // 找到对应的键，访问其值
+        return Token(it->second, letters, std::monostate(), line);
     }
     else
     {
-        std::cout << kw << "[keywords, type " << isKeywords(kw) << "] id=" << 1 << std::endl;
+        // 没有找到
+        return Token(TokenType::IDENTIFIER, letters, std::monostate(), line);
+    }
+}
+Token Lexer::tokenNumber(char inpt)
+{
+    std::string digits;
+    while (isNumber(inpt))
+    {
+        digits.push_back(inpt);
+        inpt = this->nextChar();
+    }
+    current--;
+    // fseek(file, -1, SEEK_CUR);
+    return Token(TokenType::NUMBER, digits, std::monostate(), line);
+}
+void Lexer::processLetter(char inpt) // 处理字母
+{
+    std::string keyword;
+    while (isNumber(inpt) || isLetter(inpt) || inpt == '_')
+    {
+        keyword += inpt;
+        inpt = this->nextChar();
+    }
+    current--;
+
+    auto it = keyWords.find(keyword); // 查找输入字符串
+
+    if (it != keyWords.end())
+    {
+        // 找到对应的键，访问其值
+        std::cout << keyword << "[keywords] id=" << 1 << std::endl;
+    }
+    else
+    {
+        // 没有找到
+        std::cout << keyword << "[identifier] id=" << 2 << std::endl;
     }
 }
 

@@ -32,10 +32,10 @@ public:
         file = freopen(filepath, "r", stdin);
     }
     */
-    std::vector<Token> scan_tokens();     // 读取一行代码，返回 Token 列表
-    Token scan_token(std::string source); // 读取一个 Token
-    char nextChar();                      // 读取下一个字符
-    // char read();                                        // 读取一个字符
+    std::vector<Token> scan_tokens();           // 读取一行代码，返回 Token 列表
+    void scan_token(char inpt);                 // 读取一个 Token
+    char nextChar();                            // 读取下一个字符
+    void addToken(TokenType type);              // 添加 Token
     bool isEmpty(char inpt);                    // 读取字符是否为空
     bool isLetter(char inpt);                   // 读取字符是否为字母
     bool isNumber(char inpt);                   // 读取字符是否为数字
@@ -44,6 +44,8 @@ public:
     bool isDelimiter(char inpt);                // 读取字符是否为界限符
     int findType(char inpt);                    // 判断是读取字符是哪一种类型
     int isKeywords(char *kw);                   // 判断字符串是否是关键字
+    Token tokenLetter(char inpt);               // 读取字母
+    Token tokenNumber(char inpt);               // 读取数字
     void processLetter(char inpt);              // 处理字母
     void processNumber(char inpt);              // 处理数字
     int processRelationalOperator(char inpt);   // 处理关系运算符，返回运算符类型

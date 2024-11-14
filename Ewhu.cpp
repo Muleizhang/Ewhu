@@ -38,17 +38,22 @@ public:
             {
                 break;
             }
+
             run(line);
         }
     }
 
     static void run(const std::string &source)
     {
-
+        std::vector<Token> tokens;
         // 解释 Ewhu 代码的逻辑
         std::cout << "Running: " << source << std::endl;
         Lexer lx(source);
-        lx.scan_tokens();
+        tokens = lx.scan_tokens();
+        for (auto token : tokens)
+        {
+            std::cout << token.toString() << std::endl;
+        }
     }
 };
 
