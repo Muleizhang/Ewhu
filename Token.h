@@ -14,7 +14,8 @@ enum TokenType
     RIGHT_BRACE,   // }
     LEFT_BRACKET,  // [
     RIGHT_BRACKET, // ]
-    QUOTE,         // "
+    DOUBLE_QUOTE,  // "
+    SINGLE_QUOTE,  // '
     COMMA,         // ,
     DOT,           // .
     COLON,         // :
@@ -23,6 +24,7 @@ enum TokenType
     MINUS,         // -
     PLUS,          // +
     SLASH,         // /
+    BACK_SLASH,    // '\'
     STAR,          // *
 
     // One or two character tokens.
@@ -71,7 +73,8 @@ std::map<TokenType, std::string> TokenTypeToString = {
     {TokenType::RIGHT_BRACE, "RIGHT_BRACE"},
     {TokenType::LEFT_BRACKET, "LEFT_BRACKET"},
     {TokenType::RIGHT_BRACKET, "RIGHT_BRACKET"},
-    {TokenType::QUOTE, "QUOTE"},
+    {TokenType::DOUBLE_QUOTE, "DOUBLE_QUOTE"},
+    {TokenType::SINGLE_QUOTE, "SINGLE_QUOTE"},
     {TokenType::COMMA, "COMMA"},
     {TokenType::DOT, "DOT"},
     {TokenType::COLON, "COLON"},
@@ -80,6 +83,7 @@ std::map<TokenType, std::string> TokenTypeToString = {
     {TokenType::MINUS, "MINUS"},
     {TokenType::PLUS, "PLUS"},
     {TokenType::SLASH, "SLASH"},
+    {TokenType::BACK_SLASH, "BACK_SLASH"},
     {TokenType::STAR, "STAR"},
 
     // One or two character tokens.
@@ -130,13 +134,13 @@ class Token
     friend class Tokens;
 
 public:
-    TokenType type;                                            // 标记的类型
-    std::string lexeme;                                        // 标记对应的源代码文本
-    std::variant<std::monostate, double, std::string> literal; // 字面量的值
-    int line;                                                  // 标记所在的行号
+    TokenType type;                                         // 标记的类型
+    std::string lexeme;                                     // 标记对应的源代码文本
+    std::variant<std::monostate, int, std::string> literal; // 字面量的值
+    int line;                                               // 标记所在的行号
 
     // 构造函数
-    Token(TokenType type, const std::string &lexeme, std::variant<std::monostate, double, std::string> literal, int line)
+    Token(TokenType type, const std::string &lexeme, std::variant<std::monostate, int, std::string> literal, int line)
         : type(type), lexeme(lexeme), literal(literal), line(line) {}
 
     Token() : type(TokenType::ERR), lexeme(""), literal(std::monostate()), line(0) {}
@@ -150,9 +154,9 @@ public:
         {
             literalStr = "null";
         }
-        else if (std::holds_alternative<double>(literal))
+        else if (std::holds_alternative<int>(literal))
         {
-            literalStr = std::to_string(std::get<double>(literal));
+            literalStr = std::to_string(std::get<int>(literal));
         }
         else if (std::holds_alternative<std::string>(literal))
         {
