@@ -18,8 +18,10 @@ public:
         }
 
         std::string line;
+        int lineNum = 1;
         while (std::getline(file, line))
         {
+            std::cout << lineNum++ << " ";
             run(line);
             std::cout << std::endl;
         }
@@ -52,13 +54,15 @@ public:
         tokens = lx.scan_tokens();
         for (auto token : tokens)
         {
-            std::cout << token.toString() << std::endl;
+            std::cout << token.toString();
         }
+        std::cout << std::endl;
     }
 };
 
 int main(int argc, char *argv[])
 {
+    // SetConsoleOutputCP(CP_UTF8);
 
     if (argc > 2)
     {

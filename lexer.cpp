@@ -72,7 +72,10 @@ void Lexer::scan_token(char inpt)
         addToken(RIGHT_BRACKET);
         break;
     case '"':
-        addToken(QUOTE);
+        addToken(DOUBLE_QUOTE);
+        break;
+    case '\'':
+        addToken(SINGLE_QUOTE);
         break;
     case ',':
         addToken(COMMA);
@@ -97,6 +100,9 @@ void Lexer::scan_token(char inpt)
         break;
     case '/':
         addToken(SLASH);
+        break;
+    case '\\':
+        addToken(BACK_SLASH);
         break;
     case '*':
         addToken(STAR);
@@ -156,7 +162,7 @@ void Lexer::scan_token(char inpt)
             tokens.push_back(tokenNumber(inpt));
             break;
         default:
-            std::cerr << inpt << "[error] id=" << findType(inpt) << std::endl;
+            std::cerr << inpt << "[error:unknown_charactor] id=" << findType(inpt) << std::endl;
             tokens.push_back(Token(TokenType::ERR, std::to_string(inpt), std::monostate(), line));
         }
     }
@@ -181,7 +187,7 @@ inline bool Lexer::isEmpty(char inpt)
 
 inline bool Lexer::isLetter(char inpt)
 {
-    return (inpt >= 'a' && inpt <= 'z') || (inpt >= 'A' && inpt <= 'Z');
+    return (inpt >= 'a' && inpt <= 'z') || (inpt >= 'A' && inpt <= 'Z') || inpt == '_';
 }
 
 inline bool Lexer::isNumber(char inpt)
@@ -255,7 +261,7 @@ Token Lexer::tokenLetter(char inpt)
     else
     {
         // 没有找到
-        return Token(TokenType::IDENTIFIER, letters, std::monostate(), line);
+        return Token(TokenType::IDENTIFIER, letters, letters, line);
     }
 }
 Token Lexer::tokenNumber(char inpt)
@@ -268,7 +274,12 @@ Token Lexer::tokenNumber(char inpt)
     }
     current--;
     // fseek(file, -1, SEEK_CUR);
-    return Token(TokenType::NUMBER, digits, std::monostate(), line);
+    if (digits.size() >= 10)
+    {
+        std::cerr << digits << "[error:out_of_number_MAX(999999999)]" << std::endl;
+        return Token(TokenType::ERR, digits, std::monostate(), line);
+    }
+    return Token(TokenType::NUMBER, digits, std::stoi(digits), line);
 }
 void Lexer::processLetter(char inpt) // 处理字母
 {
