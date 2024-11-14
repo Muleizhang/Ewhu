@@ -2,24 +2,27 @@
 #include <variant>
 #include <vector>
 #include <variant>
+#include <map>
+#include <iomanip>
 
-// 定义 TokenType 枚举类型，表示标记的类型
-enum class TokenType
+enum TokenType
 {
     // Single-character tokens.
-    LEFT_PAREN,  // (
-    RIGHT_PAREN, // )
-    LEFT_BRACE,  // {
-    RIGHT_BRACE, // }
-                 // [
-                 // ]
-    COMMA,       // ,
-    DOT,         // .
-    MINUS,       // -
-    PLUS,        // +
-    SEMICOLON,   // ;
-    SLASH,       // /
-    STAR,        // *
+    LEFT_PAREN,    // (
+    RIGHT_PAREN,   // )
+    LEFT_BRACE,    // {
+    RIGHT_BRACE,   // }
+    LEFT_BRACKET,  // [
+    RIGHT_BRACKET, // ]
+    COMMA,         // ,
+    DOT,           // .
+    COLON,         // :
+    SEMICOLON,     // ;
+    QUESTION,      // ?
+    MINUS,         // -
+    PLUS,          // +
+    SLASH,         // /
+    STAR,          // *
 
     // One or two character tokens.
     BANG,          // !
@@ -38,24 +41,84 @@ enum class TokenType
 
     // Keywords.
     AND,       // and
-    CLASS,     // class
-    ELSE,      // else
-    FALSE,     // false
-               // FUNCTION, //
-    FOR,       // for
-    IF,        // if
-    NIL,       // NULL
     OR,        // or
+    XOR,       // xor
+    IF,        // if
+    ELSE,      // else
+    TRUE,      // true
+    FALSE,     // false
+    FOR,       // for
+    CONTINUE,  // continue
+    BREAK,     // break
+    WHILE,     // while
+    CLASS,     // class
     PRINT,     // print
     RETURN,    // return
     THIS,      // this
-    TRUE,      // true
     VAR,       // var
-    WHILE,     // while
     DO,        // do
     EOF_TOKEN, // end of file
+    NIL,       // NIL
     ERR,       // error
 };
+
+std::map<TokenType, std::string> TokenTypeToString = {
+    // Single-character tokens.
+    {TokenType::LEFT_PAREN, "LEFT_PAREN"},
+    {TokenType::RIGHT_PAREN, "RIGHT_PAREN"},
+    {TokenType::LEFT_BRACE, "LEFT_BRACE"},
+    {TokenType::RIGHT_BRACE, "RIGHT_BRACE"},
+    {TokenType::LEFT_BRACKET, "LEFT_BRACKET"},
+    {TokenType::RIGHT_BRACKET, "RIGHT_BRACKET"},
+    {TokenType::COMMA, "COMMA"},
+    {TokenType::DOT, "DOT"},
+    {TokenType::COLON, "COLON"},
+    {TokenType::SEMICOLON, "SEMICOLON"},
+    {TokenType::QUESTION, "QUESTION"},
+    {TokenType::MINUS, "MINUS"},
+    {TokenType::PLUS, "PLUS"},
+    {TokenType::SLASH, "SLASH"},
+    {TokenType::STAR, "STAR"},
+
+    // One or two character tokens.
+    {TokenType::BANG, "BANG"},
+    {TokenType::BANG_EQUAL, "BANG_EQUAL"},
+    {TokenType::EQUAL, "EQUAL"},
+    {TokenType::EQUAL_EQUAL, "EQUAL_EQUAL"},
+    {TokenType::GREATER, "GREATER"},
+    {TokenType::GREATER_EQUAL, "GREATER_EQUAL"},
+    {TokenType::LESS, "LESS"},
+    {TokenType::LESS_EQUAL, "LESS_EQUAL"},
+
+    // Literals.
+    {TokenType::IDENTIFIER, "IDENTIFIER"},
+    {TokenType::STRING, "STRING"},
+    {TokenType::NUMBER, "NUMBER"},
+
+    // Keywords.
+    {TokenType::AND, "AND"},
+    {TokenType::OR, "OR"},
+    {TokenType::XOR, "XOR"},
+    {TokenType::IF, "IF"},
+    {TokenType::ELSE, "ELSE"},
+    {TokenType::TRUE, "TRUE"},
+    {TokenType::FALSE, "FALSE"},
+    {TokenType::FOR, "FOR"},
+    {TokenType::CONTINUE, "CONTINUE"},
+    {TokenType::BREAK, "BREAK"},
+    {TokenType::WHILE, "WHILE"},
+    {TokenType::CLASS, "CLASS"},
+    {TokenType::PRINT, "PRINT"},
+    {TokenType::RETURN, "RETURN"},
+    {TokenType::THIS, "THIS"},
+    {TokenType::VAR, "VAR"},
+    {TokenType::DO, "DO"},
+    {TokenType::EOF_TOKEN, "EOF"},
+    {TokenType::NIL, "NIL"},
+    {TokenType::ERR, "ERR"},
+};
+
+// 定义 TokenType 枚举类型，表示标记的类型
 
 // 定义 Token 类
 class Token
@@ -95,6 +158,6 @@ public:
         }
 
         // 将 Token 的信息拼接成字符串
-        return std::string("[") + std::to_string(static_cast<int>(type)) + " " + lexeme + " " + literalStr + "]";
+        return std::string("[") + TokenTypeToString[type] + " " + lexeme + " " + literalStr + "]";
     }
 };

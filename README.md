@@ -44,7 +44,7 @@ list = [a,b,c]
 ```
 
 ### Function
-```
+```cpp
 var func_name(arg1,arg2) = ();
 func_name(arg1,arg2);
 ```
