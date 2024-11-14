@@ -14,6 +14,7 @@ enum TokenType
     RIGHT_BRACE,   // }
     LEFT_BRACKET,  // [
     RIGHT_BRACKET, // ]
+    QUOTE,         // "
     COMMA,         // ,
     DOT,           // .
     COLON,         // :
@@ -70,6 +71,7 @@ std::map<TokenType, std::string> TokenTypeToString = {
     {TokenType::RIGHT_BRACE, "RIGHT_BRACE"},
     {TokenType::LEFT_BRACKET, "LEFT_BRACKET"},
     {TokenType::RIGHT_BRACKET, "RIGHT_BRACKET"},
+    {TokenType::QUOTE, "QUOTE"},
     {TokenType::COMMA, "COMMA"},
     {TokenType::DOT, "DOT"},
     {TokenType::COLON, "COLON"},

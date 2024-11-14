@@ -12,9 +12,6 @@ public:
     static const char *space_word_table[8];     // 界限符
     static const char *relation_calcu_table[7]; // 比较运算符
 
-    char *filepath = (char *)"test.txt";
-    FILE *file;
-
     const std::string source;
     const int length;          // source.length()
     std::vector<Token> tokens; // 保存 Token 的列表
@@ -22,16 +19,8 @@ public:
     int current = 0;
     int line = 1;
 
-    Lexer(const std::string &source) : source(source), length(source.length())
-    {
-        // std::cout << "id=1 关键字;   id=2 标识符;   id=3 常数;   id=4 数学运算符;   id=5 关系运算符;   id=6 界限符" << std::endl;
-    }
-    /*
-    Lexer(){
-        std::cout << "id=1 关键字;   id=2 标识符;   id=3 常数;   id=4 数学运算符;   id=5 关系运算符;   id=6 界限符" << std::endl;
-        file = freopen(filepath, "r", stdin);
-    }
-    */
+    Lexer(const std::string &source) : source(source), length(source.length()) {}
+
     std::vector<Token> scan_tokens();           // 读取一行代码，返回 Token 列表
     void scan_token(char inpt);                 // 读取一个 Token
     char nextChar();                            // 读取下一个字符
