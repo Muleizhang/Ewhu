@@ -47,7 +47,7 @@ public:
     {
         std::vector<Token> tokens;
         // 解释 Ewhu 代码的逻辑
-        std::cout << "Running: " << source << std::endl;
+        // std::cout << "Running: " << source << std::endl;
         Lexer lx(source);
         tokens = lx.scan_tokens();
         for (auto token : tokens)

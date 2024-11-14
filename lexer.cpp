@@ -71,6 +71,9 @@ void Lexer::scan_token(char inpt)
     case ']':
         addToken(RIGHT_BRACKET);
         break;
+    case '"':
+        addToken(QUOTE);
+        break;
     case ',':
         addToken(COMMA);
         break;
