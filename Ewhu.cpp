@@ -48,16 +48,24 @@ public:
 
     static void run(const std::string &source)
     {
-        std::vector<Token> tokens;
+        Parser parser;
         // 解释 Ewhu 代码的逻辑
         // std::cout << "Running: " << source << std::endl;
         Lexer lx(source);
-        tokens = lx.scan_tokens();
+        std::vector<Token> tokens;
+        tokens = lx.scanTokens();
+
         for (auto token : tokens)
         {
             std::cout << token.toString();
         }
         std::cout << std::endl;
+
+        // 前后括号相等
+        if (tokens.end()->type == TokenType::SEMICOLON)
+        {
+            parser.parse_program(tokens.begin());
+        }
     }
 };
 

@@ -68,7 +68,12 @@ enum TokenType
     DO,        // do
     EOF_TOKEN, // end of file
     NIL,       // NIL
-    ERR,       // error
+
+    // Error
+    ERR, // error
+
+    // Empty
+    EMPTY // empty
 };
 
 static std::map<TokenType, std::string> TokenTypeToString = {
@@ -132,8 +137,12 @@ static std::map<TokenType, std::string> TokenTypeToString = {
     {TokenType::DO, "DO"},
     {TokenType::EOF_TOKEN, "EOF"},
     {TokenType::NIL, "NIL"},
+
+    // Error
     {TokenType::ERR, "ERR"},
-};
+
+    // Empty
+    {TokenType::EMPTY, "EMPTY"}};
 
 // 定义 TokenType 枚举类型，表示标记的类型
 

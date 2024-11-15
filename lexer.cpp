@@ -25,19 +25,19 @@ static std::map<std::string, TokenType> keyWords = {
     {"ERR", TokenType::ERR},
 };
 
-std::vector<Token> Lexer::scan_tokens()
+std::vector<Token> Lexer::scanTokens()
 {
     char inpt;
     while (current < length)
     {
         start = current;
         inpt = nextChar();
-        scan_token(inpt);
+        scanToken(inpt);
     }
     return tokens;
 }
 
-void Lexer::scan_token(char inpt)
+void Lexer::scanToken(char inpt)
 {
 
     switch (inpt)
@@ -181,6 +181,16 @@ void Lexer::scan_token(char inpt)
         }
     }
 }
+
+Token Lexer::nextToken()
+{
+    if (read_current >= tokens.size())
+    {
+        return Token(TokenType::EOF_TOKEN, "", std::monostate(), line);
+    }
+    return tokens[read_current++];
+}
+
 void Lexer::addToken(TokenType type)
 {
     std::string text = source.substr(start, current - start);

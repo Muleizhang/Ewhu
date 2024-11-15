@@ -18,11 +18,17 @@ public:
     int start = 0;
     int current = 0;
     int line = 1;
+    int read_current = 0;
 
     Lexer(const std::string &source) : source(source), length(source.length()) {}
 
-    std::vector<Token> scan_tokens();           // 读取一行代码，返回 Token 列表
-    void scan_token(char inpt);                 // 读取一个 Token
+    // 返回下一个Token
+    Token nextToken();
+    // 读取一行代码，返回 Token 列表
+    std::vector<Token> scanTokens();
+
+private:
+    void scanToken(char inpt);                  // 读取一个 Token
     char nextChar();                            // 读取下一个字符
     void addToken(TokenType type);              // 添加 Token
     bool isEmpty(char inpt);                    // 读取字符是否为空
