@@ -3,7 +3,7 @@
 #include <cstring>
 #include <vector>
 #include "Token.h"
-
+#pragma once
 class Lexer
 {
 public:

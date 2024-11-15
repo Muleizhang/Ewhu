@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include "lexer.cpp"
+#include "parser.h"
 
 class Ewhu
 {

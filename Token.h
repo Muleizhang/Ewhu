@@ -4,7 +4,7 @@
 #include <variant>
 #include <map>
 #include <iomanip>
-
+#pragma once
 enum TokenType
 {
     // Single-character tokens.
@@ -41,6 +41,7 @@ enum TokenType
     IDENTIFIER, // a
     STRING,     //"a"
     NUMBER,     // 1
+    INTEGER,
 
     // Keywords.
     AND,       // and
