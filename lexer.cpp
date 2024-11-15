@@ -1,6 +1,4 @@
 #include "lexer.h"
-#include <string>
-#include <map>
 
 static std::map<std::string, TokenType> keyWords = {
     {"and", TokenType::AND},
@@ -54,21 +52,27 @@ void Lexer::scanToken(char inpt)
         break;
     case '(':
         addToken(LEFT_PAREN);
+        bracketStatus++;
         break;
     case ')':
         addToken(RIGHT_PAREN);
+        bracketStatus--;
         break;
     case '{':
         addToken(LEFT_BRACE);
+        bracketStatus++;
         break;
     case '}':
         addToken(RIGHT_BRACE);
+        bracketStatus--;
         break;
     case '[':
         addToken(LEFT_BRACKET);
+        bracketStatus++;
         break;
     case ']':
         addToken(RIGHT_BRACKET);
+        bracketStatus--;
         break;
     case '"':
         addToken(DOUBLE_QUOTE);
@@ -186,7 +190,7 @@ Token Lexer::nextToken()
 {
     if (read_current >= tokens.size())
     {
-        return Token(TokenType::EOF_TOKEN, "", std::monostate(), line);
+        return Token(TokenType::EMPTY, "", std::monostate(), line);
     }
     return tokens[read_current++];
 }

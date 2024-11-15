@@ -1,10 +1,12 @@
+#pragma once
+
 #include <string>
 #include <variant>
 #include <vector>
 #include <variant>
 #include <map>
 #include <iomanip>
-#pragma once
+
 enum TokenType
 {
     // Single-character tokens.
