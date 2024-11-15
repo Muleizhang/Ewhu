@@ -4,7 +4,7 @@ class Integer : public Expression
 {
 public:
     Integer() : Expression(Type::NODE_INTEGER) {}
-    ~Integer(){};
+    ~Integer() {};
 
 public:
     __INT64_TYPE__ m_value;

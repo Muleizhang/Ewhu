@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include "token.h"
+#include "Token.h"
 
 class Node
 {
@@ -19,7 +19,7 @@ public:
     };
 
     Node() {}
-    Node(Type type) : m_type(type){};
+    Node(Type type) : m_type(type) {};
     virtual ~Node() {}
 
     Type getType() { return m_type; }

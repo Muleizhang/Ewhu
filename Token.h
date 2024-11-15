@@ -165,9 +165,9 @@ public:
         {
             literalStr = "null";
         }
-        else if (std::holds_alternative<int>(literal))
+        else if (std::holds_alternative<long long>(literal))
         {
-            literalStr = std::to_string(std::get<int>(literal));
+            literalStr = std::to_string(std::get<long long>(literal));
         }
         else if (std::holds_alternative<std::string>(literal))
         {
@@ -176,5 +176,21 @@ public:
 
         // 将 Token 的信息拼接成字符串
         return std::string("[") + TokenTypeToString[type] + " " + lexeme + " " + literalStr + "]";
+    }
+    long long literalToLonglong()
+    {
+        if (std::holds_alternative<long long>(literal))
+        {
+            return std::get<long long>(literal);
+        }
+        return 0;
+    }
+    std::string literalToString()
+    {
+        if (std::holds_alternative<std::string>(literal))
+        {
+            return std::get<std::string>(literal);
+        }
+        return "";
     }
 };
