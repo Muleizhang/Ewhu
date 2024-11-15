@@ -48,6 +48,9 @@ public:
     std::shared_ptr<Statement> parse_statement();
     std::shared_ptr<ExpressionStatement> parse_expression_statement();
 
+    std::shared_ptr<Program> m_program(new Program());
+    void new_sentence(std::vector<Token>::iterator ptokens);
+
 private:
     std::vector<Token>::iterator m_ptokens; // 指向下一个token的迭代器
     std::shared_ptr<Lexer> m_lexer;

@@ -99,3 +99,10 @@ std::list<std::string> &Parser::errors()
 {
     return m_errors;
 }
+
+void Parser::new_sentence(std::vector<Token>::iterator ptokens)
+{
+    m_ptokens = ptokens;
+    next_token();
+    next_token();
+}
