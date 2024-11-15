@@ -1,6 +1,6 @@
 #include "Node.h"
 
-std::map<Node::Type, std::string> Node::TypeToString = {
+std::map<Node::Type, std::string> Node::m_names = {
     {Node::NODE_INTEGER, "Integer"},
     {Node::NODE_FLOAT, "Float"},
     {Node::NODE_STRING, "String"},
@@ -14,8 +14,8 @@ std::map<Node::Type, std::string> Node::TypeToString = {
 // return the string of the node type
 std::string Node::nameString()
 {
-    auto it = TypeToString.find(type);
-    if (it == TypeToString.end())
+    auto it = m_names.find(type);
+    if (it == m_names.end())
     {
         return "Unknown";
     }

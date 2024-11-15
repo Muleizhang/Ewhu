@@ -145,13 +145,13 @@ class Token
     friend class Tokens;
 
 public:
-    TokenType type;                                         // 标记的类型
-    std::string lexeme;                                     // 标记对应的源代码文本
-    std::variant<std::monostate, int, std::string> literal; // 字面量的值
-    int line;                                               // 标记所在的行号
+    TokenType type;                                               // 标记的类型
+    std::string lexeme;                                           // 标记对应的源代码文本
+    std::variant<std::monostate, long long, std::string> literal; // 字面量的值
+    int line;                                                     // 标记所在的行号
 
     // 构造函数
-    Token(TokenType type, const std::string &lexeme, std::variant<std::monostate, int, std::string> literal, int line)
+    Token(TokenType type, const std::string &lexeme, std::variant<std::monostate, long long, std::string> literal, int line)
         : type(type), lexeme(lexeme), literal(literal), line(line) {}
 
     Token() : type(TokenType::ERR), lexeme(""), literal(std::monostate()), line(0) {}

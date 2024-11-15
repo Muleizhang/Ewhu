@@ -288,9 +288,10 @@ Token Lexer::tokenNumber(char inpt)
     }
     current--;
     // fseek(file, -1, SEEK_CUR);
-    if (digits.size() >= 10)
+    int64_t
+    if (digits.size() >= 18)
     {
-        std::cerr << digits << "[error:out_of_number_MAX(999999999)]" << std::endl;
+        std::cerr << digits << "[error:out_of_number_MAX(999999999999999999)]" << std::endl;
         return Token(TokenType::ERR, digits, std::monostate(), line);
     }
     return Token(TokenType::NUMBER, digits, std::stoi(digits), line);

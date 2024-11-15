@@ -19,16 +19,16 @@ public:
     };
 
     Node() {}
-    Node(Type type) : type(type){};
+    Node(Type type) : m_type(type){};
     virtual ~Node() {}
 
-    Type getType() { return type; }
+    Type getType() { return m_type; }
     std::string nameString();
 
 public:
-    Type type;
-    Token token;
-    static std::map<Type, std::string> TypeToString;
+    Type m_type;
+    Token m_token;
+    static std::map<Type, std::string> m_names;
 };
 
 class Statement : public Node
