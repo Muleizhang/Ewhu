@@ -20,6 +20,7 @@ public:
 
     Node() {}
     Node(Type type) : type(type) {};
+    Node(Type type) : type(type){};
     virtual ~Node() {}
 
     Type getType() { return type; }
