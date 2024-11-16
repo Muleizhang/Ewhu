@@ -2,7 +2,12 @@
 #include <fstream>
 #include <string>
 #include "lexer.cpp"
-#include "parser.h"
+#include "parser.cpp"
+#include "program.cpp"
+#include "integer.cpp"
+#include "group.cpp"
+#include "infix.cpp"
+#include "expression.cpp"
 
 class Ewhu
 {
@@ -64,7 +69,8 @@ public:
         // 前后括号相等
         if (tokens.end()->type == TokenType::SEMICOLON)
         {
-            parser.parse_program(tokens.begin());
+            parser.new_sentence(tokens.begin());
+            parser.parse_program();
         }
     }
 };

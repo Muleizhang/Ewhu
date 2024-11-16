@@ -1,3 +1,4 @@
+#pragma once
 #include "parser.h"
 std::map<TokenType, int> Parser::m_precedences =
     {
@@ -28,10 +29,12 @@ void Parser::next_token() // 读取下一个token
 
 Parser::Parser() // 默认构造函数
 {
+    std::shared_ptr<Program> m_program(new Program());
 }
 
 Parser::Parser(std::vector<Token>::iterator ptokens)
 {
+    std::shared_ptr<Program> m_program(new Program());
     m_ptokens = ptokens;
     next_token();
     next_token();

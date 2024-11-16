@@ -19,11 +19,11 @@ public:
     };
 
     Node() {}
-    Node(Type type) : m_type(type) {};
+    Node(Type type) : m_type(type) {}
     virtual ~Node() {}
 
-    Type getType() { return m_type; }
-    std::string nameString();
+    Type type() { return m_type; }
+    std::string name() const;
 
 public:
     Type m_type;
@@ -31,16 +31,18 @@ public:
     static std::map<Type, std::string> m_names;
 };
 
-class Statement : public Node
-{
-public:
-    Statement(Type type) : Node(type) {}
-    ~Statement() {}
-};
-
 class Expression : public Node
 {
 public:
+    Expression() : Node() {}
     Expression(Type type) : Node(type) {}
     ~Expression() {}
+};
+
+class Statement : public Node
+{
+public:
+    Statement() : Node() {}
+    Statement(Type type) : Node(type) {}
+    ~Statement() {}
 };

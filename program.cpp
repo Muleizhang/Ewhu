@@ -1,5 +1,6 @@
-#include "parser.h" //创建程序的根节点
 #pragma once
+#include "parser.h" //创建程序的根节点
+#include "statement.cpp"
 void Parser::parse_program()
 {
     // std::shared_ptr<Program> s(new Program());

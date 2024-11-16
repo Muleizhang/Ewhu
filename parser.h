@@ -44,11 +44,11 @@ public:
     // 中缀
     std::shared_ptr<Expression> parse_infix(const std::shared_ptr<Expression> &left);
 
-    std::shared_ptr<Program> parse_program();
+    void parse_program();
     std::shared_ptr<Statement> parse_statement();
     std::shared_ptr<ExpressionStatement> parse_expression_statement();
 
-    std::shared_ptr<Program> m_program(new Program());
+    std::shared_ptr<Program> m_program = nullptr;
     void new_sentence(std::vector<Token>::iterator ptokens);
 
 private:

@@ -1,3 +1,4 @@
+#pragma once
 #include "lexer.h"
 #include <string>
 #include <map>
@@ -184,7 +185,7 @@ void Lexer::scanToken(char inpt)
 
 Token Lexer::nextToken()
 {
-    if (read_current >= tokens.size())
+    if (read_current >= (int)tokens.size())
     {
         return Token(TokenType::EOF_TOKEN, "", std::monostate(), line);
     }

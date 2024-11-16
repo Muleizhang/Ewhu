@@ -1,9 +1,10 @@
+#pragma once
 #include <iostream>
 #include <stdio.h>
 #include <cstring>
 #include <vector>
 #include "Token.h"
-#pragma once
+
 class Lexer
 {
 public:

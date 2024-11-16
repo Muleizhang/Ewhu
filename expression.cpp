@@ -1,5 +1,6 @@
-#include "parser.h"
 #pragma once
+#include "parser.h"
+
 std::shared_ptr<Expression> Parser::parse_expression(int precedence)
 {
     auto prefix = m_prefix_parse_fns.find(m_curr.type);

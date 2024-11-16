@@ -1,3 +1,4 @@
+#pragma once
 #include "Node.h"
 
 std::map<Node::Type, std::string> Node::m_names = {
@@ -12,12 +13,12 @@ std::map<Node::Type, std::string> Node::m_names = {
 };
 
 // return the string of the node type
-std::string Node::nameString()
+std::string Node::name() const
 {
-    auto it = m_names.find(type);
+    auto it = m_names.find(m_type);
     if (it == m_names.end())
     {
-        return "Unknown";
+        return "";
     }
     return it->second;
 }
