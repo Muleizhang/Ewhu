@@ -20,6 +20,7 @@ public:
     int current = 0;
     int line = 1;
     int read_current = 0;
+    int bracketStatus = 0; // := 前括号数量 - 后括号数量
 
     Lexer(const std::string &source) : source(source), length(source.length()) {}
 
