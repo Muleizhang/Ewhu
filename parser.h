@@ -49,6 +49,7 @@ public:
     std::shared_ptr<ExpressionStatement> parse_expression_statement();
 
     std::shared_ptr<Program> m_program = nullptr;
+
     void new_sentence(std::vector<Token>::iterator ptokens);
 
 private:

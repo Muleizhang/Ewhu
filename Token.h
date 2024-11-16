@@ -48,8 +48,8 @@ enum TokenType
     // Literals.
     IDENTIFIER, // a
     STRING,     //"a"
-    NUMBER,     // 1
-    INTEGER,
+    INTEGER,     // 1
+    //INTEGER,
 
     // Keywords.
     AND,       // and
@@ -118,7 +118,7 @@ static std::map<TokenType, std::string> TokenTypeToString = {
     // Literals.
     {TokenType::IDENTIFIER, "IDENTIFIER"},
     {TokenType::STRING, "STRING"},
-    {TokenType::NUMBER, "NUMBER"},
+    {TokenType::INTEGER, "INTEGER"},
 
     // Keywords.
     {TokenType::AND, "AND"},

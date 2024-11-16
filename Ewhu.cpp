@@ -66,22 +66,26 @@ public:
         tokens.insert(tokens.end(), new_tokens.begin(), new_tokens.end());
         if (bracketStatus == 0) // 前后括号相等
         {
+            std::cout << "return the tokens" << std::endl;
             for (auto token : tokens)
             {
                 std::cout << token.toString();
             }
             // parser.parse_program(tokens.begin()); 先不执行
-            std::vector<Token> tokens;
+
+            // std::vector<Token> tokens;
             bracketStatus = 0;
         }
 
         std::cout << std::endl;
 
         // 前后括号相等
-        if (tokens.end()->type == TokenType::SEMICOLON)
+        if ((--tokens.end())->type == TokenType::SEMICOLON)
         {
+            std::cout << "analyzing the statement" << std::endl;
             parser.new_sentence(tokens.begin());
             parser.parse_program();
+            tokens.clear();
         }
     }
 };

@@ -308,7 +308,7 @@ Token Lexer::tokenNumber(char inpt)
         std::cerr << digits << "[error:out_of_number_MAX(999999999999999999)]" << std::endl;
         return Token(TokenType::ERR, digits, std::monostate(), line);
     }
-    return Token(TokenType::NUMBER, digits, std::stoi(digits), line);
+    return Token(TokenType::INTEGER, digits, std::stoi(digits), line);
 }
 void Lexer::processLetter(char inpt) // 处理字母
 {
