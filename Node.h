@@ -15,6 +15,7 @@ public:
         NODE_STRING,
         NODE_BINARY,
         NODE_INFIX,
+        NODE_PREFIX,
         NODE_IDENTIFIER,
         NODE_EXPRESSION_STATEMENT,
         NODE_PROGRAM,

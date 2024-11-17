@@ -11,6 +11,8 @@ std::map<TokenType, Parser::prefix_parse_fn> Parser::m_prefix_parse_fns =
     {
         {TokenType::INTEGER, &Parser::parse_integer},
         {TokenType::LEFT_PAREN, &Parser::parse_group},
+        {TokenType::PLUS, &Parser::parse_prefix},
+        {TokenType::MINUS, &Parser::parse_prefix},
 };
 std::map<TokenType, Parser::infix_parse_fn> Parser::m_infix_parse_fns =
     {
@@ -23,8 +25,11 @@ std::map<TokenType, Parser::infix_parse_fn> Parser::m_infix_parse_fns =
 void Parser::next_token() // 读取下一个token
 {
     m_curr = m_peek;
-    m_peek = *m_ptokens;
-    m_ptokens++;
+    if (m_ptokens != m_ptokens_end)
+    {
+        m_peek = *m_ptokens;
+        m_ptokens++;
+    }
 }
 
 Parser::Parser() // 默认构造函数
@@ -103,9 +108,10 @@ std::list<std::string> &Parser::errors()
     return m_errors;
 }
 
-void Parser::new_sentence(std::vector<Token>::iterator ptokens)
+void Parser::new_sentence(std::vector<Token>::iterator ptokens_start, std::vector<Token>::iterator ptokens_end)
 {
-    m_ptokens = ptokens;
+    m_ptokens = ptokens_start;
+    m_ptokens_end = ptokens_end;
     next_token();
     next_token();
 }

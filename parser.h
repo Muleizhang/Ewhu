@@ -5,14 +5,16 @@
 #include "expression_statement.h"
 #include "program.h"
 #include "infix.h"
+#include "prefix.h"
 class Parser
 {
 public:
     enum Precedence
     {
         LOWEST = 0,
-        SUM,     // 加减
-        PRODUCT, // 乘除
+        SUM,      // 加减
+        PRE_SIGN, // 前缀正号负号
+        PRODUCT,  // 乘除
     };
 
     Parser();
@@ -41,6 +43,7 @@ public:
     // 前缀
     std::shared_ptr<Expression> parse_integer();
     std::shared_ptr<Expression> parse_group();
+    std::shared_ptr<Expression> parse_prefix();
     // 中缀
     std::shared_ptr<Expression> parse_infix(const std::shared_ptr<Expression> &left);
 
@@ -50,10 +53,11 @@ public:
 
     std::shared_ptr<Program> m_program = nullptr;
 
-    void new_sentence(std::vector<Token>::iterator ptokens);
+    void new_sentence(std::vector<Token>::iterator ptokens, std::vector<Token>::iterator ptokens_end);
 
 private:
-    std::vector<Token>::iterator m_ptokens; // 指向下一个token的迭代器
+    std::vector<Token>::iterator m_ptokens;     // 指向下一个token的迭代器
+    std::vector<Token>::iterator m_ptokens_end; // 指向tokens.end()的迭代器
     std::shared_ptr<Lexer> m_lexer;
     Token m_curr;                                  // 当前的token
     Token m_peek;                                  // 下一个token

@@ -3,3 +3,4 @@
 #include "group.cpp"
 #include "infix.cpp"
 #include "expression.cpp"
+#include "prefix.cpp"

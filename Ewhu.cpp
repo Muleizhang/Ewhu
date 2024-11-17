@@ -85,7 +85,7 @@ public:
             root.SetObject();
             std::cout << "analyzing the statement" << std::endl;
 
-            parser.new_sentence(tokens.begin());
+            parser.new_sentence(tokens.begin(), tokens.end());
             parser.parse_program();
             tokens.clear();
 
