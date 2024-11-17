@@ -1,8 +1,10 @@
 #pragma once
-
 #include <memory>
 #include "Token.h"
-
+#include "rapidjson/include/rapidjson/document.h"
+#include "rapidjson/include/rapidjson/writer.h"
+#include "rapidjson/include/rapidjson/stringbuffer.h"
+#include <iostream>
 class Node
 {
 public:
@@ -24,6 +26,7 @@ public:
 
     Type type() { return m_type; }
     std::string name() const;
+    virtual rapidjson::Value json(rapidjson::Document &father) = 0;
 
 public:
     Type m_type;

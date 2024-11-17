@@ -3,12 +3,11 @@
 #include <string>
 #include "lexer.cpp"
 #include "parser.cpp"
-#include "program.cpp"
-#include "integer.cpp"
-#include "group.cpp"
-#include "infix.cpp"
-#include "expression.cpp"
+#include "head.h"
 
+#include "rapidjson/include/rapidjson/document.h"
+#include "rapidjson/include/rapidjson/writer.h"
+#include "rapidjson/include/rapidjson/stringbuffer.h"
 class Ewhu
 {
 private:
@@ -82,10 +81,22 @@ public:
         // 前后括号相等
         if ((--tokens.end())->type == TokenType::SEMICOLON)
         {
+            rapidjson::Document root;
+            root.SetObject();
             std::cout << "analyzing the statement" << std::endl;
+
             parser.new_sentence(tokens.begin());
             parser.parse_program();
             tokens.clear();
+
+
+            root.AddMember("program", parser.m_program->json(root), root.GetAllocator());
+            rapidjson::StringBuffer buffer;
+            rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+            root.Accept(writer);
+            std::ofstream ofs("ast.json");
+            ofs << buffer.GetString();
+            ofs.close();
         }
     }
 };
