@@ -1,9 +1,9 @@
 #pragma once
 #include <memory>
-#include "Token.h"
-#include "rapidjson/include/rapidjson/document.h"
-#include "rapidjson/include/rapidjson/writer.h"
-#include "rapidjson/include/rapidjson/stringbuffer.h"
+#include "../lexer/token.h"
+#include "../rapidjson/include/rapidjson/document.h"
+#include "../rapidjson/include/rapidjson/writer.h"
+#include "../rapidjson/include/rapidjson/stringbuffer.h"
 #include <iostream>
 class Node
 {

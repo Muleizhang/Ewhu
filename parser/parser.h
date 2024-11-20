@@ -1,11 +1,11 @@
 #pragma once
-#include "lexer.h"
-#include "Token.h"
-#include "integer.h"
-#include "expression_statement.h"
-#include "program.h"
-#include "infix.h"
-#include "prefix.h"
+#include "../lexer/lexer.h"
+#include "../lexer/token.h"
+#include "../ast/integer.h"
+#include "../ast/expression_statement.h"
+#include "../ast/program.h"
+#include "../ast/infix.h"
+#include "../ast/prefix.h"
 class Parser
 {
 public:

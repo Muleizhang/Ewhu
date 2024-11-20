@@ -1,9 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "lexer.cpp"
-#include "parser.cpp"
-#include "head.h"
+#include "lexer/lexer.cpp"
+#include "parser/parser.cpp"
+#include "parser/head.h"
 
 #include "rapidjson/include/rapidjson/document.h"
 #include "rapidjson/include/rapidjson/writer.h"
@@ -120,6 +120,5 @@ int main(int argc, char *argv[])
     {
         Ewhu::runPrompt(); // 进入交互模式
     }
-
     return 0;
 }
