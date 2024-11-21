@@ -4,6 +4,7 @@
 #include "lexer/lexer.cpp"
 #include "parser/parser.cpp"
 #include "parser/head.h"
+#include "evaluator/head.h"
 
 #include "rapidjson/include/rapidjson/document.h"
 #include "rapidjson/include/rapidjson/writer.h"
@@ -65,7 +66,7 @@ public:
         tokens.insert(tokens.end(), new_tokens.begin(), new_tokens.end());
         if (bracketStatus == 0) // 前后括号相等
         {
-            std::cout << "return the tokens" << std::endl;
+            //std::cout << "return the tokens" << std::endl;
             for (auto token : tokens)
             {
                 std::cout << token.toString();
@@ -83,12 +84,27 @@ public:
         {
             rapidjson::Document root;
             root.SetObject();
-            std::cout << "analyzing the statement" << std::endl;
+            //std::cout << "analyzing the statement" << std::endl;
 
             parser.new_sentence(tokens.begin(), tokens.end());
             parser.parse_program();
             tokens.clear();
 
+            auto program = parser.m_program;
+            auto errors = parser.errors();
+            if (!errors.empty())
+            {
+                for (auto error : errors)
+                {
+                    std::cout << error << std::endl;
+                }
+            }
+            Evaluator evaluator;
+            auto evaluated = evaluator.eval(program);
+            if (evaluated)
+            {
+                std::cout<<evaluated->str()<<std::endl;
+            }
 
             root.AddMember("program", parser.m_program->json(root), root.GetAllocator());
             rapidjson::StringBuffer buffer;
