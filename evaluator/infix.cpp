@@ -41,6 +41,11 @@ std::shared_ptr<Object> Evaluator::eval_integer_infix_expression(const TokenType
         std::shared_ptr<Ob_Integer> s(new Ob_Integer(l->m_value / r->m_value));
         return s;
     }
+    else if (op == TokenType::PERCENT)
+    {
+        std::shared_ptr<Ob_Integer> s(new Ob_Integer(l->m_value % r->m_value));
+        return s;
+    }
     else
     {
         return new_error("unknown operator: %s %s %s", left->name().c_str(), "operator", right->name().c_str());

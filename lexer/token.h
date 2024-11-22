@@ -48,8 +48,7 @@ enum TokenType
     // Literals.
     IDENTIFIER, // a
     STRING,     //"a"
-    INTEGER,     // 1
-    //INTEGER,
+    INTEGER,    // 1
 
     // Keywords.
     AND,       // and
@@ -187,7 +186,7 @@ public:
         }
 
         // 将 Token 的信息拼接成字符串
-        return std::string("[") + TokenTypeToString[type] + " " + lexeme + " " + literalStr + "]";
+        return std::string("[") + std::to_string(type) + ": " + TokenTypeToString[type] + " " + lexeme + " " + literalStr + "]";
     }
     long long literalToLonglong()
     {

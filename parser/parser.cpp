@@ -6,7 +6,7 @@ std::map<TokenType, int> Parser::m_precedences =
         {TokenType::MINUS, SUM},
         {TokenType::STAR, PRODUCT},
         {TokenType::SLASH, PRODUCT},
-};
+        {TokenType::PERCENT, PRODUCT}};
 std::map<TokenType, Parser::prefix_parse_fn> Parser::m_prefix_parse_fns =
     {
         {TokenType::INTEGER, &Parser::parse_integer},
@@ -20,6 +20,7 @@ std::map<TokenType, Parser::infix_parse_fn> Parser::m_infix_parse_fns =
         {TokenType::MINUS, &Parser::parse_infix},
         {TokenType::STAR, &Parser::parse_infix},
         {TokenType::SLASH, &Parser::parse_infix},
+        {TokenType::PERCENT, &Parser::parse_infix},
 };
 
 void Parser::next_token() // 读取下一个token
