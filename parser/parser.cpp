@@ -6,7 +6,9 @@ std::map<TokenType, int> Parser::m_precedences =
         {TokenType::MINUS, SUM},
         {TokenType::STAR, PRODUCT},
         {TokenType::SLASH, PRODUCT},
-        {TokenType::PERCENT, PRODUCT}};
+        {TokenType::PERCENT, PRODUCT},
+        {TokenType::SLASH_SLASH, PRODUCT},
+};
 std::map<TokenType, Parser::prefix_parse_fn> Parser::m_prefix_parse_fns =
     {
         {TokenType::INTEGER, &Parser::parse_integer},
