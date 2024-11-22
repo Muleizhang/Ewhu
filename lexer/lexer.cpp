@@ -103,7 +103,15 @@ void Lexer::scanToken(char inpt)
         addToken(PLUS);
         break;
     case '/':
-        addToken(SLASH);
+        if (nextChar() == '/')
+        {
+            addToken(SLASH_SLASH);
+        }
+        else
+        {
+            current--;
+            addToken(SLASH);
+        }
         break;
     case '\\':
         addToken(BACK_SLASH);

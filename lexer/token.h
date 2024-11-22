@@ -27,6 +27,7 @@ enum TokenType
     MINUS,         // -
     PLUS,          // +
     SLASH,         // /
+    SLASH_SLASH,   // //
     BACK_SLASH,    // '\'
     STAR,          // *
     HASH,          // #
@@ -96,6 +97,7 @@ static std::map<TokenType, std::string> TokenTypeToString = {
     {TokenType::MINUS, "MINUS"},
     {TokenType::PLUS, "PLUS"},
     {TokenType::SLASH, "SLASH"},
+    {TokenType::SLASH_SLASH, "SLASH_SLASH"},
     {TokenType::BACK_SLASH, "BACK_SLASH"},
     {TokenType::STAR, "STAR"},
     {TokenType::HASH, "HASH"},

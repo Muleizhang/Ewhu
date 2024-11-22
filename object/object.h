@@ -10,12 +10,13 @@ public:
     {
         OBJECT_ERROR = 0,
         OBJECT_INTEGER,
+        OBJECT_FRACTION,
     };
 
 public:
     Object() {}
     Object(Type type) : m_type(type) {}
-    virtual ~Object(){};
+    virtual ~Object() {};
 
     Type type() const { return m_type; }
     std::string name() const;
@@ -23,6 +24,7 @@ public:
 
     static std::shared_ptr<Object> new_error(const char *format, ...);
     static std::shared_ptr<Object> new_integer(__INT64_TYPE__ value);
+    static std::shared_ptr<Object> new_fraction(__INT64_TYPE__ numerator, __INT64_TYPE__ denominator);
 
 protected:
     Type m_type;

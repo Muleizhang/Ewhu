@@ -1,12 +1,14 @@
 #pragma once
 #include "object.h"
 #include "integer.h"
+#include "fraction.h"
 #include "error.h"
 #include <string>
 #include <stdarg.h>
 std::map<Object::Type, std::string> Object::m_names = {
     {Object::OBJECT_ERROR, "error"},
     {Object::OBJECT_INTEGER, "integer"},
+    {Object::OBJECT_FRACTION, "fraction"},
 };
 
 std::string Object::name() const
@@ -35,5 +37,11 @@ std::shared_ptr<Object> new_error(const char *format, ...)
 std::shared_ptr<Object> Object::new_integer(__INT64_TYPE__ value)
 {
     std::shared_ptr<Ob_Integer> e(new Ob_Integer(value));
+    return e;
+}
+
+std::shared_ptr<Object> Object::new_fraction(__INT64_TYPE__ numerator, __INT64_TYPE__ denominator)
+{
+    std::shared_ptr<Ob_Fraction> e(new Ob_Fraction(numerator, denominator));
     return e;
 }
