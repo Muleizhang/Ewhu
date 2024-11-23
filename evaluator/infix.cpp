@@ -42,6 +42,11 @@ std::shared_ptr<Object> Evaluator::eval_integer_infix_expression(const TokenType
     }
     else if (op == TokenType::SLASH)
     {
+        std::shared_ptr<Ob_Fraction> s(new Ob_Fraction(l->m_value, r->m_value));
+        return s;
+    }
+    else if (op == TokenType::SLASH_SLASH)
+    {
         std::shared_ptr<Ob_Integer> s(new Ob_Integer(l->m_value / r->m_value));
         return s;
     }
@@ -52,7 +57,39 @@ std::shared_ptr<Object> Evaluator::eval_integer_infix_expression(const TokenType
     }
     else if (op == TokenType::DOT) // 分数
     {
-        std::shared_ptr<Ob_Fraction> s(new Ob_Fraction(l->m_value, r->m_value));
+        // 小数用分数表达
+        std::shared_ptr<Ob_Fraction> s =
+            std::make_shared<Ob_Fraction>(Ob_Fraction::decimalToFraction(l->m_value, r->m_value));
+        return s;
+    }
+    else if (op == TokenType::EQUAL_EQUAL)
+    {
+        std::shared_ptr<Ob_Integer> s(new Ob_Integer(l->m_value == r->m_value));
+        return s;
+    }
+    else if (op == TokenType::BANG_EQUAL)
+    {
+        std::shared_ptr<Ob_Integer> s(new Ob_Integer(l->m_value != r->m_value));
+        return s;
+    }
+    else if (op == TokenType::LESS)
+    {
+        std::shared_ptr<Ob_Integer> s(new Ob_Integer(l->m_value < r->m_value));
+        return s;
+    }
+    else if (op == TokenType::GREATER)
+    {
+        std::shared_ptr<Ob_Integer> s(new Ob_Integer(l->m_value > r->m_value));
+        return s;
+    }
+    else if (op == TokenType::LESS_EQUAL)
+    {
+        std::shared_ptr<Ob_Integer> s(new Ob_Integer(l->m_value <= r->m_value));
+        return s;
+    }
+    else if (op == TokenType::GREATER_EQUAL)
+    {
+        std::shared_ptr<Ob_Integer> s(new Ob_Integer(l->m_value >= r->m_value));
         return s;
     }
     else
@@ -67,32 +104,32 @@ std::shared_ptr<Object> Evaluator::eval_fraction_infix_expression(const TokenTyp
     auto r = std::dynamic_pointer_cast<Ob_Fraction>(right);
     if (op == TokenType::PLUS)
     {
-        std::shared_ptr<Ob_Fraction> s(new Ob_Fraction(l->m_numerator * r->m_denominator + r->m_numerator * l->m_denominator,
-                                                       l->m_denominator * r->m_denominator));
+        std::shared_ptr<Ob_Fraction> s =
+            std::make_shared<Ob_Fraction>(Ob_Fraction::add(l, r));
         return s;
     }
     else if (op == TokenType::MINUS)
     {
-        std::shared_ptr<Ob_Fraction> s(new Ob_Fraction(l->m_numerator * r->m_denominator - r->m_numerator * l->m_denominator,
-                                                       l->m_denominator * r->m_denominator));
+        std::shared_ptr<Ob_Fraction> s =
+            std::make_shared<Ob_Fraction>(Ob_Fraction::sub(l, r));
         return s;
     }
     else if (op == TokenType::STAR)
     {
-        std::shared_ptr<Ob_Fraction> s(new Ob_Fraction(l->m_numerator * r->m_numerator, l->m_denominator * r->m_denominator));
+        std::shared_ptr<Ob_Fraction> s =
+            std::make_shared<Ob_Fraction>(Ob_Fraction::mul(l, r));
         return s;
     }
     else if (op == TokenType::SLASH)
     {
-        std::shared_ptr<Ob_Fraction> s(new Ob_Fraction(l->m_numerator * r->m_denominator, l->m_denominator * r->m_numerator));
+        std::shared_ptr<Ob_Fraction> s =
+            std::make_shared<Ob_Fraction>(Ob_Fraction::div(l, r));
         return s;
     }
     else if (op == TokenType::PERCENT)
     {
-        // 分数取余操作
-        int numerator = (l->m_numerator * r->m_denominator) % (l->m_denominator * r->m_numerator);
-        int denominator = l->m_denominator * r->m_denominator;
-        std::shared_ptr<Ob_Fraction> s(new Ob_Fraction(numerator, denominator));
+        std::shared_ptr<Ob_Fraction> s =
+            std::make_shared<Ob_Fraction>(Ob_Fraction::mod(l, r));
         return s;
     }
     else

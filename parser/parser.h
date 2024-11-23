@@ -12,9 +12,11 @@ public:
     enum Precedence
     {
         LOWEST = 0,
+        EQUALS,   // == != > < >= <=
         SUM,      // 加减
         PRE_SIGN, // 前缀正号负号
         PRODUCT,  // 乘除
+        DOT,      // 小数
     };
 
     Parser();
