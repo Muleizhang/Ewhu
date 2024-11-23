@@ -4,19 +4,19 @@
 std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, const std::shared_ptr<Object> &left,
                                               const std::shared_ptr<Object> &right) // 中缀表达式求值
 {
-    switch (left->type())
-    {
-    case Object::OBJECT_INTEGER:
-        if (right->type() == Object::OBJECT_INTEGER)
-            return eval_integer_infix_expression(op, left, right); // 整数与整数的运算
-        break;
-    case Object::OBJECT_FRACTION:
-        if (right->type() == Object::OBJECT_FRACTION)
-            return eval_fraction_infix_expression(op, left, right); // 分数与分数的运算
-        break;
-    default:
-        break;
-    }
+    // 整数与整数的运算
+    if (left->type() == Object::OBJECT_INTEGER && right->type() == Object::OBJECT_INTEGER)
+        return eval_integer_infix_expression(op, left, right);
+    // 分数的运算
+    if (left->type() == Object::OBJECT_FRACTION && right->type() == Object::OBJECT_FRACTION)
+        return eval_fraction_infix_expression(op, left, right);
+    // 分数与整数的运算
+    if (left->type() == Object::OBJECT_FRACTION && right->type() == Object::OBJECT_INTEGER)
+        return eval_fraction_infix_expression(op, left, std::make_shared<Ob_Fraction>(std::dynamic_pointer_cast<Ob_Integer>(right)->m_value, 1));
+    // 整数与分数的运算
+    if (left->type() == Object::OBJECT_INTEGER && right->type() == Object::OBJECT_FRACTION)
+        return eval_fraction_infix_expression(op, std::make_shared<Ob_Fraction>(std::dynamic_pointer_cast<Ob_Integer>(left)->m_value, 1), right);
+
     return new_error("unknown operator: %s %s %s", left->name().c_str(), "operator", right->name().c_str());
 }
 

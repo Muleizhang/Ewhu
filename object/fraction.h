@@ -6,12 +6,24 @@
 class Ob_Fraction : public Object
 {
 public:
-    Ob_Fraction() : Object(Object::OBJECT_FRACTION), m_numerator(0), m_denominator(1) {}
-    Ob_Fraction(__INT64_TYPE__ numerator, __INT64_TYPE__ denominator) : Object(Object::OBJECT_FRACTION), m_numerator(numerator), m_denominator(denominator)
+    Ob_Fraction() : Object(Object::OBJECT_FRACTION), m_integerPart(0), m_numerator(0), m_denominator(1) {}
+    Ob_Fraction(__INT64_TYPE__ numerator, __INT64_TYPE__ denominator) : Object(Object::OBJECT_FRACTION), m_integerPart(0), m_numerator(numerator), m_denominator(denominator)
     {
         simplify();
     }
     ~Ob_Fraction() {}
+
+    static Ob_Fraction simplify(const Ob_Fraction &fraction)
+    {
+        __INT64_TYPE__ gcd = std::gcd(fraction.m_numerator, fraction.m_denominator);
+        return Ob_Fraction(fraction.m_numerator / gcd, fraction.m_denominator / gcd);
+    }
+    void simplify()
+    {
+        __INT64_TYPE__ gcd = std::gcd(m_numerator, m_denominator);
+        m_numerator /= gcd;
+        m_denominator /= gcd;
+    }
 
     virtual std::string realStr() const
     {
@@ -20,7 +32,17 @@ public:
 
     virtual std::string str() const
     {
-        return std::to_string(m_numerator / m_denominator) + "(" + std::to_string(m_numerator % m_denominator) + "/" + std::to_string(m_denominator) + ")";
+        __INT64_TYPE__ integerPart = m_numerator / m_denominator;
+        if (integerPart == 0)
+        {
+            return std::to_string(m_numerator) + "/" + std::to_string(m_denominator);
+        }
+        __INT64_TYPE__ decimalPart = m_numerator % m_denominator;
+        if (decimalPart == 0)
+        {
+            return std::to_string(integerPart);
+        }
+        return std::to_string(integerPart) + "(" + std::to_string(decimalPart) + "/" + std::to_string(m_denominator) + ")";
     }
 
     static Ob_Fraction add(const std::shared_ptr<Ob_Fraction> &left, const std::shared_ptr<Ob_Fraction> &right)
@@ -47,17 +69,7 @@ public:
         __INT64_TYPE__ denominator = left->m_denominator * right->m_denominator;
         return simplify(Ob_Fraction(numerator, denominator));
     }
-    static Ob_Fraction simplify(const Ob_Fraction &fraction)
-    {
-        __INT64_TYPE__ gcd = std::gcd(fraction.m_numerator, fraction.m_denominator);
-        return Ob_Fraction(fraction.m_numerator / gcd, fraction.m_denominator / gcd);
-    }
-    void simplify()
-    {
-        __INT64_TYPE__ gcd = std::gcd(m_numerator, m_denominator);
-        m_numerator /= gcd;
-        m_denominator /= gcd;
-    }
+
     static Ob_Fraction decimalToFraction(__INT64_TYPE__ integerPart, __INT64_TYPE__ decimalPart)
     {
 
@@ -83,6 +95,7 @@ public:
     }
 
 public:
+    __INT64_TYPE__ m_integerPart;
     __INT64_TYPE__ m_numerator;
     __INT64_TYPE__ m_denominator;
 };

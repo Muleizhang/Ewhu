@@ -2,19 +2,22 @@
 #include "parser.h"
 std::map<TokenType, int> Parser::m_precedences =
     {
-        {TokenType::DOT, DOT},
-        {TokenType::PLUS, SUM},
-        {TokenType::MINUS, SUM},
-        {TokenType::STAR, PRODUCT},
-        {TokenType::SLASH, PRODUCT},
-        {TokenType::PERCENT, PRODUCT},
-        {TokenType::SLASH_SLASH, PRODUCT},
         {TokenType::EQUAL_EQUAL, EQUALS},
         {TokenType::BANG_EQUAL, EQUALS},
         {TokenType::LESS, EQUALS},
         {TokenType::GREATER, EQUALS},
         {TokenType::LESS_EQUAL, EQUALS},
         {TokenType::GREATER_EQUAL, EQUALS},
+
+        {TokenType::MINUS, SUM},
+        {TokenType::PLUS, SUM},
+
+        {TokenType::STAR, PRODUCT},
+        {TokenType::SLASH, PRODUCT},
+        {TokenType::PERCENT, PRODUCT},
+        {TokenType::SLASH_SLASH, PRODUCT},
+
+        {TokenType::DOT, DOT},
 };
 std::map<TokenType, Parser::prefix_parse_fn> Parser::m_prefix_parse_fns =
     {
