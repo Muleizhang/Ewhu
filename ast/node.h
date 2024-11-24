@@ -13,7 +13,7 @@ public:
         NODE_INTEGER = 0,
         NODE_FLOAT,
         NODE_STRING,
-        NODE_BINARY,
+        NODE_BOOLEAN,
         NODE_INFIX,
         NODE_PREFIX,
         NODE_IDENTIFIER,

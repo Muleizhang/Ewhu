@@ -9,6 +9,10 @@ public:
     Ob_Fraction() : Object(Object::OBJECT_FRACTION), m_integerPart(0), m_numerator(0), m_denominator(1) {}
     Ob_Fraction(__INT64_TYPE__ numerator, __INT64_TYPE__ denominator) : Object(Object::OBJECT_FRACTION), m_integerPart(0), m_numerator(numerator), m_denominator(denominator)
     {
+        if (denominator == 0)
+        {
+            throw std::runtime_error("Denominator cannot be zero");
+        }
         simplify();
     }
     ~Ob_Fraction() {}

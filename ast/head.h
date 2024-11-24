@@ -3,6 +3,7 @@
 #include "expression_statement.h"
 #include "identifier.h"
 #include "integer.h"
+#include "boolean.h"
 #include "infix.h"
 #include "prefix.h"
 #include "program.h"

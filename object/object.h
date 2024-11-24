@@ -9,6 +9,7 @@ public:
     enum Type
     {
         OBJECT_ERROR = 0,
+        OBJECT_BOOLEAN,    // 布尔值
         OBJECT_INTEGER,    // 整数
         OBJECT_FRACTION,   // 分数
         OBJECT_IDENTIFIER, // 标识符
@@ -25,6 +26,7 @@ public:
     virtual std::string str() const = 0;
 
     static std::shared_ptr<Object> new_error(const char *format, ...);
+    static std::shared_ptr<Object> new_boolean(bool value);
     static std::shared_ptr<Object> new_integer(__INT64_TYPE__ value);
     static std::shared_ptr<Object> new_fraction(__INT64_TYPE__ numerator, __INT64_TYPE__ denominator);
     static std::shared_ptr<Object> new_identifier(const std::string &value);

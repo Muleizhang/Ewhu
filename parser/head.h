@@ -1,4 +1,5 @@
 #include "program.cpp"
+#include "boolean.cpp"
 #include "integer.cpp"
 #include "identifier.cpp"
 #include "group.cpp"

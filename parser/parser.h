@@ -2,6 +2,7 @@
 #include "../lexer/lexer.h"
 #include "../lexer/token.h"
 #include "../ast/integer.h"
+#include "../ast/boolean.h"
 #include "../ast/identifier.h"
 #include "../ast/expression_statement.h"
 #include "../ast/program.h"
@@ -46,6 +47,7 @@ public:
 
     // 前缀
     std::shared_ptr<Expression> parse_integer();
+    std::shared_ptr<Expression> parse_boolean();
     std::shared_ptr<Expression> parse_group();
     std::shared_ptr<Expression> parse_prefix();
     std::shared_ptr<Expression> parse_identifier();

@@ -5,7 +5,7 @@ std::map<Node::Type, std::string> Node::m_names = {
     {Node::NODE_INTEGER, "Integer"},
     {Node::NODE_FLOAT, "Float"},
     {Node::NODE_STRING, "String"},
-    {Node::NODE_BINARY, "Binary"},
+    {Node::NODE_BOOLEAN, "Boolean"},
     {Node::NODE_INFIX, "Infix"},
     {Node::NODE_IDENTIFIER, "Identifier"},
     {Node::NODE_EXPRESSION_STATEMENT, "ExpressionStatement"},

@@ -50,6 +50,11 @@ std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node)
         auto e = std::dynamic_pointer_cast<Identifier>(node);
         return eval_identifier(e);
     }
+    case Node::NODE_BOOLEAN:
+    {
+        auto e = std::dynamic_pointer_cast<Boolean>(node);
+        return Object::new_boolean(e->m_value);
+    }
     case Node::NODE_INTEGER:
     {
         auto e = std::dynamic_pointer_cast<Integer>(node);
