@@ -3,5 +3,6 @@
 #include "infix.cpp"
 #include "integer.cpp"
 #include "fraction.cpp"
+#include "identifier.cpp"
 #include "program.cpp"
 #include "prefix.cpp"

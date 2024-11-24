@@ -4,20 +4,25 @@
 std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, const std::shared_ptr<Object> &left,
                                               const std::shared_ptr<Object> &right) // 中缀表达式求值
 {
-    // 整数与整数的运算
+    // assign
+    if (op == TokenType::EQUAL)
+    {
+        return eval_assign_expression(left, right);
+    }
+    // int op int
     if (left->type() == Object::OBJECT_INTEGER && right->type() == Object::OBJECT_INTEGER)
         return eval_integer_infix_expression(op, left, right);
-    // 分数的运算
+    // fraction op fraction
     if (left->type() == Object::OBJECT_FRACTION && right->type() == Object::OBJECT_FRACTION)
         return eval_fraction_infix_expression(op, left, right);
-    // 分数与整数的运算
+    // int op fraction
     if (left->type() == Object::OBJECT_FRACTION && right->type() == Object::OBJECT_INTEGER)
         return eval_fraction_infix_expression(op, left, std::make_shared<Ob_Fraction>(std::dynamic_pointer_cast<Ob_Integer>(right)->m_value, 1));
-    // 整数与分数的运算
+    // fraction op int
     if (left->type() == Object::OBJECT_INTEGER && right->type() == Object::OBJECT_FRACTION)
         return eval_fraction_infix_expression(op, std::make_shared<Ob_Fraction>(std::dynamic_pointer_cast<Ob_Integer>(left)->m_value, 1), right);
 
-    return new_error("unknown operator: %s %s %s", left->name().c_str(), "operator", right->name().c_str());
+    return new_error("Evaluator::eval_infix unknown operation: %s %s %s", left->name().c_str(), TokenTypeToString[op].c_str(), right->name().c_str());
 }
 
 std::shared_ptr<Object> Evaluator::eval_integer_infix_expression(const TokenType &op, const std::shared_ptr<Object> &left,
@@ -27,75 +32,58 @@ std::shared_ptr<Object> Evaluator::eval_integer_infix_expression(const TokenType
     auto r = std::dynamic_pointer_cast<Ob_Integer>(right);
     if (op == TokenType::PLUS)
     {
-        std::shared_ptr<Ob_Integer> s(new Ob_Integer(l->m_value + r->m_value));
-        return s;
+        return std::make_shared<Ob_Integer>(l->m_value + r->m_value);
     }
-    else if (op == TokenType::MINUS)
+    if (op == TokenType::MINUS)
     {
-        std::shared_ptr<Ob_Integer> s(new Ob_Integer(l->m_value - r->m_value));
-        return s;
+        return std::make_shared<Ob_Integer>(l->m_value - r->m_value);
     }
-    else if (op == TokenType::STAR)
+    if (op == TokenType::STAR)
     {
-        std::shared_ptr<Ob_Integer> s(new Ob_Integer(l->m_value * r->m_value));
-        return s;
+        return std::make_shared<Ob_Integer>(l->m_value * r->m_value);
     }
-    else if (op == TokenType::SLASH)
+    if (op == TokenType::SLASH)
     {
-        std::shared_ptr<Ob_Fraction> s(new Ob_Fraction(l->m_value, r->m_value));
-        return s;
+        return std::make_shared<Ob_Fraction>(l->m_value, r->m_value);
     }
-    else if (op == TokenType::SLASH_SLASH)
+    if (op == TokenType::SLASH_SLASH)
     {
-        std::shared_ptr<Ob_Integer> s(new Ob_Integer(l->m_value / r->m_value));
-        return s;
+        return std::make_shared<Ob_Integer>(l->m_value / r->m_value);
     }
-    else if (op == TokenType::PERCENT)
+    if (op == TokenType::PERCENT)
     {
-        std::shared_ptr<Ob_Integer> s(new Ob_Integer(l->m_value % r->m_value));
-        return s;
+        return std::make_shared<Ob_Integer>(l->m_value % r->m_value);
     }
-    else if (op == TokenType::DOT) // 分数
+    if (op == TokenType::DOT) // 分数
     {
-        // 小数用分数表达
-        std::shared_ptr<Ob_Fraction> s =
-            std::make_shared<Ob_Fraction>(Ob_Fraction::decimalToFraction(l->m_value, r->m_value));
-        return s;
+        return std::make_shared<Ob_Fraction>(Ob_Fraction::decimalToFraction(l->m_value, r->m_value));
     }
-    else if (op == TokenType::EQUAL_EQUAL)
+    if (op == TokenType::EQUAL_EQUAL)
     {
-        std::shared_ptr<Ob_Integer> s(new Ob_Integer(l->m_value == r->m_value));
-        return s;
+        return std::make_shared<Ob_Integer>(l->m_value == r->m_value);
     }
-    else if (op == TokenType::BANG_EQUAL)
+    if (op == TokenType::BANG_EQUAL)
     {
-        std::shared_ptr<Ob_Integer> s(new Ob_Integer(l->m_value != r->m_value));
-        return s;
+        return std::make_shared<Ob_Integer>(l->m_value != r->m_value);
     }
-    else if (op == TokenType::LESS)
+    if (op == TokenType::LESS)
     {
-        std::shared_ptr<Ob_Integer> s(new Ob_Integer(l->m_value < r->m_value));
-        return s;
+        return std::make_shared<Ob_Integer>(l->m_value < r->m_value);
     }
-    else if (op == TokenType::GREATER)
+    if (op == TokenType::GREATER)
     {
-        std::shared_ptr<Ob_Integer> s(new Ob_Integer(l->m_value > r->m_value));
-        return s;
+        return std::make_shared<Ob_Integer>(l->m_value > r->m_value);
     }
-    else if (op == TokenType::LESS_EQUAL)
+    if (op == TokenType::LESS_EQUAL)
     {
-        std::shared_ptr<Ob_Integer> s(new Ob_Integer(l->m_value <= r->m_value));
-        return s;
+        return std::make_shared<Ob_Integer>(l->m_value <= r->m_value);
     }
-    else if (op == TokenType::GREATER_EQUAL)
+    if (op == TokenType::GREATER_EQUAL)
     {
-        std::shared_ptr<Ob_Integer> s(new Ob_Integer(l->m_value >= r->m_value));
-        return s;
+        return std::make_shared<Ob_Integer>(l->m_value >= r->m_value);
     }
-    else
-    {
-        return new_error("unknown operator: %s %s %s", left->name().c_str(), "operator", right->name().c_str());
-    }
+
+    return new_error("Evaluator::eval_integer_infix_expression unknown operation: %s %s %s", left->name().c_str(), TokenTypeToString[op].c_str(), right->name().c_str());
 }
 std::shared_ptr<Object> Evaluator::eval_fraction_infix_expression(const TokenType &op, const std::shared_ptr<Object> &left,
                                                                   const std::shared_ptr<Object> &right)
@@ -104,36 +92,29 @@ std::shared_ptr<Object> Evaluator::eval_fraction_infix_expression(const TokenTyp
     auto r = std::dynamic_pointer_cast<Ob_Fraction>(right);
     if (op == TokenType::PLUS)
     {
-        std::shared_ptr<Ob_Fraction> s =
-            std::make_shared<Ob_Fraction>(Ob_Fraction::add(l, r));
-        return s;
+        return std::make_shared<Ob_Fraction>(Ob_Fraction::add(l, r));
     }
-    else if (op == TokenType::MINUS)
+    if (op == TokenType::MINUS)
     {
-        std::shared_ptr<Ob_Fraction> s =
-            std::make_shared<Ob_Fraction>(Ob_Fraction::sub(l, r));
-        return s;
+        return std::make_shared<Ob_Fraction>(Ob_Fraction::sub(l, r));
     }
-    else if (op == TokenType::STAR)
+    if (op == TokenType::STAR)
     {
-        std::shared_ptr<Ob_Fraction> s =
-            std::make_shared<Ob_Fraction>(Ob_Fraction::mul(l, r));
-        return s;
+        return std::make_shared<Ob_Fraction>(Ob_Fraction::mul(l, r));
     }
-    else if (op == TokenType::SLASH)
+    if (op == TokenType::SLASH)
     {
-        std::shared_ptr<Ob_Fraction> s =
-            std::make_shared<Ob_Fraction>(Ob_Fraction::div(l, r));
-        return s;
+        return std::make_shared<Ob_Fraction>(Ob_Fraction::div(l, r));
     }
-    else if (op == TokenType::PERCENT)
+    if (op == TokenType::PERCENT)
     {
-        std::shared_ptr<Ob_Fraction> s =
-            std::make_shared<Ob_Fraction>(Ob_Fraction::mod(l, r));
-        return s;
+        return std::make_shared<Ob_Fraction>(Ob_Fraction::mod(l, r));
     }
-    else
-    {
-        return new_error("unknown operator: %s %s %s", left->name().c_str(), "operator", right->name().c_str());
-    }
+
+    return new_error("Evaluator::eval_fraction_infix_expression unknown operation: %s %s %s", left->name().c_str(), TokenTypeToString[op].c_str(), right->name().c_str());
+}
+std::shared_ptr<Object> Evaluator::eval_assign_expression(const std::shared_ptr<Object> &name, const std::shared_ptr<Object> &value)
+{
+    std::cout << "eval_assign_expression: " << name->str() << " = " << value->str() << std::endl;
+    return value;
 }

@@ -34,7 +34,7 @@ std::shared_ptr<Object> Evaluator::eval_integer_prefix_expression(const TokenTyp
     }
     else
     {
-        return new_error("Evaluator: unknown operator: %s %s", "operator", right->name().c_str());
+        return new_error("Evaluator::eval_integer_prefix_expression unknown operator: %s %s", TokenTypeToString[op], right->name().c_str());
     }
 }
 

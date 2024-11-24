@@ -13,27 +13,16 @@ public:
         rapidjson::Value json(rapidjson::kObjectType);
         std::string *typeStr = new std::string;
         *typeStr = name();
-        switch (m_operator)
+        if (TokenTypeToString.find(m_operator) == TokenTypeToString.end())
         {
-        case TokenType::PLUS:
-            json.AddMember("operator", "+", father.GetAllocator());
-            break;
-        case TokenType::MINUS:
-            json.AddMember("operator", "-", father.GetAllocator());
-            break;
-        case TokenType::STAR:
-            json.AddMember("operator", "*", father.GetAllocator());
-            break;
-        case TokenType::SLASH:
-            json.AddMember("operator", "/", father.GetAllocator());
-            break;
-        default:
             json.AddMember("operator", "err", father.GetAllocator());
-            break;
+        }
+        else
+        {
+            json.AddMember("operator", rapidjson::StringRef(TokenTypeToString[m_operator].c_str()), father.GetAllocator());
         }
 
         json.AddMember("type", rapidjson::StringRef(typeStr->c_str()), father.GetAllocator());
-
         json.AddMember("left", m_left->json(father), father.GetAllocator());
         json.AddMember("right", m_right->json(father), father.GetAllocator());
         return json;

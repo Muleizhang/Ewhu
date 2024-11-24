@@ -2,6 +2,8 @@
 #include "parser.h"
 std::map<TokenType, int> Parser::m_precedences =
     {
+        {TokenType::EQUAL, ASSIGN},
+
         {TokenType::EQUAL_EQUAL, EQUALS},
         {TokenType::BANG_EQUAL, EQUALS},
         {TokenType::LESS, EQUALS},
@@ -25,6 +27,8 @@ std::map<TokenType, Parser::prefix_parse_fn> Parser::m_prefix_parse_fns =
         {TokenType::LEFT_PAREN, &Parser::parse_group},
         {TokenType::PLUS, &Parser::parse_prefix},
         {TokenType::MINUS, &Parser::parse_prefix},
+        {TokenType::BANG, &Parser::parse_prefix},
+        {TokenType::IDENTIFIER, &Parser::parse_identifier},
 };
 std::map<TokenType, Parser::infix_parse_fn> Parser::m_infix_parse_fns =
     {
@@ -34,13 +38,17 @@ std::map<TokenType, Parser::infix_parse_fn> Parser::m_infix_parse_fns =
         {TokenType::SLASH, &Parser::parse_infix},
         {TokenType::SLASH_SLASH, &Parser::parse_infix},
         {TokenType::PERCENT, &Parser::parse_infix},
+
         {TokenType::EQUAL_EQUAL, &Parser::parse_infix},
         {TokenType::BANG_EQUAL, &Parser::parse_infix},
         {TokenType::LESS, &Parser::parse_infix},
         {TokenType::GREATER, &Parser::parse_infix},
         {TokenType::LESS_EQUAL, &Parser::parse_infix},
         {TokenType::GREATER_EQUAL, &Parser::parse_infix},
+
         {TokenType::DOT, &Parser::parse_infix},
+
+        {TokenType::EQUAL, &Parser::parse_infix},
 
 };
 
@@ -121,7 +129,7 @@ int Parser::peek_token_precedence()
 void Parser::no_prefix_parse_fn_error(TokenType type)
 {
     std::ostringstream oss;
-    oss << "Parser: no prefix function for " << type;
+    oss << "Parser: no prefix function for " << TokenTypeToString[type] << " found";
     m_errors.push_back(oss.str());
 }
 

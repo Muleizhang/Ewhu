@@ -23,7 +23,14 @@ std::shared_ptr<Object> Evaluator::new_integer(__INT64_TYPE__ value)
 {
     return Object::new_integer(value);
 }
-
+std::shared_ptr<Object> Evaluator::new_fraction(__INT64_TYPE__ numerator, __INT64_TYPE__ denominator)
+{
+    return Object::new_fraction(numerator, denominator);
+}
+std::shared_ptr<Object> Evaluator::new_identifier(const std::string &value)
+{
+    return Object::new_identifier(value);
+}
 std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node)
 {
     switch (node->type())
@@ -37,6 +44,11 @@ std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node)
     {
         auto s = std::dynamic_pointer_cast<ExpressionStatement>(node);
         return eval(s->m_expression);
+    }
+    case Node::NODE_IDENTIFIER:
+    {
+        auto e = std::dynamic_pointer_cast<Identifier>(node);
+        return eval_identifier(e);
     }
     case Node::NODE_INTEGER:
     {
@@ -66,7 +78,7 @@ std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node)
     }
     default:
     {
-        return new_error("node type error");
+        return new_error("Evaluator: node type error");
         break; // error
     }
     }
