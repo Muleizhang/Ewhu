@@ -1,6 +1,7 @@
 #pragma once
 #include "node.h"
 #include "expression_statement.h"
+#include "identifier.h"
 #include "integer.h"
 #include "infix.h"
 #include "prefix.h"

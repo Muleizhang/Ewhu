@@ -66,7 +66,7 @@ public:
         tokens.insert(tokens.end(), new_tokens.begin(), new_tokens.end());
         if (bracketStatus == 0) // 前后括号相等
         {
-            //std::cout << "return the tokens" << std::endl;
+            // std::cout << "return the tokens" << std::endl;
             for (auto token : tokens)
             {
                 std::cout << token.toString();
@@ -84,7 +84,7 @@ public:
         {
             rapidjson::Document root;
             root.SetObject();
-            //std::cout << "analyzing the statement" << std::endl;
+            // std::cout << "analyzing the statement" << std::endl;
 
             parser.new_sentence(tokens.begin(), tokens.end());
             parser.parse_program();
@@ -99,12 +99,6 @@ public:
                     std::cout << error << std::endl;
                 }
             }
-            Evaluator evaluator;
-            auto evaluated = evaluator.eval(program);
-            if (evaluated)
-            {
-                std::cout<<evaluated->str()<<std::endl;
-            }
 
             root.AddMember("program", parser.m_program->json(root), root.GetAllocator());
             rapidjson::StringBuffer buffer;
@@ -113,6 +107,13 @@ public:
             std::ofstream ofs("ast.json");
             ofs << buffer.GetString();
             ofs.close();
+
+            Evaluator evaluator;
+            auto evaluated = evaluator.eval(program);
+            if (evaluated)
+            {
+                std::cout << evaluated->str() << std::endl;
+            }
         }
     }
 };

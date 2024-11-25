@@ -2,6 +2,7 @@
 #include "../lexer/lexer.h"
 #include "../lexer/token.h"
 #include "../ast/integer.h"
+#include "../ast/identifier.h"
 #include "../ast/expression_statement.h"
 #include "../ast/program.h"
 #include "../ast/infix.h"
@@ -12,9 +13,12 @@ public:
     enum Precedence
     {
         LOWEST = 0,
+        ASSIGN,   // =
+        EQUALS,   // == != > < >= <=
         SUM,      // 加减
         PRE_SIGN, // 前缀正号负号
         PRODUCT,  // 乘除
+        DOT,      // 小数
     };
 
     Parser();
@@ -44,6 +48,7 @@ public:
     std::shared_ptr<Expression> parse_integer();
     std::shared_ptr<Expression> parse_group();
     std::shared_ptr<Expression> parse_prefix();
+    std::shared_ptr<Expression> parse_identifier();
     // 中缀
     std::shared_ptr<Expression> parse_infix(const std::shared_ptr<Expression> &left);
 

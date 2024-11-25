@@ -9,10 +9,14 @@ std::shared_ptr<Object> Evaluator::eval_prefix(const TokenType &op, const std::s
     {
         return eval_integer_prefix_expression(op, right);
     }
+    case Object::OBJECT_FRACTION:
+    {
+        return eval_fraction_prefix_expression(op, right);
+    }
     default:
         break;
     }
-    return new_error("unknown operator: %s %s", "operator", right->name().c_str());
+    return new_error("Evaluator: unknown operator: %s %s", "operator", right->name().c_str());
 }
 
 std::shared_ptr<Object> Evaluator::eval_integer_prefix_expression(const TokenType &op, const std::shared_ptr<Object> &right)
@@ -30,6 +34,25 @@ std::shared_ptr<Object> Evaluator::eval_integer_prefix_expression(const TokenTyp
     }
     else
     {
-        return new_error("unknown operator: %s %s", "operator", right->name().c_str());
+        return new_error("Evaluator::eval_integer_prefix_expression unknown operator: %s %s", TokenTypeToString[op], right->name().c_str());
+    }
+}
+
+std::shared_ptr<Object> Evaluator::eval_fraction_prefix_expression(const TokenType &op, const std::shared_ptr<Object> &right)
+{
+    auto r = std::dynamic_pointer_cast<Ob_Fraction>(right);
+    if (op == TokenType::PLUS)
+    {
+        std::shared_ptr<Ob_Fraction> s(new Ob_Fraction(r->m_numerator, r->m_denominator));
+        return s;
+    }
+    else if (op == TokenType::MINUS)
+    {
+        std::shared_ptr<Ob_Fraction> s(new Ob_Fraction(-r->m_numerator, r->m_denominator));
+        return s;
+    }
+    else
+    {
+        return new_error("Evaluator: unknown operator: %s %s", "operator", right->name().c_str());
     }
 }

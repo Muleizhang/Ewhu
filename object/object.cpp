@@ -1,12 +1,17 @@
 #pragma once
 #include "object.h"
 #include "integer.h"
+#include "fraction.h"
+#include "identifier.h"
 #include "error.h"
 #include <string>
 #include <stdarg.h>
 std::map<Object::Type, std::string> Object::m_names = {
-    {Object::OBJECT_ERROR, "error"},
-    {Object::OBJECT_INTEGER, "integer"},
+    {Object::OBJECT_ERROR, "Error"},
+    {Object::OBJECT_INTEGER, "Integer"},
+    {Object::OBJECT_FRACTION, "Fraction"},
+    {Object::OBJECT_IDENTIFIER, "Identifier"},
+    {Object::OBJECT_NULL, "Null"},
 };
 
 std::string Object::name() const
@@ -16,7 +21,7 @@ std::string Object::name() const
     {
         return it->second;
     }
-    return "";
+    return "UnknownType";
 }
 
 std::shared_ptr<Object> new_error(const char *format, ...)
@@ -35,5 +40,17 @@ std::shared_ptr<Object> new_error(const char *format, ...)
 std::shared_ptr<Object> Object::new_integer(__INT64_TYPE__ value)
 {
     std::shared_ptr<Ob_Integer> e(new Ob_Integer(value));
+    return e;
+}
+
+std::shared_ptr<Object> Object::new_fraction(__INT64_TYPE__ numerator, __INT64_TYPE__ denominator)
+{
+    std::shared_ptr<Ob_Fraction> e(new Ob_Fraction(numerator, denominator));
+    return e;
+}
+
+std::shared_ptr<Object> Object::new_identifier(const std::string &value)
+{
+    std::shared_ptr<Ob_Identifier> e(new Ob_Identifier(value));
     return e;
 }

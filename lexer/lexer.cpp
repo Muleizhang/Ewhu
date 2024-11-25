@@ -103,7 +103,15 @@ void Lexer::scanToken(char inpt)
         addToken(PLUS);
         break;
     case '/':
-        addToken(SLASH);
+        if (nextChar() == '/')
+        {
+            addToken(SLASH_SLASH);
+        }
+        else
+        {
+            current--;
+            addToken(SLASH);
+        }
         break;
     case '\\':
         addToken(BACK_SLASH);
@@ -303,12 +311,12 @@ Token Lexer::tokenNumber(char inpt)
     }
     current--;
     // fseek(file, -1, SEEK_CUR);
-    if (digits.size() >= 18)
+    if (digits.size() > 18)
     {
         std::cerr << digits << "[error:out_of_number_MAX(999999999999999999)]" << std::endl;
         return Token(TokenType::ERR, digits, std::monostate(), line);
     }
-    return Token(TokenType::INTEGER, digits, std::stoi(digits), line);
+    return Token(TokenType::INTEGER, digits, std::stoll(digits), line);
 }
 void Lexer::processLetter(char inpt) // 处理字母
 {
