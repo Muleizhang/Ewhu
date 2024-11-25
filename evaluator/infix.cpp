@@ -100,6 +100,18 @@ std::shared_ptr<Object> Evaluator::eval_fraction_infix_expression(const TokenTyp
         return std::make_shared<Ob_Fraction>(Ob_Fraction::div(l, r));
     case TokenType::PERCENT:
         return std::make_shared<Ob_Fraction>(Ob_Fraction::mod(l, r));
+    case TokenType::EQUAL_EQUAL:
+        return std::make_shared<Ob_Boolean>(l->equal(r));
+    case TokenType::BANG_EQUAL:
+        return std::make_shared<Ob_Boolean>(l->notEqual(r));
+    case TokenType::LESS:
+        return std::make_shared<Ob_Boolean>(l->lessThan(r));
+    case TokenType::GREATER:
+        return std::make_shared<Ob_Boolean>(l->greaterThan(r));
+    case TokenType::LESS_EQUAL:
+        return std::make_shared<Ob_Boolean>(l->lessEqual(r));
+    case TokenType::GREATER_EQUAL:
+        return std::make_shared<Ob_Boolean>(l->greaterEqual(r));
     default:
         return new_error("Evaluator::eval_fraction_infix_expression unknown operation: %s %s %s", left->name().c_str(), TokenTypeToString[op].c_str(), right->name().c_str());
     }

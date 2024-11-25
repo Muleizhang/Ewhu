@@ -32,4 +32,5 @@ public:
     std::shared_ptr<Object> eval_prefix(const TokenType &op, const std::shared_ptr<Object> &right);
     std::shared_ptr<Object> eval_integer_prefix_expression(const TokenType &op, const std::shared_ptr<Object> &right);
     std::shared_ptr<Object> eval_fraction_prefix_expression(const TokenType &op, const std::shared_ptr<Object> &right);
+    std::shared_ptr<Object> eval_boolean_prefix_expression(const TokenType &op, const std::shared_ptr<Object> &right);
 };

@@ -17,8 +17,8 @@ public:
         ASSIGN,   // =
         EQUALS,   // == != > < >= <=
         SUM,      // 加减
-        PRE_SIGN, // 前缀正号负号
         PRODUCT,  // 乘除
+        PRE_SIGN, // 前缀正号负号
         DOT,      // 小数
     };
 
