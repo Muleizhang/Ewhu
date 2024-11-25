@@ -110,7 +110,7 @@ bool Parser::expect_peek_token(TokenType ty)
 void Parser::peek_error(TokenType type)
 {
     std::ostringstream oss;
-    oss << "Parser: expected next token to be " << type << ", got" << m_peek.type << " instead";
+    oss << "Parser: expected next token to be " << TokenTypeToString[type] << ", got" << TokenTypeToString[m_peek.type] << " instead";
     m_errors.push_back(oss.str());
 }
 

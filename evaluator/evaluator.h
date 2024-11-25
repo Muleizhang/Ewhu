@@ -5,6 +5,9 @@
 #include <unordered_map>
 class Evaluator
 {
+private:
+    Scope scope;
+
 public:
     Evaluator() {}
     ~Evaluator() {}

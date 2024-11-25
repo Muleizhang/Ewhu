@@ -45,6 +45,7 @@ public:
         std::vector<Token> tokens;
         Parser parser;
         Evaluator evaluator;
+
         while (true)
         {
             std::cout << lineNum++ << " > ";
@@ -59,7 +60,6 @@ public:
     static void run(const std::string &source, std::vector<Token> &tokens,
                     Parser &parser, Evaluator &evaluator)
     {
-        
         Lexer lx(source);
         std::vector<Token> new_tokens = lx.scanTokens();
 
@@ -101,13 +101,11 @@ public:
             ofs << buffer.GetString();
             ofs.close();
 
-            
             auto evaluated = evaluator.eval(program);
             if (evaluated)
             {
                 std::cout << evaluated->str() << std::endl;
             }
-
         }
     }
 };
