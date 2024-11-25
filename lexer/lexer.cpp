@@ -178,6 +178,11 @@ void Lexer::scanToken(char inpt)
             addToken(LESS);
         }
         break;
+    case '^':
+    {
+        addToken(BIT_XOR);
+        break;
+    }
 
     default:
         switch (findType(inpt))
@@ -393,7 +398,7 @@ int Lexer::processMathematicalOperator(char inpt)
     // fseek(file, -1, SEEK_CUR);
     maticaliop[pr] = '\0';
     int type;
-    for (type = 0; type < 5; type++)
+    for (type = 0; type < 6; type++)
     {
         if (!strcmp(maticaliop, cal_sign[type]))
             break;

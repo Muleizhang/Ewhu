@@ -15,6 +15,7 @@ public:
     {
         LOWEST = 0,
         ASSIGN,   // =
+        BIT,      // 位运算
         EQUALS,   // == != > < >= <=
         SUM,      // 加减
         PRODUCT,  // 乘除

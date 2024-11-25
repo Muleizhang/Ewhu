@@ -35,8 +35,8 @@ enum TokenType
     AMPERSAND,     // &
     PIPE,          // |
     PERCENT,       // %
-
-    // One or two character tokens.
+    BIT_XOR,       //^
+                   // One or two character tokens.
     BANG,          // !
     BANG_EQUAL,    //!=
     EQUAL,         // =
@@ -105,7 +105,7 @@ static std::map<TokenType, std::string> TokenTypeToString = {
     {TokenType::AMPERSAND, "AMPERSAND"},
     {TokenType::PIPE, "PIPE"},
     {TokenType::PERCENT, "PERCENT"},
-
+    {TokenType::BIT_XOR, "BIT_XOR"},
     // One or two character tokens.
     {TokenType::BANG, "BANG"},
     {TokenType::BANG_EQUAL, "BANG_EQUAL"},
