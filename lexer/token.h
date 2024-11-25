@@ -32,10 +32,11 @@ enum TokenType
     STAR,          // *
     HASH,          // #
     AT,            // @
-    AMPERSAND,     // &
+//  AMPERSAND,     // &
     PIPE,          // |
     PERCENT,       // %
-    BIT_XOR,       //^
+    BIT_XOR,       // ^
+    BIT_AND,       // &
                    // One or two character tokens.
     BANG,          // !
     BANG_EQUAL,    //!=
@@ -102,10 +103,10 @@ static std::map<TokenType, std::string> TokenTypeToString = {
     {TokenType::STAR, "STAR"},
     {TokenType::HASH, "HASH"},
     {TokenType::AT, "AT"},
-    {TokenType::AMPERSAND, "AMPERSAND"},
     {TokenType::PIPE, "PIPE"},
     {TokenType::PERCENT, "PERCENT"},
     {TokenType::BIT_XOR, "BIT_XOR"},
+    {TokenType::BIT_AND, "BIT_AND"},
     // One or two character tokens.
     {TokenType::BANG, "BANG"},
     {TokenType::BANG_EQUAL, "BANG_EQUAL"},

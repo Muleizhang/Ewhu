@@ -9,7 +9,7 @@ class Lexer
 {
 public:
     static const char *keywords[9];             // 保留字
-    static const char *cal_sign[6];             // 运算符
+    static const char *cal_sign[7];             // 运算符
     static const char *space_word_table[8];     // 界限符
     static const char *relation_calcu_table[7]; // 比较运算符
 
@@ -51,6 +51,6 @@ private:
 };
 
 const char *Lexer::keywords[9] = {"main", "int", "float", "return", "while", "break", "continue", "if", "else"}; // 保留字
-const char *Lexer::cal_sign[6] = {"+", "-", "*", "/", "%", "^"};                                                      // 运算符
+const char *Lexer::cal_sign[7] = {"+", "-", "*", "/", "%", "^", "&"};                                                      // 运算符
 const char *Lexer::space_word_table[8] = {";", ",", "[", "]", "{", "}", "(", ")"};                               // 界限符
 const char *Lexer::relation_calcu_table[7] = {"<", "<=", ">", ">=", "=", "=="};

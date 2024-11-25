@@ -4,6 +4,7 @@ std::map<TokenType, int> Parser::m_precedences =
     {
         {TokenType::EQUAL, ASSIGN},
         {TokenType::BIT_XOR, BIT},
+        {TokenType::BIT_AND, BIT},
 
         {TokenType::EQUAL_EQUAL, EQUALS},
         {TokenType::BANG_EQUAL, EQUALS},
@@ -53,6 +54,7 @@ std::map<TokenType, Parser::infix_parse_fn> Parser::m_infix_parse_fns =
 
         {TokenType::EQUAL, &Parser::parse_infix},
         {TokenType::BIT_XOR, &Parser::parse_infix},
+        {TokenType::BIT_AND, &Parser::parse_infix},
 
 };
 

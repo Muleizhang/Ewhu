@@ -80,6 +80,8 @@ std::shared_ptr<Object> Evaluator::eval_integer_infix_expression(const TokenType
         return std::make_shared<Ob_Boolean>(l >= r);
     case TokenType::BIT_XOR:
         return std::make_shared<Ob_Integer>(l ^ r);
+    case TokenType::BIT_AND:
+        return std::make_shared<Ob_Integer>(l & r);
     default:
         return new_error("Evaluator::eval_integer_infix_expression unknown operation: %s %s %s", left->name().c_str(), TokenTypeToString[op].c_str(), right->name().c_str());
     }
