@@ -27,10 +27,11 @@ public:
         int lineNum = 1;
         std::vector<Token> token;
         Parser parser;
+        Evaluator evaluator;
         while (std::getline(file, line))
         {
             std::cout << lineNum++ << " ";
-            run(line, token, parser);
+            run(line, token, parser, evaluator);
             std::cout << std::endl;
         }
 
@@ -43,7 +44,7 @@ public:
         std::string line;
         std::vector<Token> tokens;
         Parser parser;
-
+        Evaluator evaluator;
         while (true)
         {
             std::cout << lineNum++ << " > ";
@@ -51,13 +52,14 @@ public:
             {
                 break;
             }
-            run(line, tokens, parser);
+            run(line, tokens, parser, evaluator);
         }
     }
 
     static void run(const std::string &source, std::vector<Token> &tokens,
-                    Parser &parser)
+                    Parser &parser, Evaluator &evaluator)
     {
+        
         Lexer lx(source);
         std::vector<Token> new_tokens = lx.scanTokens();
 
@@ -99,12 +101,13 @@ public:
             ofs << buffer.GetString();
             ofs.close();
 
-            Evaluator evaluator;
+            
             auto evaluated = evaluator.eval(program);
             if (evaluated)
             {
                 std::cout << evaluated->str() << std::endl;
             }
+
         }
     }
 };
