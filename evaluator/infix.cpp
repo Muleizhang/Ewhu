@@ -38,6 +38,23 @@ std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, const std::sha
     if (left->type() == Object::OBJECT_BOOLEAN && right->type() == Object::OBJECT_FRACTION)
         return eval_fraction_infix_expression(op, std::make_shared<Ob_Fraction>(std::dynamic_pointer_cast<Ob_Boolean>(left)->m_value, 1), right);
 
+    // string op string
+    if (left->type() == Object::OBJECT_STRING && right->type() == Object::OBJECT_STRING)
+    {
+        auto l = std::dynamic_pointer_cast<Ob_String>(left);
+        auto r = std::dynamic_pointer_cast<Ob_String>(right);
+        switch (op)
+        {
+        case TokenType::PLUS:
+            return std::make_shared<Ob_String>(l->m_value + r->m_value);
+        case TokenType::EQUAL_EQUAL:
+            return std::make_shared<Ob_Boolean>(l->m_value == r->m_value);
+        case TokenType::BANG_EQUAL:
+            return std::make_shared<Ob_Boolean>(l->m_value != r->m_value);
+        default:
+            return new_error("Evaluator::eval_infix unknown operation: %s %s %s", left->name().c_str(), TokenTypeToString[op].c_str(), right->name().c_str());
+        }
+    }
     return new_error("Evaluator::eval_infix unknown operation: %s %s %s", left->name().c_str(), TokenTypeToString[op].c_str(), right->name().c_str());
 }
 
