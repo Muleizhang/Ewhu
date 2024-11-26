@@ -9,7 +9,7 @@ std::shared_ptr<Object> Evaluator::eval_identifier(const std::shared_ptr<Identif
         return it->second;
     }
     else
-        return nullptr;
+        return new_error("Evaluator::eval_identifier: identifier not found: %s", node->m_name.c_str());
 }
 std::shared_ptr<Object> Evaluator::eval_new_identifier(const std::shared_ptr<Identifier> &node)
 {

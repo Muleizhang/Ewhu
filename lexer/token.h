@@ -167,15 +167,14 @@ class Token
 
 public:
     TokenType type;                                               // 标记的类型
-    std::string lexeme;                                           // 标记对应的源代码文本
     std::variant<std::monostate, long long, std::string> literal; // 字面量的值
     int line;                                                     // 标记所在的行号
 
     // 构造函数
-    Token(TokenType type, const std::string &lexeme, std::variant<std::monostate, long long, std::string> literal, int line)
-        : type(type), lexeme(lexeme), literal(literal), line(line) {}
+    Token(TokenType type, std::variant<std::monostate, long long, std::string> literal, int line)
+        : type(type), literal(literal), line(line) {}
 
-    Token() : type(TokenType::ERR), lexeme(""), literal(std::monostate()), line(0) {}
+    Token() : type(TokenType::ERR), literal(std::monostate()), line(0) {}
     // 返回 Token 的字符串表示
     std::string toString() const
     {
@@ -196,7 +195,7 @@ public:
         }
 
         // 将 Token 的信息拼接成字符串
-        return std::string("[") + std::to_string(type) + ": " + TokenTypeToString[type] + " " + lexeme + " " + literalStr + "]";
+        return std::string("[") + std::to_string(type) + ": " + TokenTypeToString[type] + " " + literalStr + "]";
     }
     long long literalToLonglong()
     {

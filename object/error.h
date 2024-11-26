@@ -9,10 +9,9 @@ public:
 
     virtual std::string str() const
     {
-        return "error: " + m_messages;
+        return m_messages;
     }
 
 public:
     std::string m_messages;
 };
-

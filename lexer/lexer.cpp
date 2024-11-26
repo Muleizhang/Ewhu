@@ -212,7 +212,7 @@ void Lexer::scanToken(char inpt)
             break;
         default:
             std::cerr << inpt << "[error:unknown_charactor] id=" << findType(inpt) << std::endl;
-            tokens.push_back(Token(TokenType::ERR, std::to_string(inpt), std::monostate(), line));
+            tokens.push_back(Token(TokenType::ERR, std::monostate(), line));
         }
     }
 }
@@ -221,7 +221,7 @@ Token Lexer::nextToken()
 {
     if (read_current >= (int)tokens.size())
     {
-        return Token(TokenType::EMPTY, "", std::monostate(), line);
+        return Token(TokenType::EMPTY, std::monostate(), line);
     }
     return tokens[read_current++];
 }
@@ -229,7 +229,7 @@ Token Lexer::nextToken()
 void Lexer::addToken(TokenType type)
 {
     std::string text = source.substr(start, current - start);
-    tokens.push_back(Token(type, text, std::monostate(), line));
+    tokens.push_back(Token(type, std::monostate(), line));
 }
 
 inline char Lexer::nextChar()
@@ -315,12 +315,12 @@ Token Lexer::tokenLetter(char inpt)
     if (it != keyWords.end())
     {
         // 找到对应的键，访问其值
-        return Token(it->second, letters, std::monostate(), line);
+        return Token(it->second, std::monostate(), line);
     }
     else
     {
         // 没有找到
-        return Token(TokenType::IDENTIFIER, letters, letters, line);
+        return Token(TokenType::IDENTIFIER, letters, line);
     }
 }
 Token Lexer::tokenNumber(char inpt)
@@ -336,9 +336,9 @@ Token Lexer::tokenNumber(char inpt)
     if (digits.size() > 18)
     {
         std::cerr << digits << "[error:out_of_number_MAX(999999999999999999)]" << std::endl;
-        return Token(TokenType::ERR, digits, std::monostate(), line);
+        return Token(TokenType::ERR, std::monostate(), line);
     }
-    return Token(TokenType::INTEGER, digits, std::stoll(digits), line);
+    return Token(TokenType::INTEGER, std::stoll(digits), line);
 }
 void Lexer::processLetter(char inpt) // 处理字母
 {
