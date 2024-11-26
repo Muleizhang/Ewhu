@@ -4,7 +4,7 @@
 void Parser::parse_program()
 {
     // std::shared_ptr<Program> s(new Program());
-    while (m_curr.type != TokenType::EOF_TOKEN && m_curr.type != TokenType::SEMICOLON) // 解析程序
+    while (m_curr.type != TokenType::EOF_TOKEN && m_curr.type != TokenType::SEMICOLON && m_curr.type != TokenType::RIGHT_BRACE) // 解析程序
     {
         std::shared_ptr<Statement> stmt = parse_statement();
         if (stmt == nullptr) // pass comment

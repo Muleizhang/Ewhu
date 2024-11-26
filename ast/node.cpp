@@ -11,6 +11,7 @@ std::map<Node::Type, std::string> Node::m_names = {
     {Node::NODE_EXPRESSION_STATEMENT, "ExpressionStatement"},
     {Node::NODE_PROGRAM, "Program"},
     {Node::NODE_PREFIX, "Prefix"},
+    {Node::NODE_STATEMENTBLOCK, "StatementBlock"},
 };
 
 // return the string of the node type

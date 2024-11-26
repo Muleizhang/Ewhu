@@ -26,4 +26,4 @@ public:
 
 public:
     std::list<std::shared_ptr<Statement>> m_statements;
-}
+};

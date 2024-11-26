@@ -9,8 +9,16 @@
 class Scope
 {
 public:
-    Scope(){};
-    ~Scope(){};
+    Scope(std::unordered_map<std::string, std::shared_ptr<Object>>scp):m_var(scp){}
+    Scope(){}
+    ~Scope()
+    {
+        for (auto it : m_var)
+        {
+            it.second.reset();
+        }
+        m_var.clear();
+    };
 
 public:
     std::unordered_map<std::string, std::shared_ptr<Object>> m_var;

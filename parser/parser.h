@@ -9,6 +9,7 @@
 #include "../ast/program.h"
 #include "../ast/infix.h"
 #include "../ast/prefix.h"
+#include "../ast/statement_block.h"
 class Parser
 {
 public:
@@ -61,7 +62,7 @@ public:
     std::shared_ptr<Expression> parse_infix(const std::shared_ptr<Expression> &left);
 
     // 语句块
-    std::shared_ptr<Statement> parse_statement_block() {}
+    std::shared_ptr<Statement> parse_statement_block();
 
     void parse_program();
     std::shared_ptr<Statement> parse_statement();

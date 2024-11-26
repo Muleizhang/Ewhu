@@ -56,6 +56,11 @@ std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node, Scope
             return nullptr;
         return eval_program(s->m_statements, scp);
     }
+    case Node::NODE_STATEMENTBLOCK:
+    {
+        auto s = std::dynamic_pointer_cast<StatementBlock>(node);
+        return eval_statement_block(s->m_statements, scp);
+    }
     case Node::NODE_EXPRESSION_STATEMENT:
     {
         auto s = std::dynamic_pointer_cast<ExpressionStatement>(node);

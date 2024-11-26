@@ -79,7 +79,7 @@ public:
         std::cout << std::endl;
 
         // 到达分号时，解析语句
-        if ((--tokens.end())->type == TokenType::SEMICOLON)
+        if ((--tokens.end())->type == TokenType::SEMICOLON||(--tokens.end())->type == TokenType::RIGHT_BRACE)
         {
             rapidjson::Document root;
             root.SetObject();

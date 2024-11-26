@@ -13,7 +13,8 @@ std::shared_ptr<Statement> Parser::parse_statement()
     {
         return parse_expression_statement();
     }
-    std::shared_ptr<Statement> ele(new)
+    std::shared_ptr<Statement> ele = (this->*(it->second))();
+    return ele;
     /*if (m_curr.type == TokenType::RETURN)
     {
         return parse_return_statement();
