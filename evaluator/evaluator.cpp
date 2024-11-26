@@ -79,9 +79,13 @@ std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node, Scope
         auto e = std::dynamic_pointer_cast<Infix>(node);
         std::shared_ptr<Object> left;
         if (e->m_operator != TokenType::EQUAL)
+        {
             left = eval(e->m_left, scp);
+        }
         else
+        {
             left = eval_left(e->m_left, scp);
+        }
         if (is_error(left))
         {
             return left;

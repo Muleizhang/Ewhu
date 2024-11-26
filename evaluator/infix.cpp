@@ -5,11 +5,14 @@
 std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, const std::shared_ptr<Object> &left,
                                               const std::shared_ptr<Object> &right, Scope &scp) // 中缀表达式求值
 {
+    std::cout << "eval_infix: " << left->str() << " " << TokenTypeToString[op] << " " << right->str() << std::endl;
+
     // assign
     if (op == TokenType::EQUAL)
-        return eval_assign_expression(left, right, scp);
+    {
 
-    // std::cout << left->name().c_str() << TokenTypeToString[op] << right->name().c_str() << std::endl;
+        return eval_assign_expression(left, right, scp);
+    }
     // int(bool) op int(bool)
     if (((left->type() == Object::OBJECT_INTEGER) || (left->type() == Object::OBJECT_BOOLEAN)) &&
         ((right->type() == Object::OBJECT_INTEGER) || (right->type() == Object::OBJECT_BOOLEAN)))
@@ -128,20 +131,46 @@ std::shared_ptr<Object> Evaluator::eval_assign_expression(const std::shared_ptr<
     if (it == scp.m_var.end())
     {
         std::cout << "eval_assign_expression: " << name->str() << " = " << value->str() << std::endl;
-        if (value->type() == Object::OBJECT_INTEGER)
+
+        std::shared_ptr<Object> e;
+        switch (value->type())
         {
-            std::shared_ptr<Ob_Integer> e(new Ob_Integer(std::dynamic_pointer_cast<Ob_Integer>(value)->m_value));
+        case Object::OBJECT_INTEGER:
+            e = std::make_shared<Ob_Integer>(std::dynamic_pointer_cast<Ob_Integer>(value)->m_value);
             scp.m_var.insert(std::make_pair(std::dynamic_pointer_cast<Ob_Identifier>(name)->m_name, e));
+            break;
+        case Object::OBJECT_FRACTION:
+            e = std::make_shared<Ob_Fraction>(std::dynamic_pointer_cast<Ob_Fraction>(value)->num,
+                                              std::dynamic_pointer_cast<Ob_Fraction>(value)->den);
+            scp.m_var.insert(std::make_pair(std::dynamic_pointer_cast<Ob_Identifier>(name)->m_name, e));
+            break;
+        case Object::OBJECT_BOOLEAN:
+            e = std::make_shared<Ob_Boolean>(std::dynamic_pointer_cast<Ob_Boolean>(value)->m_value);
+            scp.m_var.insert(std::make_pair(std::dynamic_pointer_cast<Ob_Identifier>(name)->m_name, e));
+            break;
+        default:
+            return new_error("Evaluator::eval_assign_expression unknown object type: %s", value->name().c_str());
         }
+        return value;
     }
     else
     {
         std::cout << "change_value: " << name->str() << " = " << value->str() << std::endl;
-        if (value->type() == Object::OBJECT_INTEGER)
+        switch (value->type())
         {
-            std::shared_ptr<Ob_Integer> e(new Ob_Integer(std::dynamic_pointer_cast<Ob_Integer>(value)->m_value));
-            scp.m_var[std::dynamic_pointer_cast<Ob_Identifier>(name)->m_name] = e;
+        case Object::OBJECT_INTEGER:
+            it->second = std::make_shared<Ob_Integer>(std::dynamic_pointer_cast<Ob_Integer>(value)->m_value);
+            break;
+        case Object::OBJECT_FRACTION:
+            it->second = std::make_shared<Ob_Fraction>(std::dynamic_pointer_cast<Ob_Fraction>(value)->num,
+                                                       std::dynamic_pointer_cast<Ob_Fraction>(value)->den);
+            break;
+        case Object::OBJECT_BOOLEAN:
+            it->second = std::make_shared<Ob_Boolean>(std::dynamic_pointer_cast<Ob_Boolean>(value)->m_value);
+            break;
+        default:
+            return new_error("Evaluator::eval_assign_expression unknown object type: %s", value->name().c_str());
         }
+        return value;
     }
-    return value;
 }
