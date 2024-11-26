@@ -91,21 +91,24 @@ public:
                 {
                     std::cout << error << std::endl;
                 }
+                parser.errors().clear();
             }
-
-            root.AddMember("program", parser.m_program->json(root), root.GetAllocator());
-            rapidjson::StringBuffer buffer;
-            rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-            root.Accept(writer);
-            std::ofstream ofs("ast.json");
-            ofs << buffer.GetString();
-            ofs.close();
-
-            static Scope global_scp;
-            auto evaluated = evaluator.eval(program, global_scp);
-            if (evaluated)
+            else
             {
-                std::cout << evaluated->str() << std::endl;
+                root.AddMember("program", parser.m_program->json(root), root.GetAllocator());
+                rapidjson::StringBuffer buffer;
+                rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+                root.Accept(writer);
+                std::ofstream ofs("ast.json");
+                ofs << buffer.GetString();
+                ofs.close();
+
+                static Scope global_scp;
+                auto evaluated = evaluator.eval(program, global_scp);
+                if (evaluated)
+                {
+                    std::cout << evaluated->str() << std::endl;
+                }
             }
         }
     }
