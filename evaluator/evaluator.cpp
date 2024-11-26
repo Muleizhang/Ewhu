@@ -52,7 +52,7 @@ std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node, Scope
         auto s = std::dynamic_pointer_cast<Program>(node); // 类型转换
         if (s->m_statements.empty())
             return nullptr;
-        return eval_program(s->m_statements);
+        return eval_program(s->m_statements, scp);
     }
     case Node::NODE_EXPRESSION_STATEMENT:
     {
@@ -79,9 +79,13 @@ std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node, Scope
         auto e = std::dynamic_pointer_cast<Infix>(node);
         std::shared_ptr<Object> left;
         if (e->m_operator != TokenType::EQUAL)
+        {
             left = eval(e->m_left, scp);
+        }
         else
+        {
             left = eval_left(e->m_left, scp);
+        }
         if (is_error(left))
         {
             return left;
