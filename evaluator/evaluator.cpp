@@ -23,10 +23,12 @@ std::shared_ptr<Object> Evaluator::new_integer(__INT64_TYPE__ value)
 {
     return Object::new_integer(value);
 }
+
 std::shared_ptr<Object> Evaluator::new_fraction(__INT64_TYPE__ numerator, __INT64_TYPE__ denominator)
 {
     return Object::new_fraction(numerator, denominator);
 }
+
 std::shared_ptr<Object> Evaluator::new_identifier(const std::string &value)
 {
     return Object::new_identifier(value);
@@ -73,6 +75,11 @@ std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node, Scope
     {
         auto e = std::dynamic_pointer_cast<Integer>(node);
         return eval_integer(e);
+    }
+    case Node::NODE_STRING:
+    {
+        auto e = std::dynamic_pointer_cast<String>(node);
+        return Object::new_string(e->m_value);
     }
     case Node::NODE_INFIX:
     {

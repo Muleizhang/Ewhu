@@ -12,6 +12,7 @@ std::map<Object::Type, std::string> Object::m_names = {
     {Object::OBJECT_BOOLEAN, "Boolean"},
     {Object::OBJECT_INTEGER, "Integer"},
     {Object::OBJECT_FRACTION, "Fraction"},
+    {Object::OBJECT_STRING, "String"},
     {Object::OBJECT_IDENTIFIER, "Identifier"},
     {Object::OBJECT_NULL, "Null"},
 };
@@ -54,6 +55,12 @@ std::shared_ptr<Object> Object::new_integer(__INT64_TYPE__ value)
 std::shared_ptr<Object> Object::new_fraction(__INT64_TYPE__ numerator, __INT64_TYPE__ denominator)
 {
     std::shared_ptr<Ob_Fraction> e(new Ob_Fraction(numerator, denominator));
+    return e;
+}
+
+std::shared_ptr<Object> Object::new_string(const std::string &value)
+{
+    std::shared_ptr<Ob_String> e(new Ob_String(value));
     return e;
 }
 

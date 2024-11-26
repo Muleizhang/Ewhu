@@ -1,6 +1,6 @@
 #pragma once
 #include "../ast/head.h"
-#include "../object/header.h"
+#include "../object/head.h"
 #include <memory>
 #include <unordered_map>
 #include "scope.h"
@@ -20,7 +20,7 @@ public:
     std::shared_ptr<Object> new_error(const char *format, ...);
 
     std::shared_ptr<Object> eval(const std::shared_ptr<Node> &node, Scope &scp);                                // 求值
-    std::shared_ptr<Object> eval_left(const std::shared_ptr<Node> &node, Scope &scp);                // 对左值特殊处理
+    std::shared_ptr<Object> eval_left(const std::shared_ptr<Node> &node, Scope &scp);                           // 对左值特殊处理
     std::shared_ptr<Object> eval_program(const std::list<std::shared_ptr<Statement>> &node, Scope &global_scp); // 对根节点求值
     std::shared_ptr<Object> eval_integer(const std::shared_ptr<Integer> &node);                                 // 求值
 

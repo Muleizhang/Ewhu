@@ -28,6 +28,7 @@ std::map<TokenType, Parser::prefix_parse_fn> Parser::m_prefix_parse_fns =
         {TokenType::TRUE, &Parser::parse_boolean},
         {TokenType::FALSE, &Parser::parse_boolean},
         {TokenType::INTEGER, &Parser::parse_integer},
+        {TokenType::STRING, &Parser::parse_string},
         {TokenType::LEFT_PAREN, &Parser::parse_group},
         {TokenType::PLUS, &Parser::parse_prefix},
         {TokenType::MINUS, &Parser::parse_prefix},
