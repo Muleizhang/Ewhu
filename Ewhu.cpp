@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <chrono>
+
 #include "lexer/lexer.cpp"
 #include "parser/parser.cpp"
 #include "parser/head.h"
@@ -53,7 +55,11 @@ public:
             {
                 break;
             }
+            auto start = std::chrono::high_resolution_clock::now();
             run(line, tokens, parser, evaluator);
+            auto end = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double> duration = end - start;
+            std::cout << "run time: " << duration.count() << " s" << std::endl;
         }
     }
 

@@ -39,3 +39,5 @@ test.*
 .test/
 ast.json
 ast.json
+callgrind.out.*
+Ewhu
