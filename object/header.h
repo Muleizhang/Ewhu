@@ -4,4 +4,3 @@
 #include "fraction.h"
 #include "error.h"
 #include "object.cpp"
-#include "scope.cpp"

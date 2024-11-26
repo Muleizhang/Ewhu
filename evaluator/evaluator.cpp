@@ -52,7 +52,7 @@ std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node, Scope
         auto s = std::dynamic_pointer_cast<Program>(node); // 类型转换
         if (s->m_statements.empty())
             return nullptr;
-        return eval_program(s->m_statements);
+        return eval_program(s->m_statements, scp);
     }
     case Node::NODE_EXPRESSION_STATEMENT:
     {

@@ -1,5 +1,6 @@
 #pragma once
 #include "evaluator.h"
+#include "scope.h"
 
 std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, const std::shared_ptr<Object> &left,
                                               const std::shared_ptr<Object> &right, Scope &scp) // 中缀表达式求值
@@ -139,7 +140,7 @@ std::shared_ptr<Object> Evaluator::eval_assign_expression(const std::shared_ptr<
         if (value->type() == Object::OBJECT_INTEGER)
         {
             std::shared_ptr<Ob_Integer> e(new Ob_Integer(std::dynamic_pointer_cast<Ob_Integer>(value)->m_value));
-            scp.m_var[std::dynamic_pointer_cast<Ob_Identifier>(name)->m_name]=e;
+            scp.m_var[std::dynamic_pointer_cast<Ob_Identifier>(name)->m_name] = e;
         }
     }
     return value;

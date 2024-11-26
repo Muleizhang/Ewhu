@@ -1,9 +1,11 @@
 // 负责局部变量的作用范围
+#pragma once
 #include <unordered_map>
-#include<map>
+#include <map>
 #include <string>
 #include <memory>
 #include "../object/object.h"
+
 class Scope
 {
 public:
