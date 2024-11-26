@@ -43,6 +43,7 @@ private:
     int isKeywords(char *kw);                   // 判断字符串是否是关键字
     Token tokenLetter(char inpt);               // 读取字母
     Token tokenNumber(char inpt);               // 读取数字
+    Token tokenString();                        // 读取字符串
     void processLetter(char inpt);              // 处理字母
     void processNumber(char inpt);              // 处理数字
     int processRelationalOperator(char inpt);   // 处理关系运算符，返回运算符类型
@@ -51,6 +52,6 @@ private:
 };
 
 const char *Lexer::keywords[9] = {"main", "int", "float", "return", "while", "break", "continue", "if", "else"}; // 保留字
-const char *Lexer::cal_sign[7] = {"+", "-", "*", "/", "%", "^", "&"};                                                      // 运算符
+const char *Lexer::cal_sign[7] = {"+", "-", "*", "/", "%", "^", "&"};                                            // 运算符
 const char *Lexer::space_word_table[8] = {";", ",", "[", "]", "{", "}", "(", ")"};                               // 界限符
 const char *Lexer::relation_calcu_table[7] = {"<", "<=", ">", ">=", "=", "=="};

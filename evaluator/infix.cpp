@@ -4,12 +4,12 @@
 std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, const std::shared_ptr<Object> &left,
                                               const std::shared_ptr<Object> &right, Scope &scp) // 中缀表达式求值
 {
-    std::cout << "eval_infix: " << left->str() << " " << TokenTypeToString[op] << " " << right->str() << std::endl;
+    std::cout << "eval_infix: " << left->str() << "(" << left->name() << ") " << TokenTypeToString[op]
+              << " " << right->str() << "(" << right->name() << ")" << std::endl;
 
     // assign
     if (op == TokenType::EQUAL)
     {
-
         return eval_assign_expression(left, right, scp);
     }
     // int(bool) op int(bool)
@@ -147,6 +147,10 @@ std::shared_ptr<Object> Evaluator::eval_assign_expression(const std::shared_ptr<
             e = std::make_shared<Ob_Boolean>(std::dynamic_pointer_cast<Ob_Boolean>(value)->m_value);
             scp.m_var.insert(std::make_pair(std::dynamic_pointer_cast<Ob_Identifier>(name)->m_name, e));
             break;
+        case Object::OBJECT_STRING:
+            e = std::make_shared<Ob_String>(std::dynamic_pointer_cast<Ob_String>(value)->m_value);
+            scp.m_var.insert(std::make_pair(std::dynamic_pointer_cast<Ob_Identifier>(name)->m_name, e));
+            break;
         default:
             return new_error("Evaluator::eval_assign_expression unknown object type: %s", value->name().c_str());
         }
@@ -166,6 +170,9 @@ std::shared_ptr<Object> Evaluator::eval_assign_expression(const std::shared_ptr<
             break;
         case Object::OBJECT_BOOLEAN:
             it->second = std::make_shared<Ob_Boolean>(std::dynamic_pointer_cast<Ob_Boolean>(value)->m_value);
+            break;
+        case Object::OBJECT_STRING:
+            it->second = std::make_shared<Ob_String>(std::dynamic_pointer_cast<Ob_String>(value)->m_value);
             break;
         default:
             return new_error("Evaluator::eval_assign_expression unknown object type: %s", value->name().c_str());

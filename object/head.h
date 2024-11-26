@@ -2,5 +2,8 @@
 #include "object.h"
 #include "integer.h"
 #include "fraction.h"
+#include "identifier.h"
+#include "boolean.h"
+#include "string.h"
 #include "error.h"
 #include "object.cpp"

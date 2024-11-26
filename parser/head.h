@@ -6,3 +6,4 @@
 #include "infix.cpp"
 #include "expression.cpp"
 #include "prefix.cpp"
+#include "string.cpp"

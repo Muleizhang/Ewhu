@@ -76,7 +76,7 @@ void Lexer::scanToken(char inpt)
         addToken(RIGHT_BRACKET);
         break;
     case '"':
-        addToken(DOUBLE_QUOTE);
+        tokens.push_back(tokenString());
         break;
     case '\'':
         addToken(SINGLE_QUOTE);
@@ -298,6 +298,19 @@ int Lexer::isKeywords(char *kw)
         }
     }
     return -1;
+}
+
+Token Lexer::tokenString()
+{
+    std::string string;
+    char inpt = this->nextChar();
+    while (inpt != '"')
+    {
+        string += inpt;
+        inpt = this->nextChar();
+    }
+
+    return Token(TokenType::STRING, string, line);
 }
 
 Token Lexer::tokenLetter(char inpt)
