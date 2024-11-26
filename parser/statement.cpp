@@ -4,6 +4,11 @@
 
 std::shared_ptr<Statement> Parser::parse_statement()
 {
+    if (m_curr.type == TokenType::HASH)
+    {
+        return std::make_shared<Comment>();
+    }
+
     /*if (m_curr.type == TokenType::RETURN)
     {
         return parse_return_statement();
