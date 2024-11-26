@@ -32,6 +32,8 @@ public:
     typedef std::shared_ptr<Expression> (Parser::*prefix_parse_fn)(void);
     // 中缀表达式函数原型定义
     typedef std::shared_ptr<Expression> (Parser::*infix_parse_fn)(const std::shared_ptr<Expression> &left);
+    // 控制流语句函数原型定义
+    typedef std::shared_ptr<Statement> (Parser::*control_flow_fn)(void);
 
     void next_token();                    // 读取下一个token
     bool curr_token_is(TokenType ty);     // 判断当前token是否是ty类型
@@ -54,8 +56,12 @@ public:
     std::shared_ptr<Expression> parse_group();
     std::shared_ptr<Expression> parse_prefix();
     std::shared_ptr<Expression> parse_identifier();
+
     // 中缀
     std::shared_ptr<Expression> parse_infix(const std::shared_ptr<Expression> &left);
+
+    // 语句块
+    std::shared_ptr<Statement> parse_statement_block() {}
 
     void parse_program();
     std::shared_ptr<Statement> parse_statement();
@@ -75,4 +81,5 @@ private:
     static std::map<TokenType, int> m_precedences; // 一个从运算符TokenType类型到优先级类型的映射
     static std::map<TokenType, prefix_parse_fn> m_prefix_parse_fns;
     static std::map<TokenType, infix_parse_fn> m_infix_parse_fns;
+    static std::map<TokenType, control_flow_fn> m_control_flow_fns;
 };

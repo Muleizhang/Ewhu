@@ -20,6 +20,7 @@ public:
         NODE_EXPRESSION_STATEMENT,
         NODE_PROGRAM,
         NODE_COMMENT,
+        NODE_STATEMENTBLOCK,
     };
 
     Node() {}

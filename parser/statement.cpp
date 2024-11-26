@@ -8,7 +8,12 @@ std::shared_ptr<Statement> Parser::parse_statement()
     {
         return std::make_shared<Comment>();
     }
-
+    auto it = m_control_flow_fns.find(m_curr.type);
+    if (it == m_control_flow_fns.end())
+    {
+        return parse_expression_statement();
+    }
+    std::shared_ptr<Statement> ele(new)
     /*if (m_curr.type == TokenType::RETURN)
     {
         return parse_return_statement();
@@ -27,7 +32,7 @@ std::shared_ptr<Statement> Parser::parse_statement()
     }
     else
     {*/
-    return parse_expression_statement();
+
     //}
 }
 
@@ -36,10 +41,6 @@ std::shared_ptr<ExpressionStatement> Parser::parse_expression_statement()
     std::shared_ptr<ExpressionStatement> s(new ExpressionStatement);
     s->m_token = m_curr;
     s->m_expression = parse_expression(Precedence::LOWEST);
-    if (s->m_expression == nullptr)
-    {
-        return nullptr;
-    }
     if (peek_token_is(TokenType::SEMICOLON)) // while->if暂定
     {
         next_token();

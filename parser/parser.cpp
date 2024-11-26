@@ -58,6 +58,10 @@ std::map<TokenType, Parser::infix_parse_fn> Parser::m_infix_parse_fns =
         {TokenType::BIT_AND, &Parser::parse_infix},
 
 };
+std::map<TokenType, Parser::control_flow_fn> Parser::m_control_flow_fns =
+    {
+        {TokenType::LEFT_BRACE, &Parser::parse_statement_block},
+};
 
 void Parser::next_token() // 读取下一个token
 {
