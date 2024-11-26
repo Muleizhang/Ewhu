@@ -56,7 +56,7 @@ private:
     std::shared_ptr<Scope> parent;
 };
 
-// 示例用法
+/* 示例用法
 int main()
 {
     // 全局作用域
@@ -95,3 +95,4 @@ int main()
 
     return 0;
 }
+*/

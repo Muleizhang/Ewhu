@@ -28,6 +28,11 @@ public:
         __INT64_TYPE__ gcd = std::gcd(num, den);
         num /= gcd;
         den /= gcd;
+        if (den < 0)
+        {
+            num = -num;
+            den = -den;
+        }
     }
 
     virtual std::string realStr() const

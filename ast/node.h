@@ -19,6 +19,7 @@ public:
         NODE_IDENTIFIER,
         NODE_EXPRESSION_STATEMENT,
         NODE_PROGRAM,
+        NODE_COMMENT,
     };
 
     Node() {}
@@ -49,4 +50,16 @@ public:
     Statement() : Node() {}
     Statement(Type type) : Node(type) {}
     ~Statement() {}
+};
+
+class Comment : public Statement
+{
+public:
+    Comment() : Statement(NODE_COMMENT) {}
+    ~Comment() {}
+    rapidjson::Value json(rapidjson::Document &father) override
+    {
+        rapidjson::Value nothing(rapidjson::kObjectType);
+        return nothing;
+    }
 };

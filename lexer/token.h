@@ -32,20 +32,24 @@ enum TokenType
     STAR,          // *
     HASH,          // #
     AT,            // @
-//  AMPERSAND,     // &
-    PIPE,          // |
-    PERCENT,       // %
-    BIT_XOR,       // ^
-    BIT_AND,       // &
-                   // One or two character tokens.
-    BANG,          // !
-    BANG_EQUAL,    //!=
-    EQUAL,         // =
-    EQUAL_EQUAL,   //==
-    GREATER,       //>
-    GREATER_EQUAL, //>=
-    LESS,          //<
-    LESS_EQUAL,    //<=
+
+    // bitwise operator
+    PIPE,    // |
+    PERCENT, // %
+    BIT_XOR, // ^
+    BIT_AND, // &
+
+    // One or two character tokens.
+    BANG,            // !
+    BANG_EQUAL,      //!=
+    EQUAL,           // =
+    EQUAL_EQUAL,     //==
+    GREATER,         //>
+    GREATER_EQUAL,   //>=
+    GREATER_GREATER, //>>
+    LESS,            //<
+    LESS_EQUAL,      //<=
+    LESS_LESS,       //<<
 
     // Literals.
     IDENTIFIER, // a
@@ -107,6 +111,7 @@ static std::map<TokenType, std::string> TokenTypeToString = {
     {TokenType::PERCENT, "PERCENT"},
     {TokenType::BIT_XOR, "BIT_XOR"},
     {TokenType::BIT_AND, "BIT_AND"},
+
     // One or two character tokens.
     {TokenType::BANG, "BANG"},
     {TokenType::BANG_EQUAL, "BANG_EQUAL"},
@@ -114,8 +119,10 @@ static std::map<TokenType, std::string> TokenTypeToString = {
     {TokenType::EQUAL_EQUAL, "EQUAL_EQUAL"},
     {TokenType::GREATER, "GREATER"},
     {TokenType::GREATER_EQUAL, "GREATER_EQUAL"},
+    {TokenType::GREATER_GREATER, "GREATER_GREATER"},
     {TokenType::LESS, "LESS"},
     {TokenType::LESS_EQUAL, "LESS_EQUAL"},
+    {TokenType::LESS_LESS, "LESS_LESS"},
 
     // Literals.
     {TokenType::IDENTIFIER, "IDENTIFIER"},

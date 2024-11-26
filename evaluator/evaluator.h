@@ -6,6 +6,9 @@
 #include "scope.h"
 class Evaluator
 {
+private:
+    Scope scope;
+
 public:
     Evaluator() {}
     ~Evaluator() {}

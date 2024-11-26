@@ -27,6 +27,7 @@ static std::map<std::string, TokenType> keyWords = {
 std::vector<Token> Lexer::scanTokens()
 {
     char inpt;
+    int equal = 0;
     while (current < length)
     {
         start = current;
@@ -53,27 +54,26 @@ void Lexer::scanToken(char inpt)
         break;
     case '(':
         addToken(LEFT_PAREN);
-        bracketStatus++;
         break;
     case ')':
+        for (int i = 0; i < bracketStatus; i++)
+        {
+            addToken(RIGHT_PAREN);
+        }
+        bracketStatus = 0;
         addToken(RIGHT_PAREN);
-        bracketStatus--;
         break;
     case '{':
         addToken(LEFT_BRACE);
-        bracketStatus++;
         break;
     case '}':
         addToken(RIGHT_BRACE);
-        bracketStatus--;
         break;
     case '[':
         addToken(LEFT_BRACKET);
-        bracketStatus++;
         break;
     case ']':
         addToken(RIGHT_BRACKET);
-        bracketStatus--;
         break;
     case '"':
         addToken(DOUBLE_QUOTE);
@@ -91,6 +91,11 @@ void Lexer::scanToken(char inpt)
         addToken(COLON);
         break;
     case ';':
+        for (int i = 0; i < bracketStatus; i++)
+        {
+            addToken(RIGHT_PAREN);
+        }
+        bracketStatus = 0;
         addToken(SEMICOLON);
         break;
     case '?':
@@ -151,41 +156,50 @@ void Lexer::scanToken(char inpt)
         {
             current--;
             addToken(EQUAL);
+            addToken(LEFT_PAREN);
+            bracketStatus++;
         }
         break;
     case '>':
-        if (nextChar() == '=')
+    {
+        char next = nextChar();
+        if (next == '=')
         {
             addToken(GREATER_EQUAL);
+            break;
         }
-        else
+        if (next == '>')
         {
-            current--;
-            addToken(GREATER);
+            addToken(GREATER_GREATER);
+            break;
         }
+        current--;
+        addToken(GREATER);
         break;
+    }
     case '<':
-        if (nextChar() == '=')
+    {
+        char next = nextChar();
+        if (next == '=')
         {
             addToken(LESS_EQUAL);
+            break;
         }
-        else
+        else if (next == '<')
         {
-            current--;
-            addToken(LESS);
+            addToken(LESS_LESS);
+            break;
         }
+        current--;
+        addToken(LESS);
         break;
+    }
     case '^':
-    {
         addToken(BIT_XOR);
         break;
-    }
     case '&':
-    {
         addToken(BIT_AND);
         break;
-    }
-
 
     default:
         switch (findType(inpt))
@@ -247,7 +261,7 @@ inline bool Lexer::isRelationalOperator(char inpt)
 
 inline bool Lexer::isMathematicalOperator(char inpt)
 {
-    return (inpt == '+' || inpt == '-' || inpt == '*' || inpt == '/' || inpt == '%'|| inpt =='^'|| inpt =='&');
+    return (inpt == '+' || inpt == '-' || inpt == '*' || inpt == '/' || inpt == '%' || inpt == '^' || inpt == '&');
 }
 
 inline bool Lexer::isDelimiter(char inpt)
