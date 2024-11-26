@@ -2,11 +2,11 @@
 #include "evaluator.h"
 
 std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, const std::shared_ptr<Object> &left,
-                                              const std::shared_ptr<Object> &right) // 中缀表达式求值
+                                              const std::shared_ptr<Object> &right, Scope &scp) // 中缀表达式求值
 {
     // assign
     if (op == TokenType::EQUAL)
-        return eval_assign_expression(left, right);
+        return eval_assign_expression(left, right, scp);
 
     // std::cout << left->name().c_str() << TokenTypeToString[op] << right->name().c_str() << std::endl;
     // int(bool) op int(bool)
@@ -121,8 +121,26 @@ std::shared_ptr<Object> Evaluator::eval_fraction_infix_expression(const TokenTyp
     }
 }
 
-std::shared_ptr<Object> Evaluator::eval_assign_expression(const std::shared_ptr<Object> &name, const std::shared_ptr<Object> &value)
+std::shared_ptr<Object> Evaluator::eval_assign_expression(const std::shared_ptr<Object> &name, const std::shared_ptr<Object> &value, Scope &scp)
 {
-    std::cout << "eval_assign_expression: " << name->str() << " = " << value->str() << std::endl;
+    auto it = scp.m_var.find(std::dynamic_pointer_cast<Ob_Identifier>(name)->m_name);
+    if (it == scp.m_var.end())
+    {
+        std::cout << "eval_assign_expression: " << name->str() << " = " << value->str() << std::endl;
+        if (value->type() == Object::OBJECT_INTEGER)
+        {
+            std::shared_ptr<Ob_Integer> e(new Ob_Integer(std::dynamic_pointer_cast<Ob_Integer>(value)->m_value));
+            scp.m_var.insert(std::make_pair(std::dynamic_pointer_cast<Ob_Identifier>(name)->m_name, e));
+        }
+    }
+    else
+    {
+        std::cout << "change_value: " << name->str() << " = " << value->str() << std::endl;
+        if (value->type() == Object::OBJECT_INTEGER)
+        {
+            std::shared_ptr<Ob_Integer> e(new Ob_Integer(std::dynamic_pointer_cast<Ob_Integer>(value)->m_value));
+            scp.m_var[std::dynamic_pointer_cast<Ob_Identifier>(name)->m_name]=e;
+        }
+    }
     return value;
 }

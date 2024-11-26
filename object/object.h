@@ -19,7 +19,8 @@ public:
 public:
     Object() {}
     Object(Type type) : m_type(type) {}
-    virtual ~Object() {};
+    Object(const Object &obj) : m_type(obj.m_type){};
+    virtual ~Object(){};
 
     Type type() const { return m_type; }
     std::string name() const;

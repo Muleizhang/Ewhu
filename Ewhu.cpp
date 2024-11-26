@@ -101,8 +101,8 @@ public:
             ofs << buffer.GetString();
             ofs.close();
 
-            
-            auto evaluated = evaluator.eval(program);
+            static Scope global_scp;
+            auto evaluated = evaluator.eval(program, global_scp);
             if (evaluated)
             {
                 std::cout << evaluated->str() << std::endl;
