@@ -1,4 +1,3 @@
-#pragma once
 #include "evaluator.h"
 
 std::shared_ptr<Object> Evaluator::eval_integer(const std::shared_ptr<Integer> &node)

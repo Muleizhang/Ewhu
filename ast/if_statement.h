@@ -4,7 +4,7 @@
 class IfStatement : public Statement
 {
 public:
-    IfStatement() : Statement(Node::NODE_IFSTATEMENT) {}
+    IfStatement() : Statement(Type::NODE_IFSTATEMENT) {}
     ~IfStatement() {}
     virtual rapidjson::Value json(rapidjson::Document &father)
     {
@@ -15,12 +15,12 @@ public:
         rapidjson::Value statements(rapidjson::kArrayType);
         json.AddMember("expression", m_expression->json(father), father.GetAllocator());
         json.AddMember("true_statement", m_true_statement->json(father), father.GetAllocator());
-        //json.AddMember("false_statement", m_true_statement->json(father), father.GetAllocator());
+        // json.AddMember("false_statement", m_true_statement->json(father), father.GetAllocator());
         return json;
     }
 
 public:
     std::shared_ptr<Expression> m_expression;
     std::shared_ptr<Statement> m_true_statement;
-    //std::shared_ptr<Statement> m_false_statement;
+    // std::shared_ptr<Statement> m_false_statement;
 };

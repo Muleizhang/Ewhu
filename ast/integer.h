@@ -1,11 +1,11 @@
 #pragma once
 #include "node.h"
-#include "node.cpp"
+
 class Integer : public Expression
 {
 public:
     Integer() : Expression(Type::NODE_INTEGER) {}
-    ~Integer(){};
+    ~Integer() {};
 
     virtual rapidjson::Value json(rapidjson::Document &father)
     {
@@ -20,5 +20,5 @@ public:
     }
 
 public:
-    __INT64_TYPE__ m_value;
+    long long m_value;
 };

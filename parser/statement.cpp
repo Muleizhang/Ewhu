@@ -1,4 +1,3 @@
-// #pragma once
 #include "parser.h"
 #include "expression.cpp"
 

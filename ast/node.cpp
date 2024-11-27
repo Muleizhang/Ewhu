@@ -1,27 +1,15 @@
-#pragma once
-#include "Node.h"
+#include "node.h"
 
-std::unordered_map<Node::Type, std::string> Node::m_names = {
-    {Node::NODE_INTEGER, "Integer"},
-    {Node::NODE_FLOAT, "Float"},
-    {Node::NODE_STRING, "String"},
-    {Node::NODE_BOOLEAN, "Boolean"},
-    {Node::NODE_INFIX, "Infix"},
-    {Node::NODE_IDENTIFIER, "Identifier"},
-    {Node::NODE_EXPRESSION_STATEMENT, "ExpressionStatement"},
-    {Node::NODE_PROGRAM, "Program"},
-    {Node::NODE_PREFIX, "Prefix"},
-    {Node::NODE_STATEMENTBLOCK, "StatementBlock"},
-    {Node::NODE_IFSTATEMENT, "IfStatement"},
-};
-
-// return the string of the node type
-std::string Node::name() const
-{
-    auto it = m_names.find(m_type);
-    if (it == m_names.end())
-    {
-        return "";
-    }
-    return it->second;
-}
+std::unordered_map<Type, std::string> Node::m_names = {
+    {Type::NODE_INTEGER, "Integer"},
+    {Type::NODE_FLOAT, "Float"},
+    {Type::NODE_STRING, "String"},
+    {Type::NODE_BOOLEAN, "Boolean"},
+    {Type::NODE_INFIX, "Infix"},
+    {Type::NODE_IDENTIFIER, "Identifier"},
+    {Type::NODE_EXPRESSION_STATEMENT, "ExpressionStatement"},
+    {Type::NODE_PROGRAM, "Program"},
+    {Type::NODE_PREFIX, "Prefix"},
+    {Type::NODE_STATEMENTBLOCK, "StatementBlock"},
+    {Type::NODE_IFSTATEMENT, "IfStatement"},
+}; // return the string of the node type

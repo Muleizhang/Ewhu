@@ -1,4 +1,3 @@
-#pragma once
 #include "evaluator.h"
 #include "scope.h"
 std::shared_ptr<Object> Evaluator::eval_identifier(const std::shared_ptr<Identifier> &node, Scope &scp)

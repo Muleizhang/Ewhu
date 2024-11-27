@@ -1,5 +1,9 @@
-#pragma once
 #include "lexer.h"
+
+const char *Lexer::keywords[9] = {"main", "int", "float", "return", "while", "break", "continue", "if", "else"}; // 保留字
+const char *Lexer::cal_sign[7] = {"+", "-", "*", "/", "%", "^", "&"};                                            // 运算符
+const char *Lexer::space_word_table[8] = {";", ",", "[", "]", "{", "}", "(", ")"};                               // 界限符
+const char *Lexer::relation_calcu_table[7] = {"<", "<=", ">", ">=", "=", "=="};
 
 static std::unordered_map<std::string, TokenType> keyWords = {
     {"and", TokenType::AND},

@@ -1,5 +1,3 @@
-#pragma once
-
 // 运算式中()优先级较高，成为一个group
 #include "parser.h"
 
@@ -14,7 +12,7 @@ std::shared_ptr<Statement> Parser::parse_statement_block()
         {
             return nullptr;
         }
-        if (stmt.get()->m_type != Node::Type::NODE_COMMENT) // 如果指针有效
+        if (stmt.get()->m_type != Type::NODE_COMMENT) // 如果指针有效
         {
             ele->m_statements.push_back(stmt);
         }
@@ -23,4 +21,3 @@ std::shared_ptr<Statement> Parser::parse_statement_block()
     }
     return ele;
 }
-

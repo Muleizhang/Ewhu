@@ -1,5 +1,4 @@
 // 运算式中()优先级较高，成为一个group
-#pragma once
 #include "parser.h"
 
 std::shared_ptr<Expression> Parser::parse_group()

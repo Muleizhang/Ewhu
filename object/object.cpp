@@ -1,7 +1,7 @@
-#pragma once
 #include "object.h"
 #include "boolean.h"
 #include "integer.h"
+#include "string.h"
 #include "fraction.h"
 #include "identifier.h"
 #include "error.h"
@@ -46,13 +46,13 @@ std::shared_ptr<Object> Object::new_boolean(bool value)
     return e;
 }
 
-std::shared_ptr<Object> Object::new_integer(__INT64_TYPE__ value)
+std::shared_ptr<Object> Object::new_integer(long long value)
 {
     std::shared_ptr<Ob_Integer> e(new Ob_Integer(value));
     return e;
 }
 
-std::shared_ptr<Object> Object::new_fraction(__INT64_TYPE__ numerator, __INT64_TYPE__ denominator)
+std::shared_ptr<Object> Object::new_fraction(long long numerator, long long denominator)
 {
     std::shared_ptr<Ob_Fraction> e(new Ob_Fraction(numerator, denominator));
     return e;

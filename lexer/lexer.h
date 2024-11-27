@@ -51,8 +51,3 @@ private:
     int processMathematicalOperator(char inpt); // 处理数学运算符，返回运算符类型
     int processDelimiter(char inpt);            // 处理界限符，返回界限符类型
 };
-
-const char *Lexer::keywords[9] = {"main", "int", "float", "return", "while", "break", "continue", "if", "else"}; // 保留字
-const char *Lexer::cal_sign[7] = {"+", "-", "*", "/", "%", "^", "&"};                                            // 运算符
-const char *Lexer::space_word_table[8] = {";", ",", "[", "]", "{", "}", "(", ")"};                               // 界限符
-const char *Lexer::relation_calcu_table[7] = {"<", "<=", ">", ">=", "=", "=="};

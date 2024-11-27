@@ -1,4 +1,3 @@
-#pragma once
 #include "parser.h"
 
 std::shared_ptr<Expression> Parser::parse_expression(int precedence)

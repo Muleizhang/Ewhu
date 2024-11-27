@@ -1,3 +1,4 @@
+#pragma once
 #include "program.cpp"
 #include "boolean.cpp"
 #include "integer.cpp"

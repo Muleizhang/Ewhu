@@ -37,6 +37,8 @@
 # test
 test.*
 .test/
+build/*
+build_linux/*
 compiler/*
 compileObj/*
 ast.json

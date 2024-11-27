@@ -3,7 +3,6 @@
 #include "../lexer/token.h"
 #include "../ast/integer.h"
 #include "../ast/boolean.h"
-#include "../ast/string.h"
 #include "../ast/identifier.h"
 #include "../ast/expression_statement.h"
 #include "../ast/program.h"
@@ -11,6 +10,8 @@
 #include "../ast/prefix.h"
 #include "../ast/statement_block.h"
 #include "../ast/if_statement.h"
+#include "../ast/boolean.h"
+#include "../ast/node.h"
 #include <map>
 #include <unordered_map>
 

@@ -8,6 +8,5 @@
 #include "infix.h"
 #include "prefix.h"
 #include "program.h"
-#include "node.cpp"
 #include "statement_block.h"
 #include "if_statement.h"

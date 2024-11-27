@@ -1,6 +1,23 @@
 #pragma once
-#include "../ast/head.h"
-#include "../object/head.h"
+#include "../ast/node.h"
+#include "../ast/integer.h"
+#include "../ast/identifier.h"
+#include "../ast/infix.h"
+#include "../ast/prefix.h"
+#include "../ast/program.h"
+#include "../ast/statement_block.h"
+#include "../ast/if_statement.h"
+#include "../ast/expression_statement.h"
+#include "../ast/boolean.h"
+#include "../object/boolean.h"
+#include "../object/fraction.h"
+#include "../object/integer.h"
+#include "../object/string.h"
+#include "../object/identifier.h"
+#include "../object/object.h"
+#include "../object/error.h"
+
+#include <list>
 #include <memory>
 #include <unordered_map>
 #include "scope.h"
@@ -14,8 +31,8 @@ public:
     ~Evaluator() {}
 
     bool is_error(const std::shared_ptr<Object> &obj);
-    std::shared_ptr<Object> new_integer(__INT64_TYPE__ value);
-    std::shared_ptr<Object> new_fraction(__INT64_TYPE__ numerator, __INT64_TYPE__ denominator);
+    std::shared_ptr<Object> new_integer(long long value);
+    std::shared_ptr<Object> new_fraction(long long numerator, long long denominator);
     std::shared_ptr<Object> new_identifier(const std::string &value);
     std::shared_ptr<Object> new_error(const char *format, ...);
 
@@ -24,7 +41,7 @@ public:
     std::shared_ptr<Object> eval_program(const std::list<std::shared_ptr<Statement>> &node, Scope &global_scp); // 对根节点求值
     std::shared_ptr<Object> eval_integer(const std::shared_ptr<Integer> &node);                                 // 求值
 
-    std::shared_ptr<Object> eval_statement_block(const std::list<std::shared_ptr<Statement>> &stmts, Scope &scp); // 对语句块求值
+    std::shared_ptr<Object> eval_statement_block(const std::list<std::shared_ptr<Statement>> &stmts, Scope &scp);                                   // 对语句块求值
     std::shared_ptr<Object> eval_if_statement(const std::shared_ptr<Expression> &exp, const std::shared_ptr<Statement> true_statement, Scope &scp); // 对语句块求值
     std::shared_ptr<Object> eval_new_identifier(const std::shared_ptr<Identifier> &node);
     std::shared_ptr<Object> eval_identifier(const std::shared_ptr<Identifier> &node, Scope &scp); // 求值

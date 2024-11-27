@@ -1,6 +1,4 @@
-#pragma once
 #include "parser.h"
-#include "parser.cpp"
 std::shared_ptr<Statement> Parser::parse_if_statement()
 {
     std::shared_ptr<IfStatement> ele(new IfStatement());

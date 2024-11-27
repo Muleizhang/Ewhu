@@ -1,6 +1,5 @@
 #pragma once
 #include "node.h"
-#include "node.cpp"
 class Boolean : public Expression
 {
 public:

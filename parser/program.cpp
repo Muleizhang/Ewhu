@@ -1,4 +1,3 @@
-#pragma once
 #include "parser.h" //创建程序的根节点
 #include "statement.cpp"
 void Parser::parse_program()
@@ -11,7 +10,7 @@ void Parser::parse_program()
         {
             return;
         }
-        if (stmt.get()->m_type != Node::Type::NODE_COMMENT) // 如果指针有效
+        if (stmt.get()->m_type != Type::NODE_COMMENT) // 如果指针有效
         {
             // std::cout << stmt << std::endl;
             // std::cout << m_program << std::endl;

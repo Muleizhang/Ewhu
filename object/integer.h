@@ -5,7 +5,7 @@ class Ob_Integer : public Object
 {
 public:
     Ob_Integer() : Object(Object::OBJECT_INTEGER), m_value(0) {}
-    Ob_Integer(__INT64_TYPE__ value) : Object(Object::OBJECT_INTEGER), m_value(value) {}
+    Ob_Integer(long long value) : Object(Object::OBJECT_INTEGER), m_value(value) {}
     ~Ob_Integer() {}
 
     virtual std::string str() const
@@ -14,5 +14,5 @@ public:
     }
 
 public:
-    __INT64_TYPE__ m_value;
+    long long m_value;
 };
