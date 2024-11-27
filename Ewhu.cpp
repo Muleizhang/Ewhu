@@ -31,11 +31,17 @@ public:
         std::vector<Token> token;
         Parser parser;
         Evaluator evaluator;
+
+        auto start = std::chrono::high_resolution_clock::now();
         while (std::getline(file, line))
         {
             std::cout << lineNum++ << " ";
-            run(line, token, parser, evaluator);
+            benchMarkRun(line, token, parser, evaluator);
         }
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration = end - start;
+        std::cout << "run time: " << duration.count() << " s" << std::endl
+                  << std::endl;
 
         file.close();
     }
@@ -78,70 +84,42 @@ public:
             std::cout << "run time: " << duration.count() << " s" << std::endl;
         }
     }
+
     static void benchMarkRun(const std::string &source, std::vector<Token> &tokens,
                              Parser &parser, Evaluator &evaluator)
     {
-        auto lx_start = std::chrono::high_resolution_clock::now();
+        // auto lx_start = std::chrono::high_resolution_clock::now();
         Lexer lx(source);
         std::vector<Token> new_tokens = lx.scanTokens();
         tokens.insert(tokens.end(), new_tokens.begin(), new_tokens.end());
-        auto lx_end = std::chrono::high_resolution_clock::now();
-        std::chrono::duration<double> duration = lx_end - lx_start;
-        std::cout << "lx time: " << duration.count() << " s" << std::endl;
-
-        for (auto token : tokens)
-            std::cout << token.toString();
-        std::cout << std::endl;
+        // auto lx_end = std::chrono::high_resolution_clock::now();
+        // std::chrono::duration<double> duration = lx_end - lx_start;
+        // std::cout << "lx time: " << duration.count() << " s" << std::endl;
 
         if ((--tokens.end())->type == TokenType::SEMICOLON)
         {
-            auto parse_start = std::chrono::high_resolution_clock::now();
+            // auto parse_start = std::chrono::high_resolution_clock::now();
             parser.new_sentence(tokens.begin(), tokens.end());
             parser.parse_program();
             tokens.clear();
-            auto parse_end = std::chrono::high_resolution_clock::now();
-            std::chrono::duration<double> duration = parse_end - parse_start;
-            std::cout << "parse time: " << duration.count() << " s" << std::endl;
+            // auto parse_end = std::chrono::high_resolution_clock::now();
+            // std::chrono::duration<double> parse_duration = parse_end - parse_start;
+            // std::cout << "parse time: " << parse_duration.count() << " s" << std::endl;
 
             auto program = parser.m_program;
-            auto errors = parser.errors();
 
-            if (!errors.empty())
-            {
+            // auto eval_start = std::chrono::high_resolution_clock::now();
+            static Scope global_scp;
+            auto evaluated = evaluator.eval(program, global_scp);
+            // auto eval_end = std::chrono::high_resolution_clock::now();
+            // std::chrono::duration<double> eval_duration = eval_end - eval_start;
+            // std::cout << "evaluate time: " << eval_duration.count() << " s" << std::endl;
 
-                for (auto error : errors)
-                {
-                    std::cout << error << std::endl;
-                }
-
-                parser.errors().clear();
-            }
-            else
-            {
-                /*
-                rapidjson::Document root;
-                root.SetObject();
-                root.AddMember("program", parser.m_program->json(root), root.GetAllocator());
-                rapidjson::StringBuffer buffer;
-                rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-                root.Accept(writer);
-                std::ofstream ofs("ast.json");
-                ofs << buffer.GetString();
-                ofs.close();
-                */
-
-                auto parse_start = std::chrono::high_resolution_clock::now();
-                static Scope global_scp;
-                auto evaluated = evaluator.eval(program, global_scp);
-                auto parse_end = std::chrono::high_resolution_clock::now();
-                std::chrono::duration<double> duration = parse_end - parse_start;
-                std::cout << "evaluate time: " << duration.count() << " s" << std::endl;
-
-                if (evaluated)
-                    std::cout << evaluated->str() << std::endl;
-            }
+            if (evaluated)
+                std::cout << evaluated->str() << std::endl;
         }
     }
+
     static void run(const std::string &source, std::vector<Token> &tokens,
                     Parser &parser, Evaluator &evaluator)
     {
@@ -192,8 +170,8 @@ public:
 
 int main(int argc, char *argv[])
 {
-    // SetConsoleOutputCP(CP_UTF8);
-
+    std::ios::sync_with_stdio(false);
+    std::cout << "Ewhu Programming Language" << std::endl;
     if (argc > 3)
     {
         std::cerr << "Compile File Usage: Ewhu [script] [output]" << std::endl;

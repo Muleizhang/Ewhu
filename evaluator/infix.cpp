@@ -5,8 +5,8 @@
 std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, const std::shared_ptr<Object> &left,
                                               const std::shared_ptr<Object> &right, Scope &scp) // 中缀表达式求值
 {
-    std::cout << "eval_infix: " << left->str() << "(" << left->name() << ") " << TokenTypeToString[op]
-              << " " << right->str() << "(" << right->name() << ")" << std::endl;
+    // std::cout << "eval_infix: " << left->str() << "(" << left->name() << ") " << TokenTypeToString[op]
+    //           << " " << right->str() << "(" << right->name() << ")" << std::endl;
 
     // assign
     if (op == TokenType::EQUAL)
@@ -147,7 +147,7 @@ std::shared_ptr<Object> Evaluator::eval_assign_expression(const std::shared_ptr<
     auto it = scp.m_var.find(std::dynamic_pointer_cast<Ob_Identifier>(name)->m_name);
     if (it == scp.m_var.end())
     {
-        std::cout << "eval_assign_expression: " << name->str() << " = " << value->str() << std::endl;
+        // std::cout << "eval_assign_expression: " << name->str() << " = " << value->str() << std::endl;
 
         std::shared_ptr<Object> e;
         switch (value->type())
@@ -176,7 +176,7 @@ std::shared_ptr<Object> Evaluator::eval_assign_expression(const std::shared_ptr<
     }
     else
     {
-        std::cout << "change_value: " << name->str() << " = " << value->str() << std::endl;
+        // std::cout << "change_value: " << name->str() << " = " << value->str() << std::endl;
         switch (value->type())
         {
         case Object::OBJECT_INTEGER:
