@@ -15,9 +15,8 @@ class Ewhu
 {
 private:
 public:
-    static void runFile(const std::string &path)
+    static void compileFile(const std::string &path, const std::string &output)
     {
-        // 打开文件并读取内容
         std::ifstream file(path);
         if (!file.is_open())
         {
@@ -35,6 +34,33 @@ public:
             std::cout << lineNum++ << " ";
             run(line, token, parser, evaluator);
             std::cout << std::endl;
+        }
+
+        file.close();
+    }
+
+    static void runFile(const std::string &path)
+    {
+        std::ifstream file(path);
+        if (!file.is_open())
+        {
+            std::cerr << "Error: Could not open file " << path << std::endl;
+            exit(-1);
+        }
+
+        std::string line;
+        int lineNum = 1;
+        std::vector<Token> token;
+        Parser parser;
+        Evaluator evaluator;
+        while (std::getline(file, line))
+        {
+            std::cout << lineNum++ << " ";
+            auto start = std::chrono::high_resolution_clock::now();
+            run(line, token, parser, evaluator);
+            auto end = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double> duration = end - start;
+            std::cout << "run time: " << duration.count() << " s" << std::endl;
         }
 
         file.close();
@@ -71,15 +97,17 @@ public:
 
         tokens.insert(tokens.end(), new_tokens.begin(), new_tokens.end());
 
+        /*
         for (auto token : tokens)
         {
             std::cout << token.toString();
         }
+        */
 
-        std::cout << std::endl;
+        // std::cout << std::endl;
 
         // 到达分号时，解析语句
-        if ((--tokens.end())->type == TokenType::SEMICOLON||(--tokens.end())->type == TokenType::RIGHT_BRACE)
+        if ((--tokens.end())->type == TokenType::SEMICOLON)
         {
             rapidjson::Document root;
             root.SetObject();
@@ -91,16 +119,20 @@ public:
 
             auto program = parser.m_program;
             auto errors = parser.errors();
+
             if (!errors.empty())
             {
+                /*
                 for (auto error : errors)
                 {
                     std::cout << error << std::endl;
                 }
+                */
                 parser.errors().clear();
             }
             else
             {
+                /*
                 root.AddMember("program", parser.m_program->json(root), root.GetAllocator());
                 rapidjson::StringBuffer buffer;
                 rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
@@ -108,13 +140,16 @@ public:
                 std::ofstream ofs("ast.json");
                 ofs << buffer.GetString();
                 ofs.close();
+                */
 
                 static Scope global_scp;
                 auto evaluated = evaluator.eval(program, global_scp);
+                /*
                 if (evaluated)
                 {
                     std::cout << evaluated->str() << std::endl;
                 }
+                */
             }
         }
     }
@@ -124,12 +159,17 @@ int main(int argc, char *argv[])
 {
     // SetConsoleOutputCP(CP_UTF8);
 
-    if (argc > 2)
+    if (argc > 3)
     {
+        std::cerr << "Compile File Usage: Ewhu [script] [output]" << std::endl;
         std::cerr << "Run File Usage: Ewhu [script]" << std::endl;
         std::cerr << "Run Prompt Usage: Ewhu" << std::endl;
 
         exit(64);
+    }
+    else if (argc == 3)
+    {
+        Ewhu::compileFile(argv[1], argv[2]); // 编译传入的脚本文件
     }
     else if (argc == 2)
     {

@@ -1,5 +1,8 @@
 #pragma once
 #include "parser.h"
+#include <map>
+#include <unordered_map>
+
 std::map<TokenType, int> Parser::m_precedences =
     {
         {TokenType::EQUAL, ASSIGN},
@@ -23,7 +26,7 @@ std::map<TokenType, int> Parser::m_precedences =
 
         {TokenType::DOT, DOT},
 };
-std::map<TokenType, Parser::prefix_parse_fn> Parser::m_prefix_parse_fns =
+std::unordered_map<TokenType, Parser::prefix_parse_fn> Parser::m_prefix_parse_fns =
     {
         {TokenType::TRUE, &Parser::parse_boolean},
         {TokenType::FALSE, &Parser::parse_boolean},
@@ -35,7 +38,7 @@ std::map<TokenType, Parser::prefix_parse_fn> Parser::m_prefix_parse_fns =
         {TokenType::BANG, &Parser::parse_prefix},
         {TokenType::IDENTIFIER, &Parser::parse_identifier},
 };
-std::map<TokenType, Parser::infix_parse_fn> Parser::m_infix_parse_fns =
+std::unordered_map<TokenType, Parser::infix_parse_fn> Parser::m_infix_parse_fns =
     {
         {TokenType::PLUS, &Parser::parse_infix},
         {TokenType::MINUS, &Parser::parse_infix},
@@ -58,7 +61,7 @@ std::map<TokenType, Parser::infix_parse_fn> Parser::m_infix_parse_fns =
         {TokenType::BIT_AND, &Parser::parse_infix},
 
 };
-std::map<TokenType, Parser::control_flow_fn> Parser::m_control_flow_fns =
+std::unordered_map<TokenType, Parser::control_flow_fn> Parser::m_control_flow_fns =
     {
         {TokenType::LEFT_BRACE, &Parser::parse_statement_block},
         {TokenType::IF, &Parser::parse_if_statement},

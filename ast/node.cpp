@@ -1,7 +1,7 @@
 #pragma once
 #include "Node.h"
 
-std::map<Node::Type, std::string> Node::m_names = {
+std::unordered_map<Node::Type, std::string> Node::m_names = {
     {Node::NODE_INTEGER, "Integer"},
     {Node::NODE_FLOAT, "Float"},
     {Node::NODE_STRING, "String"},

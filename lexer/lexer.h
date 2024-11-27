@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <cstring>
 #include <vector>
+#include <unordered_map>
 #include "token.h"
 
 class Lexer

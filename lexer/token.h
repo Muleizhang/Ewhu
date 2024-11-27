@@ -5,7 +5,7 @@
 #include <variant>
 #include <vector>
 #include <variant>
-#include <map>
+#include <unordered_map>
 #include <iomanip>
 
 enum TokenType
@@ -84,7 +84,7 @@ enum TokenType
     EMPTY // empty
 };
 
-static std::map<TokenType, std::string> TokenTypeToString = {
+static std::unordered_map<TokenType, std::string> TokenTypeToString = {
     // Single-character tokens.
     {TokenType::LEFT_PAREN, "LEFT_PAREN"},
     {TokenType::RIGHT_PAREN, "RIGHT_PAREN"},

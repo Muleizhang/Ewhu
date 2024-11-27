@@ -1,7 +1,7 @@
 #pragma once
 #include "lexer.h"
 
-static std::map<std::string, TokenType> keyWords = {
+static std::unordered_map<std::string, TokenType> keyWords = {
     {"and", TokenType::AND},
     {"or", TokenType::OR},
     {"xor", TokenType::XOR},
@@ -27,7 +27,7 @@ static std::map<std::string, TokenType> keyWords = {
 std::vector<Token> Lexer::scanTokens()
 {
     char inpt;
-    //int equal = 0;
+    // int equal = 0;
     while (current < length)
     {
         start = current;

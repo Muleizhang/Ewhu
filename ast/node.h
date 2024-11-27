@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <unordered_map>
 #include "../lexer/token.h"
 #include "../rapidjson/include/rapidjson/document.h"
 #include "../rapidjson/include/rapidjson/writer.h"
@@ -35,7 +36,7 @@ public:
 public:
     Type m_type;
     Token m_token;
-    static std::map<Type, std::string> m_names;
+    static std::unordered_map<Type, std::string> m_names;
 };
 
 class Expression : public Node
