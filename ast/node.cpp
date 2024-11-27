@@ -12,6 +12,7 @@ std::map<Node::Type, std::string> Node::m_names = {
     {Node::NODE_PROGRAM, "Program"},
     {Node::NODE_PREFIX, "Prefix"},
     {Node::NODE_STATEMENTBLOCK, "StatementBlock"},
+    {Node::NODE_IFSTATEMENT, "IfStatement"},
 };
 
 // return the string of the node type

@@ -21,6 +21,7 @@ public:
         NODE_PROGRAM,
         NODE_COMMENT,
         NODE_STATEMENTBLOCK,
+        NODE_IFSTATEMENT,
     };
 
     Node() {}

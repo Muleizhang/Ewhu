@@ -10,6 +10,7 @@
 #include "../ast/infix.h"
 #include "../ast/prefix.h"
 #include "../ast/statement_block.h"
+#include "../ast/if_statement.h"
 class Parser
 {
 public:
@@ -61,8 +62,8 @@ public:
     // 中缀
     std::shared_ptr<Expression> parse_infix(const std::shared_ptr<Expression> &left);
 
-    // 语句块
-    std::shared_ptr<Statement> parse_statement_block();
+    std::shared_ptr<Statement> parse_statement_block(); // 语句块
+    std::shared_ptr<Statement> parse_if_statement();    // if语句
 
     void parse_program();
     std::shared_ptr<Statement> parse_statement();
