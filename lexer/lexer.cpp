@@ -200,7 +200,8 @@ void Lexer::scanToken(char inpt)
     case '&':
         addToken(BIT_AND);
         break;
-
+    case '\r':
+        break;
     default:
         switch (findType(inpt))
         {
