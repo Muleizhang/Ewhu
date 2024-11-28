@@ -1,13 +1,8 @@
-#pragma once
 #include "object.h"
-#include "boolean.h"
-#include "integer.h"
-#include "fraction.h"
-#include "identifier.h"
-#include "error.h"
 #include <string>
-#include <stdarg.h>
-std::map<Object::Type, std::string> Object::m_names = {
+// #include <stdarg.h>
+
+std::unordered_map<Object::Type, std::string> Object::m_names = {
     {Object::OBJECT_ERROR, "Error"},
     {Object::OBJECT_BOOLEAN, "Boolean"},
     {Object::OBJECT_INTEGER, "Integer"},
@@ -38,34 +33,4 @@ std::shared_ptr<Object> new_error(const char *format, ...)
     std::shared_ptr<Ob_Error> obj(new Ob_Error());
     obj->m_messages = buf;
     return obj;
-}
-
-std::shared_ptr<Object> Object::new_boolean(bool value)
-{
-    std::shared_ptr<Ob_Boolean> e(new Ob_Boolean(value));
-    return e;
-}
-
-std::shared_ptr<Object> Object::new_integer(__INT64_TYPE__ value)
-{
-    std::shared_ptr<Ob_Integer> e(new Ob_Integer(value));
-    return e;
-}
-
-std::shared_ptr<Object> Object::new_fraction(__INT64_TYPE__ numerator, __INT64_TYPE__ denominator)
-{
-    std::shared_ptr<Ob_Fraction> e(new Ob_Fraction(numerator, denominator));
-    return e;
-}
-
-std::shared_ptr<Object> Object::new_string(const std::string &value)
-{
-    std::shared_ptr<Ob_String> e(new Ob_String(value));
-    return e;
-}
-
-std::shared_ptr<Object> Object::new_identifier(const std::string &value)
-{
-    std::shared_ptr<Ob_Identifier> e(new Ob_Identifier(value));
-    return e;
 }

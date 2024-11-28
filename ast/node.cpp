@@ -1,5 +1,4 @@
-#pragma once
-#include "Node.h"
+#include "node.h"
 
 std::unordered_map<Node::Type, std::string> Node::m_names = {
     {Node::NODE_INTEGER, "Integer"},

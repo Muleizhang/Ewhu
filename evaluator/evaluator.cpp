@@ -1,49 +1,5 @@
 #include "evaluator.h"
 
-bool Evaluator::is_error(const std::shared_ptr<Object> &obj)
-{
-    return obj->type() == Object::OBJECT_ERROR;
-}
-
-std::shared_ptr<Object> Evaluator::new_error(const char *format, ...)
-{
-    char buf[114514] = {0};
-    va_list arg_ptr;
-    va_start(arg_ptr, format);
-    vsnprintf(buf, sizeof(buf), format, arg_ptr);
-    va_end(arg_ptr);
-
-    std::shared_ptr<Ob_Error> obj(new Ob_Error());
-    obj->m_messages = buf;
-    return obj;
-}
-
-std::shared_ptr<Object> Evaluator::new_integer(__INT64_TYPE__ value)
-{
-    return Object::new_integer(value);
-}
-
-std::shared_ptr<Object> Evaluator::new_fraction(__INT64_TYPE__ numerator, __INT64_TYPE__ denominator)
-{
-    return Object::new_fraction(numerator, denominator);
-}
-
-std::shared_ptr<Object> Evaluator::new_identifier(const std::string &value)
-{
-    return Object::new_identifier(value);
-}
-
-std::shared_ptr<Object> Evaluator::eval_left(const std::shared_ptr<Node> &node, Scope &scp)
-{
-    if (node->type() != Node::NODE_IDENTIFIER)
-        return Evaluator::eval(node, scp);
-    else
-    {
-        auto e = std::dynamic_pointer_cast<Identifier>(node);
-        return eval_new_identifier(e);
-    }
-}
-
 std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node, Scope &scp)
 {
     switch (node->type())
@@ -83,7 +39,7 @@ std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node, Scope
     case Node::NODE_BOOLEAN:
     {
         auto e = std::dynamic_pointer_cast<Boolean>(node);
-        return Object::new_boolean(e->m_value);
+        return std::make_shared<Ob_Boolean>(e->m_value);
     }
     case Node::NODE_INTEGER:
     {
@@ -93,7 +49,7 @@ std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node, Scope
     case Node::NODE_STRING:
     {
         auto e = std::dynamic_pointer_cast<String>(node);
-        return Object::new_string(e->m_value);
+        return std::make_shared<Ob_String>(e->m_value);
     }
     case Node::NODE_INFIX:
     {
@@ -130,4 +86,59 @@ std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node, Scope
         break; // error
     }
     }
+}
+
+bool Evaluator::is_error(const std::shared_ptr<Object> &obj)
+{
+    return obj->type() == Object::OBJECT_ERROR;
+}
+
+std::shared_ptr<Object> Evaluator::new_error(const char *format, ...)
+{
+    char buf[114514] = {0};
+    va_list arg_ptr;
+    va_start(arg_ptr, format);
+    vsnprintf(buf, sizeof(buf), format, arg_ptr);
+    va_end(arg_ptr);
+
+    std::shared_ptr<Ob_Error> obj(new Ob_Error());
+    obj->m_messages = buf;
+    return obj;
+}
+
+std::shared_ptr<Object> Evaluator::new_integer(__INT64_TYPE__ value)
+{
+    return std::make_shared<Ob_Integer>(value);
+}
+
+std::shared_ptr<Object> Evaluator::new_identifier(const std::string &value)
+{
+    return std::make_shared<Ob_Identifier>(value);
+}
+
+std::shared_ptr<Object> Evaluator::eval_left(const std::shared_ptr<Node> &node, Scope &scp)
+{
+    if (node->type() != Node::NODE_IDENTIFIER)
+        return Evaluator::eval(node, scp);
+    else
+    {
+        auto e = std::dynamic_pointer_cast<Identifier>(node);
+        return eval_new_identifier(e);
+    }
+}
+
+std::shared_ptr<Object> Evaluator::eval_program(const std::list<std::shared_ptr<Statement>> &stmts, Scope &global_scp)
+{
+    std::shared_ptr<Object> result;
+
+    result = eval(*(--stmts.end()), global_scp);
+    // for (auto &stat : stmts)
+    // {
+    //     result = eval(stat);
+    //     if (is_error(result))
+    //     {
+    //         break;
+    //     }
+    // }
+    return result;
 }

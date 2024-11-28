@@ -1,7 +1,4 @@
-#pragma once
 #include "parser.h"
-#include <map>
-#include <unordered_map>
 
 std::map<TokenType, int> Parser::m_precedences =
     {

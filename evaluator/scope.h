@@ -1,16 +1,15 @@
 // 负责局部变量的作用范围
 #pragma once
-#include <unordered_map>
-#include <map>
 #include <string>
 #include <memory>
+#include <unordered_map>
 #include "../object/object.h"
 
 class Scope
 {
 public:
-    Scope(std::unordered_map<std::string, std::shared_ptr<Object>>scp):m_var(scp){}
-    Scope(){}
+    Scope(std::unordered_map<std::string, std::shared_ptr<Object>> scp) : m_var(scp) {}
+    Scope() {}
     ~Scope()
     {
         for (auto it : m_var)

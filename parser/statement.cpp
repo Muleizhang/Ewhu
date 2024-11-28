@@ -1,6 +1,25 @@
-// #pragma once
 #include "parser.h"
-#include "expression.cpp"
+
+std::shared_ptr<Statement> Parser::parse_statement_block()
+{
+    std::shared_ptr<StatementBlock> ele(new StatementBlock());
+    while (m_curr.type != TokenType::EOF_TOKEN && m_peek.type != TokenType::RIGHT_BRACE) // 解析代码块
+    {
+        next_token();
+        std::shared_ptr<Statement> stmt = parse_statement();
+        if (stmt == nullptr) // pass comment
+        {
+            return nullptr;
+        }
+        if (stmt.get()->m_type != Node::Type::NODE_COMMENT) // 如果指针有效
+        {
+            ele->m_statements.push_back(stmt);
+        }
+        if (m_curr.type != TokenType::SEMICOLON)
+            next_token();
+    }
+    return ele;
+}
 
 std::shared_ptr<Statement> Parser::parse_statement()
 {
@@ -47,4 +66,26 @@ std::shared_ptr<ExpressionStatement> Parser::parse_expression_statement()
         next_token();
     }
     return s;
+}
+
+std::shared_ptr<Statement> Parser::parse_while_statement()
+{
+    std::shared_ptr<WhileStatement> ele(new WhileStatement());
+    ele->m_token = m_curr;
+    next_token();
+    ele->m_expression = parse_expression(LOWEST);
+    next_token();
+    ele->m_cycle_statement = parse_statement();
+    return ele;
+}
+
+std::shared_ptr<Statement> Parser::parse_if_statement()
+{
+    std::shared_ptr<IfStatement> ele(new IfStatement());
+    ele->m_token = m_curr;
+    next_token();
+    ele->m_expression = parse_expression(LOWEST);
+    next_token();
+    ele->m_true_statement = parse_statement();
+    return ele;
 }

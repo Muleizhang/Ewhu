@@ -36,11 +36,7 @@
 
 # test
 test.*
-.test/
-compiler/*
-compileObj/*
-build/*
-ast.json
+/build/
+/build_linux/
 ast.json
 callgrind.out.*
-Ewhu
