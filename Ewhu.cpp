@@ -102,6 +102,8 @@ public:
             auto program = parser.m_program;
             static Scope global_scp;
             auto evaluated = evaluator.eval(program, global_scp);
+            if (!evaluated)
+                std::cout << "Error: No output" << std::endl;
         }
     }
 

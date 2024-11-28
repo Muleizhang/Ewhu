@@ -1,6 +1,6 @@
 #include "evaluator.h"
 
-std::shared_ptr<Object> Evaluator::eval_statement_block(const std::list<std::shared_ptr<Statement>> &stmts, Scope &scp)
+std::shared_ptr<Object> Evaluator::eval_statement_block(const std::vector<std::shared_ptr<Statement>> &stmts, Scope &scp)
 {
     std::shared_ptr<Object> result;
     Scope temp_scope(scp.m_var); // 局部作用域

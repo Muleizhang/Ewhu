@@ -82,8 +82,8 @@ std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node, Scope
     }
     default:
     {
-        return new_error("Evaluator: node type error");
-        break; // error
+        return new_error("Evaluator: node type error: %d", Node::m_names[node->type()]);
+        break;
     }
     }
 }
@@ -127,7 +127,7 @@ std::shared_ptr<Object> Evaluator::eval_left(const std::shared_ptr<Node> &node, 
     }
 }
 
-std::shared_ptr<Object> Evaluator::eval_program(const std::list<std::shared_ptr<Statement>> &stmts, Scope &global_scp)
+std::shared_ptr<Object> Evaluator::eval_program(const std::vector<std::shared_ptr<Statement>> &stmts, Scope &global_scp)
 {
     std::shared_ptr<Object> result;
 

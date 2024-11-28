@@ -23,7 +23,7 @@ public:
     }
 
 public:
-    std::list<std::shared_ptr<Statement>> m_statements;
+    std::vector<std::shared_ptr<Statement>> m_statements;
 };
 
 class ExpressionStatement : public Statement
@@ -68,7 +68,7 @@ public:
     }
 
 public:
-    std::list<std::shared_ptr<Statement>> m_statements;
+    std::vector<std::shared_ptr<Statement>> m_statements;
 };
 
 class IfStatement : public Statement
