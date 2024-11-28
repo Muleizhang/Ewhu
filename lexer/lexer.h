@@ -14,8 +14,7 @@ public:
     static const char *space_word_table[8];     // 界限符
     static const char *relation_calcu_table[7]; // 比较运算符
 
-    const std::string source;
-    const int length;          // source.length()
+    std::string source;
     std::vector<Token> tokens; // 保存 Token 的列表
     int start = 0;
     int current = 0;
@@ -23,7 +22,8 @@ public:
     int read_current = 0;
     int bracketStatus = 0; // := 前括号数量 - 后括号数量
 
-    Lexer(const std::string &source) : source(source), length(source.length()) {}
+    Lexer() {}
+    Lexer(const std::string &source) : source(source) {}
 
     // 返回下一个Token
     Token nextToken();

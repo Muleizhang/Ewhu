@@ -28,12 +28,18 @@ std::vector<Token> Lexer::scanTokens()
 {
     char inpt;
     // int equal = 0;
+    int length = source.length();
     while (current < length)
     {
         start = current;
         inpt = nextChar();
         scanToken(inpt);
     }
+    // reinitialize
+    start = 0;
+    current = 0;
+    line = 1;
+    read_current = 0;
     return tokens;
 }
 

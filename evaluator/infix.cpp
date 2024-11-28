@@ -41,16 +41,37 @@ std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, const std::sha
     // string op string
     if (left->type() == Object::OBJECT_STRING && right->type() == Object::OBJECT_STRING)
     {
-        auto l = std::dynamic_pointer_cast<Ob_String>(left);
-        auto r = std::dynamic_pointer_cast<Ob_String>(right);
+        auto l = std::dynamic_pointer_cast<Ob_String>(left)->m_value;
+        auto r = std::dynamic_pointer_cast<Ob_String>(right)->m_value;
         switch (op)
         {
         case TokenType::PLUS:
-            return std::make_shared<Ob_String>(l->m_value + r->m_value);
+            return std::make_shared<Ob_String>(l + r);
         case TokenType::EQUAL_EQUAL:
-            return std::make_shared<Ob_Boolean>(l->m_value == r->m_value);
+            return std::make_shared<Ob_Boolean>(l == r);
         case TokenType::BANG_EQUAL:
-            return std::make_shared<Ob_Boolean>(l->m_value != r->m_value);
+            return std::make_shared<Ob_Boolean>(l != r);
+        default:
+            return new_error("Evaluator::eval_infix unknown operation: %s %s %s", left->name().c_str(), TokenTypeToString[op].c_str(), right->name().c_str());
+        }
+    }
+    // string op int
+    if (left->type() == Object::OBJECT_STRING && right->type() == Object::OBJECT_INTEGER)
+    {
+        auto l = std::dynamic_pointer_cast<Ob_String>(left)->m_value;
+        auto r = std::dynamic_pointer_cast<Ob_Integer>(right)->m_value;
+        std::string result;
+        switch (op)
+        {
+        case TokenType::STAR:
+            for (int i = 0; i < r; i++)
+                result += l;
+            return std::make_shared<Ob_String>(result);
+        case TokenType::DOT:
+            if (r < l.length())
+                return std::make_shared<Ob_String>(l[r]);
+            else
+                return new_error("Evaluator::eval_infix: index %d out of length %d", r, l.length());
         default:
             return new_error("Evaluator::eval_infix unknown operation: %s %s %s", left->name().c_str(), TokenTypeToString[op].c_str(), right->name().c_str());
         }
