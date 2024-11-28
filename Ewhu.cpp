@@ -92,7 +92,11 @@ public:
         lexer.source = source;
         std::vector<Token> new_tokens = lexer.scanTokens();
         tokens.insert(tokens.end(), new_tokens.begin(), new_tokens.end());
-        if ((--tokens.end())->type == TokenType::SEMICOLON)
+        // auto lx_end = std::chrono::high_resolution_clock::now();
+        // std::chrono::duration<double> duration = lx_end - lx_start;
+        // std::cout << "lx time: " << duration.count() << " s" << std::endl;
+
+        if ((--tokens.end())->type == TokenType::SEMICOLON||(--tokens.end())->type == TokenType::RIGHT_BRACE)
         {
             parser.new_sentence(tokens.begin(), tokens.end());
             parser.parse_program();
@@ -115,7 +119,7 @@ public:
             std::cout << token.toString();
         std::cout << std::endl;
 
-        if ((--tokens.end())->type == TokenType::SEMICOLON)
+        if ((--tokens.end())->type == TokenType::SEMICOLON||(--tokens.end())->type == TokenType::RIGHT_BRACE)
         {
             parser.new_sentence(tokens.begin(), tokens.end());
             parser.parse_program();
