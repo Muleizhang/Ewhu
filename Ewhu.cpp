@@ -96,7 +96,9 @@ public:
         // std::chrono::duration<double> duration = lx_end - lx_start;
         // std::cout << "lx time: " << duration.count() << " s" << std::endl;
 
-        if ((--tokens.end())->type == TokenType::SEMICOLON||(--tokens.end())->type == TokenType::RIGHT_BRACE)
+        if ((lexer.braceStatus == 0) &&
+            ((--tokens.end())->type == TokenType::SEMICOLON ||
+             (--tokens.end())->type == TokenType::RIGHT_BRACE))
         {
             parser.new_sentence(tokens.begin(), tokens.end());
             parser.parse_program();
@@ -119,7 +121,9 @@ public:
             std::cout << token.toString();
         std::cout << std::endl;
 
-        if ((--tokens.end())->type == TokenType::SEMICOLON||(--tokens.end())->type == TokenType::RIGHT_BRACE)
+        if ((lexer.braceStatus == 0) &&
+            ((--tokens.end())->type == TokenType::SEMICOLON ||
+             (--tokens.end())->type == TokenType::RIGHT_BRACE))
         {
             parser.new_sentence(tokens.begin(), tokens.end());
             parser.parse_program();

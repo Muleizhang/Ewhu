@@ -70,10 +70,12 @@ void Lexer::scanToken(char inpt)
         addToken(RIGHT_PAREN);
         break;
     case '{':
+        braceStatus++;
         addToken(LEFT_BRACE);
         break;
     case '}':
         addToken(RIGHT_BRACE);
+        braceStatus--;
         break;
     case '[':
         addToken(LEFT_BRACKET);

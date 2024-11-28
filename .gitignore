@@ -39,6 +39,7 @@ test.*
 .test/
 compiler/*
 compileObj/*
+build/*
 ast.json
 ast.json
 callgrind.out.*
