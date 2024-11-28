@@ -9,3 +9,4 @@
 #include "string.cpp"
 #include "statement_block.cpp"
 #include "if_statement.cpp"
+#include "while_statement.cpp"

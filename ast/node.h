@@ -23,6 +23,7 @@ public:
         NODE_COMMENT,
         NODE_STATEMENTBLOCK,
         NODE_IFSTATEMENT,
+        NODE_WHILESTATEMENT,
     };
 
     Node() {}

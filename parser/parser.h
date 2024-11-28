@@ -11,6 +11,7 @@
 #include "../ast/prefix.h"
 #include "../ast/statement_block.h"
 #include "../ast/if_statement.h"
+#include "../ast/while_statement.h"
 #include <map>
 #include <unordered_map>
 
@@ -67,6 +68,7 @@ public:
 
     std::shared_ptr<Statement> parse_statement_block(); // 语句块
     std::shared_ptr<Statement> parse_if_statement();    // if语句
+    std::shared_ptr<Statement> parse_while_statement(); // while语句
 
     void parse_program();
     std::shared_ptr<Statement> parse_statement();

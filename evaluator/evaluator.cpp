@@ -1,4 +1,3 @@
-#pragma once
 #include "evaluator.h"
 
 bool Evaluator::is_error(const std::shared_ptr<Object> &obj)
@@ -65,6 +64,11 @@ std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node, Scope
     {
         auto s = std::dynamic_pointer_cast<IfStatement>(node);
         return eval_if_statement(s->m_expression, s->m_true_statement, scp);
+    }
+    case Node::NODE_WHILESTATEMENT:
+    {
+        auto s = std::dynamic_pointer_cast<WhileStatement>(node);
+        return eval_while_statement(s->m_expression, s->m_cycle_statement, scp);
     }
     case Node::NODE_EXPRESSION_STATEMENT:
     {
