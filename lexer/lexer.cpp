@@ -225,7 +225,7 @@ void Lexer::scanToken(char inpt)
             break;
         default:
             std::cerr << inpt << "[error:unknown_charactor] id=" << findType(inpt) << std::endl;
-            tokens.push_back(Token(TokenType::ERR, std::monostate(), line));
+            // tokens.push_back(Token(TokenType::ERR, std::monostate(), line));
         }
     }
 }
