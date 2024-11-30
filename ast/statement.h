@@ -117,3 +117,18 @@ public:
     std::shared_ptr<Statement> m_cycle_statement;
     // std::shared_ptr<Statement> m_false_statement;
 };
+
+class BreakStatement: public Statement
+{
+public:
+    BreakStatement() : Statement(Node::NODE_BREAKSTATEMENT){}
+    ~BreakStatement(){}
+    virtual rapidjson::Value json(rapidjson::Document & father)
+    {
+        rapidjson::Value json(rapidjson::kObjectType);
+        std::string *typeStr = new std::string;
+        *typeStr = name();
+        json.AddMember("type", rapidjson::StringRef(typeStr->c_str()), father.GetAllocator());
+        return json;
+    }
+};

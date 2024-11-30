@@ -89,3 +89,10 @@ std::shared_ptr<Statement> Parser::parse_if_statement()
     ele->m_true_statement = parse_statement();
     return ele;
 }
+
+std::shared_ptr<Statement> Parser::parse_break_statement()
+{
+    std::shared_ptr<BreakStatement> ele(new BreakStatement());
+    next_token();
+    return ele;
+}
