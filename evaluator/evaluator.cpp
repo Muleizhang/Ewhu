@@ -82,7 +82,8 @@ std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node, Scope
     }
     case Node::NODE_BREAKSTATEMENT:
     {
-        return std::make_shared<Ob_Break>(node);
+        std::shared_ptr<Ob_Break> e(new Ob_Break);
+        return e;
     }
     default:
     {

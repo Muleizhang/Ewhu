@@ -20,7 +20,7 @@ public:
         OBJECT_IDENTIFIER, // 标识符
         OBJECT_NULL,       // 用于空指针
         OBJECT_BREAK,      // break
-        OBJECT_EMPTY,      // 空
+        //OBJECT_EMPTY,      // 空
     };
 
 public:
@@ -267,11 +267,11 @@ public:
     }
 };
 
-class Ob_Empty : public Object
+class Ob_Null : public Object
 {
 public:
-    Ob_Empty() : Object(Object::OBJECT_BREAK) {}
-    ~Ob_Empty() {}
+    Ob_Null() : Object(Object::OBJECT_NULL) {}
+    ~Ob_Null() {}
 
     virtual std::string str() const
     {

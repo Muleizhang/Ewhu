@@ -2,12 +2,12 @@
 
 std::shared_ptr<Object> Evaluator::eval_statement_block(const std::vector<std::shared_ptr<Statement>> &stmts, Scope &scp)
 {
-    std::shared_ptr<Object> result(new Ob_Empty());
+    std::shared_ptr<Object> result(new Ob_Null());
     Scope temp_scope(scp.m_var); // 局部作用域
     for (auto &stat : stmts)
     {
         result = eval(stat, temp_scope);
-        if (is_error(result))
+        if (is_error(result) || result->type() == Object::OBJECT_BREAK)
         {
             break;
         }
@@ -23,7 +23,7 @@ std::shared_ptr<Object> Evaluator::eval_statement_block(const std::vector<std::s
 
 std::shared_ptr<Object> Evaluator::eval_if_statement(const std::shared_ptr<Expression> &exp, const std::shared_ptr<Statement> true_statement, Scope &scp)
 {
-    std::shared_ptr<Object> result(new Ob_Empty());
+    std::shared_ptr<Object> result(new Ob_Null());
     auto s = eval(exp, scp);
     switch (s->type())
     {
@@ -50,7 +50,7 @@ std::shared_ptr<Object> Evaluator::eval_if_statement(const std::shared_ptr<Expre
 
 std::shared_ptr<Object> Evaluator::eval_while_statement(const std::shared_ptr<Expression> &exp, const std::shared_ptr<Statement> true_statement, Scope &scp)
 {
-    std::shared_ptr<Object> result = nullptr;
+    std::shared_ptr<Object> result(new Ob_Null());
     auto s = eval(exp, scp);
     switch (s->type())
     {
@@ -59,7 +59,10 @@ std::shared_ptr<Object> Evaluator::eval_while_statement(const std::shared_ptr<Ex
         {
             result = eval(true_statement, scp);
             if (result->type() == Object::OBJECT_BREAK)
-                break;
+            {
+                result.reset(new Ob_Null());
+                return result;
+            }
         }
         break;
 
@@ -68,7 +71,10 @@ std::shared_ptr<Object> Evaluator::eval_while_statement(const std::shared_ptr<Ex
         {
             result = eval(true_statement, scp);
             if (result->type() == Object::OBJECT_BREAK)
-                break;
+            {
+                result.reset(new Ob_Null());
+                return result;
+            }
         }
         break;
 
@@ -77,7 +83,10 @@ std::shared_ptr<Object> Evaluator::eval_while_statement(const std::shared_ptr<Ex
         {
             result = eval(true_statement, scp);
             if (result->type() == Object::OBJECT_BREAK)
-                break;
+            {
+                result.reset(new Ob_Null());
+                return result;
+            }
         }
 
         break;
