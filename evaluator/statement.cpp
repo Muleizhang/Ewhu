@@ -2,12 +2,12 @@
 
 std::shared_ptr<Object> Evaluator::eval_statement_block(const std::vector<std::shared_ptr<Statement>> &stmts, Scope &scp)
 {
-    std::shared_ptr<Object> result;
+    std::shared_ptr<Object> result(new Ob_Null());
     Scope temp_scope(scp.m_var); // 局部作用域
     for (auto &stat : stmts)
     {
         result = eval(stat, temp_scope);
-        if (is_error(result))
+        if (is_error(result) || result->type() == Object::OBJECT_BREAK)
         {
             break;
         }
@@ -23,7 +23,7 @@ std::shared_ptr<Object> Evaluator::eval_statement_block(const std::vector<std::s
 
 std::shared_ptr<Object> Evaluator::eval_if_statement(const std::shared_ptr<Expression> &exp, const std::shared_ptr<Statement> true_statement, Scope &scp)
 {
-    std::shared_ptr<Object> result = nullptr;
+    std::shared_ptr<Object> result(new Ob_Null());
     auto s = eval(exp, scp);
     switch (s->type())
     {
@@ -41,7 +41,6 @@ std::shared_ptr<Object> Evaluator::eval_if_statement(const std::shared_ptr<Expre
         if (std::dynamic_pointer_cast<Ob_Fraction>(s)->num)
             result = eval(true_statement, scp);
         break;
-
     default:
         new_error("Evaluator::eval_if_statement: unknown type: %d", s->type());
         break;
@@ -51,25 +50,46 @@ std::shared_ptr<Object> Evaluator::eval_if_statement(const std::shared_ptr<Expre
 
 std::shared_ptr<Object> Evaluator::eval_while_statement(const std::shared_ptr<Expression> &exp, const std::shared_ptr<Statement> true_statement, Scope &scp)
 {
-    std::shared_ptr<Object> result = nullptr;
+    std::shared_ptr<Object> result(new Ob_Null());
     auto s = eval(exp, scp);
     switch (s->type())
     {
     case Object::OBJECT_BOOLEAN:
         while (std::dynamic_pointer_cast<Ob_Boolean>(eval(exp, scp))->m_value)
+        {
             result = eval(true_statement, scp);
+            if (result->type() == Object::OBJECT_BREAK)
+            {
+                result.reset(new Ob_Null());
+                return result;
+            }
+        }
         break;
 
     case Object::OBJECT_INTEGER:
         while (std::dynamic_pointer_cast<Ob_Integer>(eval(exp, scp))->m_value)
+        {
             result = eval(true_statement, scp);
+            if (result->type() == Object::OBJECT_BREAK)
+            {
+                result.reset(new Ob_Null());
+                return result;
+            }
+        }
         break;
 
     case Object::OBJECT_FRACTION:
         while (std::dynamic_pointer_cast<Ob_Fraction>(eval(exp, scp))->num)
+        {
             result = eval(true_statement, scp);
-        break;
+            if (result->type() == Object::OBJECT_BREAK)
+            {
+                result.reset(new Ob_Null());
+                return result;
+            }
+        }
 
+        break;
     default:
         new_error("Evaluator::eval_while_statement: unknown type: %d", s->type());
         break;

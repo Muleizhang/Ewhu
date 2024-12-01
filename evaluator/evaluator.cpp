@@ -80,6 +80,11 @@ std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node, Scope
         auto right = eval(e->m_right, scp);
         return eval_prefix(e->m_operator, right);
     }
+    case Node::NODE_BREAKSTATEMENT:
+    {
+        std::shared_ptr<Ob_Break> e(new Ob_Break);
+        return e;
+    }
     default:
     {
         return new_error("Evaluator: node type error: %d", Node::m_names[node->type()]);

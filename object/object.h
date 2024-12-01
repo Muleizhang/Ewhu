@@ -19,13 +19,15 @@ public:
         OBJECT_STRING,     // 字符串
         OBJECT_IDENTIFIER, // 标识符
         OBJECT_NULL,       // 用于空指针
+        OBJECT_BREAK,      // break
+        //OBJECT_EMPTY,      // 空
     };
 
 public:
     Object() {}
     Object(Type type) : m_type(type) {}
-    Object(const Object &obj) : m_type(obj.m_type) {};
-    virtual ~Object() {};
+    Object(const Object &obj) : m_type(obj.m_type){};
+    virtual ~Object(){};
 
     Type type() const { return m_type; }
     std::string name() const;
@@ -251,4 +253,28 @@ public:
 
 public:
     std::string m_value;
+};
+
+class Ob_Break : public Object
+{
+public:
+    Ob_Break() : Object(Object::OBJECT_BREAK) {}
+    ~Ob_Break() {}
+
+    virtual std::string str() const
+    {
+        return "";
+    }
+};
+
+class Ob_Null : public Object
+{
+public:
+    Ob_Null() : Object(Object::OBJECT_NULL) {}
+    ~Ob_Null() {}
+
+    virtual std::string str() const
+    {
+        return "";
+    }
 };

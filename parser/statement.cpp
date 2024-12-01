@@ -15,9 +15,8 @@ std::shared_ptr<Statement> Parser::parse_statement_block()
         {
             ele->m_statements.push_back(stmt);
         }
-        if (m_curr.type != TokenType::SEMICOLON)
-            next_token();
     }
+    next_token();
     return ele;
 }
 
@@ -87,5 +86,12 @@ std::shared_ptr<Statement> Parser::parse_if_statement()
     ele->m_expression = parse_expression(LOWEST);
     next_token();
     ele->m_true_statement = parse_statement();
+    return ele;
+}
+
+std::shared_ptr<Statement> Parser::parse_break_statement()
+{
+    std::shared_ptr<BreakStatement> ele(new BreakStatement());
+    next_token();
     return ele;
 }

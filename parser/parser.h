@@ -64,7 +64,7 @@ public:
     std::shared_ptr<Statement> parse_statement_block(); // 语句块
     std::shared_ptr<Statement> parse_if_statement();    // if语句
     std::shared_ptr<Statement> parse_while_statement(); // while语句
-
+    std::shared_ptr<Statement> parse_break_statement();
     void parse_program();
     std::shared_ptr<Statement> parse_statement();
     std::shared_ptr<ExpressionStatement> parse_expression_statement();

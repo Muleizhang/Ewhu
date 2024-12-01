@@ -189,9 +189,9 @@ public:
         std::vector<Token> new_tokens = lexer.scanTokens();
         tokens.insert(tokens.end(), new_tokens.begin(), new_tokens.end());
 
-        for (auto token : tokens)
-            std::cout << token.toString();
-        std::cout << lexer.braceStatus << std::endl;
+        // for (auto token : tokens)
+        //     std::cout << token.toString();
+        // std::cout << lexer.braceStatus << std::endl;
 
         if ((lexer.braceStatus == 0) &&
             ((--tokens.end())->type == TokenType::SEMICOLON ||
