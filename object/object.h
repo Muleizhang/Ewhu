@@ -20,7 +20,8 @@ public:
         OBJECT_IDENTIFIER, // 标识符
         OBJECT_NULL,       // 用于空指针
         OBJECT_BREAK,      // break
-        //OBJECT_EMPTY,      // 空
+        OBJECT_CONTINUE,   // continue
+        // OBJECT_EMPTY,      // 空
     };
 
 public:
@@ -260,6 +261,18 @@ class Ob_Break : public Object
 public:
     Ob_Break() : Object(Object::OBJECT_BREAK) {}
     ~Ob_Break() {}
+
+    virtual std::string str() const
+    {
+        return "";
+    }
+};
+
+class Ob_Continue : public Object
+{
+public:
+    Ob_Continue() : Object(Object::OBJECT_CONTINUE) {}
+    ~Ob_Continue() {}
 
     virtual std::string str() const
     {

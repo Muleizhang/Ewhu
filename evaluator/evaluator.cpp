@@ -85,6 +85,12 @@ std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node, Scope
         std::shared_ptr<Ob_Break> e(new Ob_Break);
         return e;
     }
+    case Node::NODE_CONTINUESTATEMENT:
+    {
+        std::shared_ptr<Ob_Continue> e(new Ob_Continue);
+        return e;
+    }
+
     default:
     {
         return new_error("Evaluator: node type error: %d", Node::m_names[node->type()]);

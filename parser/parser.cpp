@@ -64,6 +64,7 @@ std::unordered_map<TokenType, Parser::control_flow_fn> Parser::m_control_flow_fn
         {TokenType::IF, &Parser::parse_if_statement},
         {TokenType::WHILE, &Parser::parse_while_statement},
         {TokenType::BREAK, &Parser::parse_break_statement},
+        {TokenType::CONTINUE, &Parser::parse_continue_statement},
 };
 
 void Parser::next_token() // 读取下一个token

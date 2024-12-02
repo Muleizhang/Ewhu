@@ -7,7 +7,7 @@ std::shared_ptr<Object> Evaluator::eval_statement_block(const std::vector<std::s
     for (auto &stat : stmts)
     {
         result = eval(stat, temp_scope);
-        if (is_error(result) || result->type() == Object::OBJECT_BREAK)
+        if (is_error(result) || result->type() == Object::OBJECT_BREAK||result->type()==Object::OBJECT_CONTINUE)
         {
             break;
         }
@@ -63,6 +63,11 @@ std::shared_ptr<Object> Evaluator::eval_while_statement(const std::shared_ptr<Ex
                 result.reset(new Ob_Null());
                 return result;
             }
+            if (result->type() == Object::OBJECT_CONTINUE)
+            {
+                result.reset(new Ob_Null);
+                continue;
+            }
         }
         break;
 
@@ -75,6 +80,11 @@ std::shared_ptr<Object> Evaluator::eval_while_statement(const std::shared_ptr<Ex
                 result.reset(new Ob_Null());
                 return result;
             }
+            if (result->type() == Object::OBJECT_CONTINUE)
+            {
+                result.reset(new Ob_Null);
+                continue;
+            }
         }
         break;
 
@@ -86,6 +96,11 @@ std::shared_ptr<Object> Evaluator::eval_while_statement(const std::shared_ptr<Ex
             {
                 result.reset(new Ob_Null());
                 return result;
+            }
+            if (result->type() == Object::OBJECT_CONTINUE)
+            {
+                result.reset(new Ob_Null);
+                continue;
             }
         }
 

@@ -95,3 +95,10 @@ std::shared_ptr<Statement> Parser::parse_break_statement()
     next_token();
     return ele;
 }
+
+std::shared_ptr<Statement> Parser::parse_continue_statement()
+{
+    std::shared_ptr<ContinueStatement> ele(new ContinueStatement());
+    next_token();
+    return ele;
+}

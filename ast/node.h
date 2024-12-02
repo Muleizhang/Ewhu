@@ -26,6 +26,7 @@ public:
         NODE_IFSTATEMENT,
         NODE_WHILESTATEMENT,
         NODE_BREAKSTATEMENT,
+        NODE_CONTINUESTATEMENT,
     };
 
     Node() {}

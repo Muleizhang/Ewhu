@@ -132,3 +132,18 @@ public:
         return json;
     }
 };
+
+class ContinueStatement: public Statement
+{
+public:
+    ContinueStatement() : Statement(Node::NODE_CONTINUESTATEMENT){}
+    ~ContinueStatement(){}
+    virtual rapidjson::Value json(rapidjson::Document & father)
+    {
+        rapidjson::Value json(rapidjson::kObjectType);
+        std::string *typeStr = new std::string;
+        *typeStr = name();
+        json.AddMember("type", rapidjson::StringRef(typeStr->c_str()), father.GetAllocator());
+        return json;
+    }
+};
