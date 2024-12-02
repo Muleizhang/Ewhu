@@ -15,7 +15,7 @@ public:
     static const char *relation_calcu_table[7]; // 比较运算符
 
     std::string source;
-    std::vector<Token> tokens; // 还未成句的 Token 列表
+    std::vector<Token> tokens; // 保存 Token 的列表
     int braceStatus = 0;
 
     Lexer() {}
@@ -23,8 +23,8 @@ public:
 
     // 返回下一个Token
     Token nextToken();
-    // 读取一行代码，返回 句子 的列表
-    std::vector<std::vector<Token>> scanTokens();
+    // 读取一行代码，返回 Token 列表
+    std::vector<Token> scanTokens();
 
 private:
     int start = 0;
@@ -32,7 +32,6 @@ private:
     int line = 1;
     int read_current = 0;
     int bracketStatus = 0; // := 前括号数量 - 后括号数量
-    std::vector<std::vector<Token>> sentences;
 
     void scanToken(char inpt);                  // 读取一个 Token
     char nextChar();                            // 读取下一个字符

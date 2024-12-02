@@ -28,9 +28,8 @@ static std::unordered_map<std::string, TokenType> keyWords = {
     {"ERR", TokenType::ERR},
 };
 
-std::vector<std::vector<Token>> Lexer::scanTokens()
+std::vector<Token> Lexer::scanTokens()
 {
-    sentences.clear();
     char inpt;
     // int equal = 0;
     int length = source.length();
@@ -45,7 +44,7 @@ std::vector<std::vector<Token>> Lexer::scanTokens()
     current = 0;
     line = 1;
     read_current = 0;
-    return sentences;
+    return tokens;
 }
 
 void Lexer::scanToken(char inpt)
@@ -81,11 +80,6 @@ void Lexer::scanToken(char inpt)
     case '}':
         addToken(RIGHT_BRACE);
         braceStatus--;
-        if (braceStatus == 0)
-        {
-            sentences.push_back(tokens);
-            tokens.clear();
-        }
         break;
     case '[':
         addToken(LEFT_BRACKET);
@@ -115,8 +109,6 @@ void Lexer::scanToken(char inpt)
         }
         bracketStatus = 0;
         addToken(SEMICOLON);
-        sentences.push_back(tokens);
-        tokens.clear();
         break;
     case '?':
         addToken(QUESTION);
