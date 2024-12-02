@@ -33,8 +33,9 @@ public:
         std::ifstream file(path);
         if (!file.is_open())
         {
-            std::cerr << "Error: Could not open file " << path << std::endl;
-            exit(-1);
+            std::cerr << "\033[31m" << "Error: Could not open file "
+                      << path << "\033[0m" << std::endl;
+            exit(1);
         }
         int lineNum = 1;
         while (std::getline(file, line))
@@ -58,7 +59,10 @@ public:
         {
             std::cout << lineNum++ << " > ";
             if (!std::getline(std::cin, line))
+            {
+                std::cout << "\033[36m" << "( ﾟдﾟ)つBye" << "\033[0m" << std::endl;
                 break;
+            }
             run(line, tokens, lexer, parser, evaluator);
         }
     }
@@ -74,7 +78,8 @@ public:
         std::ifstream file(path);
         if (!file.is_open())
         {
-            std::cerr << "Error: Could not open file " << path << std::endl;
+            std::cerr << "\033[31m" << "Error: Could not open file "
+                      << path << "\033[0m" << std::endl;
             exit(1);
         }
         std::vector<char> buffer(1024 * 1024);
@@ -104,7 +109,10 @@ public:
         {
             std::cout << lineNum++ << " > ";
             if (!std::getline(std::cin, line))
+            {
+                std::cout << "\033[36m" << "( ﾟдﾟ)つBye" << "\033[0m" << std::endl;
                 break;
+            }
             benchRun(line, tokens, lexer, parser, evaluator);
         }
     }
@@ -128,9 +136,6 @@ public:
             auto program = parser.m_program;
             static Scope global_scp;
             auto evaluated = evaluator.eval(program, global_scp);
-
-            if (!evaluated)
-                std::cerr << "Error!" << std::endl;
         }
     }
 
@@ -263,8 +268,7 @@ int main(int argc, char *argv[])
     winapi::SetConsoleCP(CP_UTF8);
 #endif
     std::ios::sync_with_stdio(false);
-
-    std::cout << "\033[32m" << "Ewhu Programming Language" << "\033[0m" << std::endl; // 蓝色
+    std::cout << "\033[36m" << "Ewhu Programming Language Ciallo～(∠・ω< )⌒★" << "\033[0m" << std::endl;
     if (argc > 3)
     {
         std::cout << "\033[34m";
