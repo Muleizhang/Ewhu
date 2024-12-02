@@ -17,7 +17,6 @@ public:
     static void runFile(const std::string &path)
     {
         std::string line;
-        std::vector<Token> token;
         Lexer lexer;
         Parser parser;
         Evaluator evaluator;
@@ -32,7 +31,7 @@ public:
         while (std::getline(file, line))
         {
             std::cout << lineNum++ << " ";
-            run(line, token, lexer, parser, evaluator);
+            run(line, lexer, parser, evaluator);
         }
         file.close();
     }
@@ -40,7 +39,6 @@ public:
     static void runPrompt()
     {
         std::string line;
-        std::vector<Token> tokens;
         Lexer lexer;
         Parser parser;
         Evaluator evaluator;
@@ -51,14 +49,13 @@ public:
             std::cout << lineNum++ << " > ";
             if (!std::getline(std::cin, line))
                 break;
-            run(line, tokens, lexer, parser, evaluator);
+            run(line, lexer, parser, evaluator);
         }
     }
 
     static void runBenchFile(const std::string &path)
     {
         std::string line;
-        std::vector<Token> token;
         Lexer lexer;
         Parser parser;
         Evaluator evaluator;
@@ -75,7 +72,7 @@ public:
         auto start = std::chrono::high_resolution_clock::now();
         while (std::getline(file, line))
         {
-            onlyRun(line, token, lexer, parser, evaluator);
+            onlyRun(line, lexer, parser, evaluator);
         }
         auto end = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
@@ -86,7 +83,6 @@ public:
     static void runBenchPrompt()
     {
         std::string line;
-        std::vector<Token> tokens;
         Lexer lexer;
         Parser parser;
         Evaluator evaluator;
@@ -97,26 +93,21 @@ public:
             std::cout << lineNum++ << " > ";
             if (!std::getline(std::cin, line))
                 break;
-            benchRun(line, tokens, lexer, parser, evaluator);
+            benchRun(line, lexer, parser, evaluator);
         }
     }
 
     // 不做检查和输出，只运行
-    static void onlyRun(const std::string &source, std::vector<Token> &tokens, Lexer &lexer,
+    static void onlyRun(const std::string &source, Lexer &lexer,
                         Parser &parser, Evaluator &evaluator)
     {
         lexer.tokens.clear();
         lexer.source = source;
-        std::vector<Token> new_tokens = lexer.scanTokens();
-        tokens.insert(tokens.end(), new_tokens.begin(), new_tokens.end());
-
-        if ((lexer.braceStatus == 0) &&
-            ((--tokens.end())->type == TokenType::SEMICOLON ||
-             (--tokens.end())->type == TokenType::RIGHT_BRACE))
+        auto new_sentences = lexer.scanTokens();
+        for (auto &sentence : new_sentences)
         {
-            parser.new_sentence(tokens.begin(), tokens.end());
+            parser.new_sentence(sentence.begin(), sentence.end());
             parser.parse_program();
-            tokens.clear();
             auto program = parser.m_program;
             static Scope global_scp;
             auto evaluated = evaluator.eval(program, global_scp);
@@ -127,39 +118,29 @@ public:
     }
 
     // 对每个模块进行测试
-    static void benchRun(const std::string &source, std::vector<Token> &tokens, Lexer &lexer,
+    static void benchRun(const std::string &source, Lexer &lexer,
                          Parser &parser, Evaluator &evaluator)
     {
-
         auto start = std::chrono::high_resolution_clock::now();
+        std::vector<std::vector<Token>> new_sentences;
         for (int i = 0; i < 10000; i++)
         {
-            tokens.clear();
-            lexer.tokens.clear();
             lexer.source = source;
-            std::vector<Token> new_tokens = lexer.scanTokens();
-            tokens.insert(tokens.end(), new_tokens.begin(), new_tokens.end());
+            new_sentences = lexer.scanTokens();
         }
         auto end = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
         std::cout << "lexer time: " << duration.count() << "ms" << std::endl;
 
-        for (auto token : tokens)
-            std::cout << token.toString();
-        std::cout << lexer.braceStatus << std::endl;
-
-        if ((lexer.braceStatus == 0) &&
-            ((--tokens.end())->type == TokenType::SEMICOLON ||
-             (--tokens.end())->type == TokenType::RIGHT_BRACE))
+        for (auto &sentence : new_sentences)
         {
 
             auto start = std::chrono::high_resolution_clock::now();
             for (int i = 0; i < 10000; i++)
             {
-                parser.new_sentence(tokens.begin(), tokens.end());
+                parser.new_sentence(sentence.begin(), sentence.end());
                 parser.parse_program();
             }
-            tokens.clear();
             auto end = std::chrono::high_resolution_clock::now();
             auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
             std::cout << "parser time: " << duration.count() << "ms" << std::endl;
@@ -181,26 +162,20 @@ public:
     }
 
     // 正常运行
-    static void run(const std::string &source, std::vector<Token> &tokens, Lexer &lexer,
+    static void run(const std::string &source, Lexer &lexer,
                     Parser &parser, Evaluator &evaluator)
     {
         lexer.tokens.clear();
         lexer.source = source;
-        std::vector<Token> new_tokens = lexer.scanTokens();
-        tokens.insert(tokens.end(), new_tokens.begin(), new_tokens.end());
-
+        auto new_sentences = lexer.scanTokens();
         // for (auto token : tokens)
         //     std::cout << token.toString();
         // std::cout << lexer.braceStatus << std::endl;
 
-        if ((lexer.braceStatus == 0) &&
-            ((--tokens.end())->type == TokenType::SEMICOLON ||
-             (--tokens.end())->type == TokenType::RIGHT_BRACE))
+        for (auto &sentence : new_sentences)
         {
-            parser.new_sentence(tokens.begin(), tokens.end());
+            parser.new_sentence(sentence.begin(), sentence.end());
             parser.parse_program();
-            tokens.clear();
-
             auto errors = parser.errors();
 
             if (!errors.empty())
@@ -219,10 +194,6 @@ public:
                 if (evaluated)
                     std::cout << evaluated->str() << std::endl;
             }
-        }
-        else
-        {
-            std::cerr << "Error: Incomplete statement" << std::endl;
         }
     }
 
