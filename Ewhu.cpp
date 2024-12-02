@@ -214,8 +214,8 @@ public:
             if (!errors.empty())
             {
                 for (auto error : errors)
-                    std::cerr << "\033[31m" << "114514" << error << "\033[0m" << std::endl;
-
+                    std::cerr << "\033[31m" << "Error: " << error << "\033[0m" << std::endl;
+                parser.m_program->m_statements.clear();
                 parser.errors().clear();
             }
             else
@@ -252,6 +252,7 @@ public:
         std::ofstream ofs("ast.json");
         ofs << buffer.GetString();
         ofs.close();
+        std::cout << "\033[32m" << "AST output to ast.jsonヾ(✿ﾟ▽ﾟ)ノ" << "\033[0m" << std::endl;
     }
 };
 int main(int argc, char *argv[])
