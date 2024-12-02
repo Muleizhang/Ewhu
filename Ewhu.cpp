@@ -246,8 +246,8 @@ int main(int argc, char *argv[])
     std::cout << "Ewhu Programming Language" << std::endl;
     if (argc > 3)
     {
-        std::cerr << "Run File Usage: Ewhu [script]" << std::endl;
         std::cerr << "Run Prompt Usage: Ewhu" << std::endl;
+        std::cerr << "Run File Usage: Ewhu [script]" << std::endl;
         std::cerr << "Bench Prompt Usage: Ewhu -b" << std::endl;
         std::cerr << "Bench File Usage: Ewhu -b [script]" << std::endl;
         exit(64);

@@ -5,6 +5,11 @@
 cmake -G "MinGW Makefiles" -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ ..
 cmake --build . -j4
 ```
+## Count line
+```bash
+(Get-ChildItem -Recurse -Include *.h, *.cpp | Where-Object { $_.FullName -notmatch '\\(rapidjson|build)\\' } | Get-Content | Measure-Object -Line).Lines
+```
+now: 2730
 ## Usage
 ### Paradigms
 
