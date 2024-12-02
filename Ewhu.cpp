@@ -10,6 +10,14 @@
 #include "rapidjson/include/rapidjson/document.h"
 #include "rapidjson/include/rapidjson/writer.h"
 #include "rapidjson/include/rapidjson/stringbuffer.h"
+
+#ifdef _WIN32
+namespace winapi
+{
+#include <windows.h>
+}
+#endif
+
 class Ewhu
 {
 private:
@@ -144,8 +152,8 @@ public:
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
         std::cout << "lexer time: " << duration.count() << "ms" << std::endl;
 
-        for (auto token : tokens)
-            std::cout << token.toString();
+        // for (auto token : tokens)
+        //     std::cout << token.toString();
         std::cout << lexer.braceStatus << std::endl;
 
         if ((lexer.braceStatus == 0) &&
@@ -206,25 +214,32 @@ public:
             if (!errors.empty())
             {
                 for (auto error : errors)
-                    std::cout << error << std::endl;
+                    std::cerr << "\033[31m" << "114514" << error << "\033[0m" << std::endl;
+
                 parser.errors().clear();
             }
             else
             {
+                std::cout << "\033[32m" << "Parser: No errorsヾ(✿ﾟ▽ﾟ)ノ" << "\033[0m" << std::endl;
                 auto program = parser.m_program;
                 jsonOutput(program); // 输出AST
                 static Scope global_scp;
                 auto evaluated = evaluator.eval(program, global_scp);
 
                 if (evaluated)
-                    std::cout << evaluated->str() << std::endl;
+                {
+                    if (evaluator.is_error(evaluated))
+                        std::cerr << "\033[31m" << "Error: " << evaluated->str() << "\033[0m" << std::endl;
+                    else
+                        std::cout << evaluated->str() << std::endl;
+                }
             }
         }
         else
         {
-            std::cerr << "Error: Incomplete statement" << std::endl;
+            std::cerr << "\033[33m" << "Warning: Incomplete statement" << "\033[0m" << std::endl;
         }
-    }
+    };
 
     static void jsonOutput(std::shared_ptr<Program> program)
     {
@@ -239,17 +254,23 @@ public:
         ofs.close();
     }
 };
-
 int main(int argc, char *argv[])
 {
+#ifdef _WIN32
+    // 如果是 Windows 平台，设置控制台为 UTF-8 编码
+    winapi::SetConsoleOutputCP(CP_UTF8);
+    winapi::SetConsoleCP(CP_UTF8);
+#endif
     std::ios::sync_with_stdio(false);
-    std::cout << "Ewhu Programming Language" << std::endl;
+
+    std::cout << "\033[32m" << "Ewhu Programming Language" << "\033[0m" << std::endl; // 蓝色
     if (argc > 3)
     {
+        std::cout << "\033[34m";
         std::cerr << "Run Prompt Usage: Ewhu" << std::endl;
         std::cerr << "Run File Usage: Ewhu [script]" << std::endl;
         std::cerr << "Bench Prompt Usage: Ewhu -b" << std::endl;
-        std::cerr << "Bench File Usage: Ewhu -b [script]" << std::endl;
+        std::cerr << "Bench File Usage: Ewhu -b [script]" << "\033[0m" << std::endl;
         exit(64);
     }
     else if (argc == 3)
