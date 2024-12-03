@@ -56,7 +56,7 @@ public:
     std::shared_ptr<Expression> parse_group();
     std::shared_ptr<Expression> parse_prefix();
     std::shared_ptr<Expression> parse_identifier();
-
+    std::shared_ptr<Expression> parse_identifier_function();
     // 中缀
     std::shared_ptr<Expression> parse_infix(const std::shared_ptr<Expression> &left);
 
@@ -67,6 +67,8 @@ public:
     std::shared_ptr<Statement> parse_break_statement();
     std::shared_ptr<Statement> parse_continue_statement();
 
+    // 函数
+    std::shared_ptr<Statement> parse_function_declaration();
 
     void parse_program();
     std::shared_ptr<Statement> parse_statement();

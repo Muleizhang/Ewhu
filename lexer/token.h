@@ -73,9 +73,9 @@ enum TokenType
     DO,        // do
     EOF_TOKEN, // end of file
     NIL,       // NIL
-
-    // Error
-    ERR, // error
+    FUNC,      // function
+               //  Error
+    ERR,       // error
 
     // Empty
     EMPTY // empty
@@ -146,7 +146,7 @@ static std::unordered_map<TokenType, std::string> TokenTypeToString = {
     {TokenType::DO, "DO"},
     {TokenType::EOF_TOKEN, "EOF"},
     {TokenType::NIL, "NIL"},
-
+    {TokenType::FUNC, "FUNC"},
     // Error
     {TokenType::ERR, "ERR"},
 

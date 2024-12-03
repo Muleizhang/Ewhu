@@ -20,7 +20,7 @@ std::shared_ptr<Expression> Parser::parse_expression(int precedence)
         return nullptr;
     }
     std::shared_ptr<Expression> ele = (this->*(prefix->second))();
-    while (!peek_token_is(TokenType::SEMICOLON) && precedence < peek_token_precedence())
+    while (!peek_token_is(TokenType::SEMICOLON) && !peek_token_is(TokenType::COMMA) && precedence < peek_token_precedence())
     {
         auto infix = m_infix_parse_fns.find(m_peek.type);
         if (infix == m_infix_parse_fns.end())

@@ -15,6 +15,8 @@ std::unordered_map<Node::Type, std::string> Node::m_names = {
     {Node::NODE_WHILESTATEMENT, "WhileStatement"},
     {Node::NODE_BREAKSTATEMENT, "Breakstatement"},
     {Node::NODE_CONTINUESTATEMENT, "ContinueStatement"},
+    {Node::NODE_FUNCTION, "Function"},
+    {Node::NODE_FUNCTION_IDENTIFIER, "FunctionIdentifier"},
 };
 
 // return the string of the node type

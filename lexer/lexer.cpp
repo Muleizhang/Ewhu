@@ -25,6 +25,7 @@ static std::unordered_map<std::string, TokenType> keyWords = {
     {"do", TokenType::DO},
     {"EOF", TokenType::EOF_TOKEN},
     {"nil", TokenType::NIL},
+    {"func", TokenType::FUNC},
     {"ERR", TokenType::ERR},
 };
 

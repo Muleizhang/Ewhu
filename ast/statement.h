@@ -1,5 +1,40 @@
 #pragma once
 #include "node.h"
+#include "infix.h"
+class Function : public Statement // 函数的声明
+{
+public:
+    Function() : Statement(Type::NODE_FUNCTION) {}
+    ~Function() {}
+
+    virtual rapidjson::Value json(rapidjson::Document &father)
+    {
+        rapidjson::Value json(rapidjson::kObjectType);
+        std::string *typeStr = new std::string;
+        *typeStr = name();
+        json.AddMember("type", rapidjson::StringRef(typeStr->c_str()), father.GetAllocator());
+        
+        rapidjson::Value args(rapidjson::kArrayType);
+        for (auto &arg : m_initial_list)
+        {
+            args.PushBack(arg->json(father), father.GetAllocator());
+        }
+        json.AddMember("arguments", args, father.GetAllocator());
+
+        rapidjson::Value statements(rapidjson::kArrayType);
+        for (auto &stat : m_statements)
+        {
+            statements.PushBack(stat->json(father), father.GetAllocator());
+        }
+        json.AddMember("statements", statements, father.GetAllocator());
+        return json;
+    }
+
+public:
+    std::shared_ptr<Identifier> m_name;
+    std::vector<std::shared_ptr<Statement>> m_statements;
+    std::vector<std::shared_ptr<Identifier>> m_initial_list;
+};
 
 class Program : public Statement // 根节点
 {
@@ -19,11 +54,22 @@ public:
             statements.PushBack(stat->json(father), father.GetAllocator());
         }
         json.AddMember("statements", statements, father.GetAllocator());
+
+        if (!m_functions.empty())
+        {
+            rapidjson::Value functions(rapidjson::kArrayType);
+            for (auto &fn : m_functions)
+            {
+                functions.PushBack(fn->json(father), father.GetAllocator());
+            }
+            json.AddMember("functions", functions, father.GetAllocator());
+        }
         return json;
     }
 
 public:
     std::vector<std::shared_ptr<Statement>> m_statements;
+    std::vector<std::shared_ptr<Function>> m_functions;
 };
 
 class ExpressionStatement : public Statement
@@ -118,12 +164,12 @@ public:
     // std::shared_ptr<Statement> m_false_statement;
 };
 
-class BreakStatement: public Statement
+class BreakStatement : public Statement
 {
 public:
-    BreakStatement() : Statement(Node::NODE_BREAKSTATEMENT){}
-    ~BreakStatement(){}
-    virtual rapidjson::Value json(rapidjson::Document & father)
+    BreakStatement() : Statement(Node::NODE_BREAKSTATEMENT) {}
+    ~BreakStatement() {}
+    virtual rapidjson::Value json(rapidjson::Document &father)
     {
         rapidjson::Value json(rapidjson::kObjectType);
         std::string *typeStr = new std::string;
@@ -133,12 +179,12 @@ public:
     }
 };
 
-class ContinueStatement: public Statement
+class ContinueStatement : public Statement
 {
 public:
-    ContinueStatement() : Statement(Node::NODE_CONTINUESTATEMENT){}
-    ~ContinueStatement(){}
-    virtual rapidjson::Value json(rapidjson::Document & father)
+    ContinueStatement() : Statement(Node::NODE_CONTINUESTATEMENT) {}
+    ~ContinueStatement() {}
+    virtual rapidjson::Value json(rapidjson::Document &father)
     {
         rapidjson::Value json(rapidjson::kObjectType);
         std::string *typeStr = new std::string;

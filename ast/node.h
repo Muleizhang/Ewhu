@@ -27,6 +27,8 @@ public:
         NODE_WHILESTATEMENT,
         NODE_BREAKSTATEMENT,
         NODE_CONTINUESTATEMENT,
+        NODE_FUNCTION,
+        NODE_FUNCTION_IDENTIFIER,
     };
 
     Node() {}

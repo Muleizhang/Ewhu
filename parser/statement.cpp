@@ -102,3 +102,45 @@ std::shared_ptr<Statement> Parser::parse_continue_statement()
     next_token();
     return ele;
 }
+
+std::shared_ptr<Statement> Parser::parse_function_declaration()
+{
+    std::shared_ptr<Function> fn(new Function());
+    next_token();
+    std::shared_ptr<Identifier> ele(new Identifier());
+    ele->m_token = this->m_curr;
+    ele->m_name = m_curr.literalToString(); // 转换
+    fn->m_name = ele;
+    next_token();
+    if (m_curr.type == TokenType::LEFT_PAREN)
+    {
+        while (m_peek.type != TokenType::RIGHT_PAREN)
+        {
+            next_token();
+            auto arg = parse_identifier();
+            if (arg->m_token.type != TokenType::IDENTIFIER)
+            {
+                m_errors.push_back("Parser::Invalid Function InitializationList");
+                return nullptr;
+            }
+            fn->m_initial_list.push_back(std::dynamic_pointer_cast<Identifier>(arg));
+            if (m_peek.type == TokenType::COMMA)
+                next_token();
+        }
+        next_token();
+        next_token();
+    }
+    else
+        ;
+    while (m_curr.type != TokenType::SEMICOLON && m_curr.type != TokenType::RIGHT_BRACE)
+    {
+        std::shared_ptr<Statement> stmt = parse_statement();
+        if (stmt.get()->m_type != Node::Type::NODE_COMMENT && errors().empty()) // 如果指针有效
+        {
+            fn->m_statements.push_back(stmt);
+        }
+        if (m_curr.type != TokenType::SEMICOLON)
+            next_token();
+    }
+    return fn;
+}

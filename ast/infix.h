@@ -5,7 +5,7 @@ class Identifier : public Expression
 {
 public:
     Identifier() : Expression(Type::NODE_IDENTIFIER) {}
-    ~Identifier() {};
+    ~Identifier(){};
 
     virtual rapidjson::Value json(rapidjson::Document &father)
     {
@@ -27,7 +27,7 @@ class Integer : public Expression
 {
 public:
     Integer() : Expression(Type::NODE_INTEGER) {}
-    ~Integer() {};
+    ~Integer(){};
 
     virtual rapidjson::Value json(rapidjson::Document &father)
     {
@@ -49,7 +49,7 @@ class Boolean : public Expression
 {
 public:
     Boolean() : Expression(Type::NODE_BOOLEAN) {}
-    ~Boolean() {};
+    ~Boolean(){};
 
     virtual rapidjson::Value json(rapidjson::Document &father)
     {
@@ -71,7 +71,7 @@ class String : public Expression
 {
 public:
     String() : Expression(Type::NODE_STRING) {}
-    ~String() {};
+    ~String(){};
 
     virtual rapidjson::Value json(rapidjson::Document &father)
     {
@@ -159,4 +159,33 @@ public:
 public:
     TokenType m_operator;                // 运算符
     std::shared_ptr<Expression> m_right; // 右表达式
+};
+
+class FunctionIdentifier : public Expression // 函数的调用
+{
+public:
+    FunctionIdentifier() : Expression(Type::NODE_FUNCTION_IDENTIFIER) {}
+    ~FunctionIdentifier(){};
+
+    virtual rapidjson::Value json(rapidjson::Document &father)
+    {
+        rapidjson::Value json(rapidjson::kObjectType);
+        std::string *typeStr = new std::string;
+        *typeStr = name();
+        std::string *valueStr = new std::string;
+        *valueStr = m_name;
+        rapidjson::Value args(rapidjson::kArrayType);
+        json.AddMember("type", rapidjson::StringRef(typeStr->c_str()), father.GetAllocator());
+        for (auto &arg : m_initial_list)
+        {
+            args.PushBack(arg->json(father), father.GetAllocator());
+        }
+        json.AddMember("arguments", args, father.GetAllocator());
+        json.AddMember("value", rapidjson::StringRef(valueStr->c_str()), father.GetAllocator());
+        return json;
+    }
+
+public:
+    std::string m_name;
+    std::vector<std::shared_ptr<Expression>> m_initial_list;
 };

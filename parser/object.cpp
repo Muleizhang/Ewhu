@@ -2,9 +2,35 @@
 
 std::shared_ptr<Expression> Parser::parse_identifier()
 {
+    if (m_peek.type == TokenType::LEFT_PAREN)
+    {
+        return parse_identifier_function();
+    }
     std::shared_ptr<Identifier> ele(new Identifier());
     ele->m_token = this->m_curr;
     ele->m_name = m_curr.literalToString(); // 转换
+    return ele;
+}
+
+std::shared_ptr<Expression> Parser::parse_identifier_function()
+{
+    std::shared_ptr<FunctionIdentifier> ele(new FunctionIdentifier());
+    ele->m_token = this->m_curr;
+    ele->m_name = m_curr.literalToString(); // 转换
+    next_token();
+    if (m_curr.type == TokenType::LEFT_PAREN)
+    {
+        while (m_peek.type != TokenType::RIGHT_PAREN)
+        {
+            next_token();
+            auto arg = parse_expression(Precedence::LOWEST);
+            ele->m_initial_list.push_back(std::dynamic_pointer_cast<Expression>(arg));
+            if (m_peek.type == TokenType::COMMA)
+                next_token();
+        }
+        next_token();
+        next_token();
+    }
     return ele;
 }
 
