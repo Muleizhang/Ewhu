@@ -1,6 +1,32 @@
 #pragma once
 #include "node.h"
 #include "infix.h"
+
+class StatementBlock : public Statement
+{
+public:
+    StatementBlock() : Statement(Type::NODE_STATEMENTBLOCK) {}
+    ~StatementBlock() {}
+
+    virtual rapidjson::Value json(rapidjson::Document &father)
+    {
+        rapidjson::Value json(rapidjson::kObjectType);
+        std::string *typeStr = new std::string;
+        *typeStr = name();
+        json.AddMember("type", rapidjson::StringRef(typeStr->c_str()), father.GetAllocator());
+        rapidjson::Value statements(rapidjson::kArrayType);
+        for (auto &stat : m_statements)
+        {
+            statements.PushBack(stat->json(father), father.GetAllocator());
+        }
+        json.AddMember("statements", statements, father.GetAllocator());
+        return json;
+    }
+
+public:
+    std::vector<std::shared_ptr<Statement>> m_statements;
+};
+
 class Function : public Statement // 函数的声明
 {
 public:
@@ -13,7 +39,7 @@ public:
         std::string *typeStr = new std::string;
         *typeStr = name();
         json.AddMember("type", rapidjson::StringRef(typeStr->c_str()), father.GetAllocator());
-        
+
         rapidjson::Value args(rapidjson::kArrayType);
         for (auto &arg : m_initial_list)
         {
@@ -22,17 +48,13 @@ public:
         json.AddMember("arguments", args, father.GetAllocator());
 
         rapidjson::Value statements(rapidjson::kArrayType);
-        for (auto &stat : m_statements)
-        {
-            statements.PushBack(stat->json(father), father.GetAllocator());
-        }
-        json.AddMember("statements", statements, father.GetAllocator());
+        json.AddMember("statements", m_statement->json(father), father.GetAllocator());
         return json;
     }
 
 public:
     std::shared_ptr<Identifier> m_name;
-    std::vector<std::shared_ptr<Statement>> m_statements;
+    std::shared_ptr<StatementBlock> m_statement;
     std::vector<std::shared_ptr<Identifier>> m_initial_list;
 };
 
@@ -92,30 +114,7 @@ public:
     std::shared_ptr<Expression> m_expression;
 };
 
-class StatementBlock : public Statement
-{
-public:
-    StatementBlock() : Statement(Type::NODE_STATEMENTBLOCK) {}
-    ~StatementBlock() {}
 
-    virtual rapidjson::Value json(rapidjson::Document &father)
-    {
-        rapidjson::Value json(rapidjson::kObjectType);
-        std::string *typeStr = new std::string;
-        *typeStr = name();
-        json.AddMember("type", rapidjson::StringRef(typeStr->c_str()), father.GetAllocator());
-        rapidjson::Value statements(rapidjson::kArrayType);
-        for (auto &stat : m_statements)
-        {
-            statements.PushBack(stat->json(father), father.GetAllocator());
-        }
-        json.AddMember("statements", statements, father.GetAllocator());
-        return json;
-    }
-
-public:
-    std::vector<std::shared_ptr<Statement>> m_statements;
-};
 
 class IfStatement : public Statement
 {

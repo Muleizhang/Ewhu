@@ -132,15 +132,20 @@ std::shared_ptr<Statement> Parser::parse_function_declaration()
     }
     else
         ;
-    while (m_curr.type != TokenType::SEMICOLON && m_curr.type != TokenType::RIGHT_BRACE)
-    {
-        std::shared_ptr<Statement> stmt = parse_statement();
-        if (stmt.get()->m_type != Node::Type::NODE_COMMENT && errors().empty()) // 如果指针有效
-        {
-            fn->m_statements.push_back(stmt);
-        }
-        if (m_curr.type != TokenType::SEMICOLON)
-            next_token();
-    }
+    std::shared_ptr<StatementBlock> stmt = std::dynamic_pointer_cast<StatementBlock>(parse_statement_block());
+    if (stmt)
+        fn->m_statement = stmt;
+    next_token();
+
+    // while (m_curr.type != TokenType::SEMICOLON && m_curr.type != TokenType::RIGHT_BRACE)
+    // {
+    //     std::shared_ptr<Statement> stmt = parse_statement();
+    //     if (stmt.get()->m_type != Node::Type::NODE_COMMENT && errors().empty()) // 如果指针有效
+    //     {
+    //         fn->m_statements.push_back(stmt);
+    //     }
+    //     if (m_curr.type != TokenType::SEMICOLON)
+    //         next_token();
+    // }
     return fn;
 }
