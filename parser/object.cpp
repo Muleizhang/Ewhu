@@ -29,7 +29,6 @@ std::shared_ptr<Expression> Parser::parse_identifier_function()
                 next_token();
         }
         next_token();
-        next_token();
     }
     return ele;
 }
