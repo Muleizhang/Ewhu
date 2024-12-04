@@ -27,8 +27,8 @@ public:
         NODE_WHILESTATEMENT,
         NODE_BREAKSTATEMENT,
         NODE_CONTINUESTATEMENT,
-        NODE_FUNCTION,
-        NODE_FUNCTION_IDENTIFIER,
+        NODE_FUNCTION,            // 声明
+        NODE_FUNCTION_IDENTIFIER, // 调用
     };
 
     Node() {}
