@@ -114,8 +114,6 @@ public:
     std::shared_ptr<Expression> m_expression;
 };
 
-
-
 class IfStatement : public Statement
 {
 public:
@@ -191,4 +189,23 @@ public:
         json.AddMember("type", rapidjson::StringRef(typeStr->c_str()), father.GetAllocator());
         return json;
     }
+};
+
+class ReturnStatement : public Statement
+{
+public:
+    ReturnStatement() : Statement(Node::NODE_RETURNSTATEMENT) {}
+    ~ReturnStatement() {}
+    virtual rapidjson::Value json(rapidjson::Document &father)
+    {
+        rapidjson::Value json(rapidjson::kObjectType);
+        std::string *typeStr = new std::string;
+        *typeStr = name();
+        json.AddMember("type", rapidjson::StringRef(typeStr->c_str()), father.GetAllocator());
+        json.AddMember("return expression", m_expression->json(father), father.GetAllocator());
+        return json;
+    }
+
+public:
+    std::shared_ptr<ExpressionStatement> m_expression;
 };

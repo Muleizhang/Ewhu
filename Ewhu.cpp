@@ -56,8 +56,8 @@ public:
         int lineNum = 1;
         while (true)
         {
-            line = hl::customInput(lineNum);
-            if (line == "exit")
+            std::cout << lineNum++ << " > ";
+            if (!std::getline(std::cin, line)) // if (line == "exit")
             {
                 std::cout << "\033[36m" << "( ﾟдﾟ)つBye" << "\033[0m" << std::endl;
                 break;

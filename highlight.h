@@ -33,10 +33,19 @@ int getch(void)
 }
 #endif
 
+void moveTo(int x, int y)
+{
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD position;
+    position.X = x;
+    position.Y = y;
+    SetConsoleCursorPosition(hConsole, position);
+}
+
 // 高亮输入的字符
 void highlightInput(const char c)
 {
-
+    printf("%d", c);
     if (std::isdigit(c))
     {
         // light blue
@@ -72,7 +81,6 @@ std::string customInput(int lineNum)
 
     while (true)
     {
-
         c = getch(); // 非阻塞读取单个字符
 
         if (c == '\r' || c == '\n') // Enter 键处理
@@ -86,6 +94,15 @@ std::string customInput(int lineNum)
             {
                 input.pop_back();
                 std::cout << "\b \b"; // 删除一个字符
+            }
+        }
+        else if (c == -32)
+        {
+            c = getch();
+            printf("%d", c);
+            if (c == 75)
+            {
+                moveTo(10, 5);
             }
         }
         else

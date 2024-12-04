@@ -100,6 +100,12 @@ std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node, Scope
         auto e = std::dynamic_pointer_cast<FunctionIdentifier>(node);
         return eval_function(e, scp);
     }
+    case Node::NODE_RETURNSTATEMENT:
+    {
+        std::shared_ptr<Ob_Return> returnvalue(new Ob_Return);
+        returnvalue->m_expression = eval(std::dynamic_pointer_cast<ReturnStatement>(node)->m_expression, scp);
+        return returnvalue;
+    }
 
     default:
     {

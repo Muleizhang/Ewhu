@@ -66,6 +66,7 @@ public:
     std::shared_ptr<Statement> parse_while_statement(); // while语句
     std::shared_ptr<Statement> parse_break_statement();
     std::shared_ptr<Statement> parse_continue_statement();
+    std::shared_ptr<Statement> parse_return_statement();
 
     // 函数
     std::shared_ptr<Statement> parse_function_declaration();

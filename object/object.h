@@ -21,6 +21,7 @@ public:
         OBJECT_NULL,       // 用于空指针
         OBJECT_BREAK,      // break
         OBJECT_CONTINUE,   // continue
+        OBJECT_RETURN,     // 函数返回
         // OBJECT_EMPTY,      // 空
     };
 
@@ -278,6 +279,21 @@ public:
     {
         return "";
     }
+};
+
+class Ob_Return : public Object
+{
+public:
+    Ob_Return() : Object(Object::OBJECT_RETURN) {}
+    ~Ob_Return() {}
+
+    virtual std::string str() const
+    {
+        return "";
+    }
+
+public:
+    std::shared_ptr<Object> m_expression;
 };
 
 class Ob_Null : public Object
