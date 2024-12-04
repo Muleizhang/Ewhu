@@ -120,7 +120,7 @@ std::shared_ptr<Statement> Parser::parse_function_declaration()
             auto arg = parse_identifier();
             if (arg->m_token.type != TokenType::IDENTIFIER)
             {
-                m_errors.push_back("Parser::Invalid Function InitializationList");
+                m_errors.push_back("Parser::Invalid Function Argument List");
                 return nullptr;
             }
             fn->m_initial_list.push_back(std::dynamic_pointer_cast<Identifier>(arg));

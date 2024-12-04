@@ -18,7 +18,7 @@ static std::unordered_map<std::string, TokenType> keyWords = {
     {"break", TokenType::BREAK},
     {"while", TokenType::WHILE},
     {"class", TokenType::CLASS},
-    {"print", TokenType::PRINT},
+    //{"print", TokenType::PRINT},
     {"return", TokenType::RETURN},
     {"this", TokenType::THIS},
     {"var", TokenType::VAR},

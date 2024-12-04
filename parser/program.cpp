@@ -13,7 +13,7 @@ void Parser::parse_program()
         if (stmt.get()->m_type != Node::Type::NODE_COMMENT && errors().empty()) // 如果指针有效
         {
             if (stmt->type() == Node::NODE_FUNCTION)
-                m_program->m_functions.push_back(std::dynamic_pointer_cast<Function>(stmt));
+                m_program->m_statements.push_back(std::dynamic_pointer_cast<Function>(stmt));
             else
                 m_program->m_statements.push_back(stmt);
         }

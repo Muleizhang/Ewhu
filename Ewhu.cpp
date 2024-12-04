@@ -11,12 +11,10 @@
 #include "rapidjson/include/rapidjson/writer.h"
 #include "rapidjson/include/rapidjson/stringbuffer.h"
 
-#ifdef _WIN32
-namespace winapi
+namespace hl
 {
-#include <windows.h>
+#include "highlight.h"
 }
-#endif
 
 class Ewhu
 {
@@ -40,7 +38,8 @@ public:
         int lineNum = 1;
         while (std::getline(file, line))
         {
-            std::cout << lineNum++ << " ";
+            std::cout << std::endl
+                      << lineNum++ << " ";
             run(line, token, lexer, parser, evaluator);
         }
         file.close();
@@ -57,8 +56,8 @@ public:
         int lineNum = 1;
         while (true)
         {
-            std::cout << lineNum++ << " > ";
-            if (!std::getline(std::cin, line))
+            line = hl::customInput(lineNum);
+            if (line == "exit")
             {
                 std::cout << "\033[36m" << "( ﾟдﾟ)つBye" << "\033[0m" << std::endl;
                 break;
@@ -242,7 +241,7 @@ public:
         }
         else
         {
-            std::cerr << "\033[33m" << "Warning: Incomplete statement" << "\033[0m" << std::endl;
+            // std::cerr << "\033[33m" << "Warning: Incomplete statement" << "\033[0m" << std::endl;
         }
     };
 
@@ -264,10 +263,9 @@ int main(int argc, char *argv[])
 {
 #ifdef _WIN32
     // 如果是 Windows 平台，设置控制台为 UTF-8 编码
-    winapi::SetConsoleOutputCP(CP_UTF8);
-    winapi::SetConsoleCP(CP_UTF8);
+    hl::SetConsoleOutputCP(CP_UTF8);
+    hl::SetConsoleCP(CP_UTF8);
 #endif
-    std::ios::sync_with_stdio(false);
     std::cout << "\033[36m" << "Ewhu Programming Language Ciallo～(∠・ω< )⌒★" << "\033[0m" << std::endl;
     if (argc > 3)
     {
