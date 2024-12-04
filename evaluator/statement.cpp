@@ -3,7 +3,7 @@
 std::shared_ptr<Object> Evaluator::eval_statement_block(const std::vector<std::shared_ptr<Statement>> &stmts, Scope &scp)
 {
     std::shared_ptr<Object> result(new Ob_Null());
-    Scope temp_scope(scp.m_var); // 局部作用域
+    Scope temp_scope(scp.m_var, scp.m_func); // 局部作用域
     for (auto &stat : stmts)
     {
         result = eval(stat, temp_scope);
@@ -19,6 +19,12 @@ std::shared_ptr<Object> Evaluator::eval_statement_block(const std::vector<std::s
             scp.m_var[it.first] = it.second;
     }
     return result;
+}
+
+std::shared_ptr<Object> Evaluator::eval_function_declaration(const std::shared_ptr<Function> &node, Scope &scp)
+{
+    scp.m_func.insert(std::make_pair((node->m_name)->m_name, std::dynamic_pointer_cast<Function>(node)));
+    return std::make_shared<Ob_Null>(Ob_Null());
 }
 
 std::shared_ptr<Object> Evaluator::eval_if_statement(const std::shared_ptr<Expression> &exp, const std::shared_ptr<Statement> true_statement, Scope &scp)

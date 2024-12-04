@@ -66,7 +66,7 @@ enum TokenType
     BREAK,     // break
     WHILE,     // while
     CLASS,     // class
-    PRINT,     // print
+               // PRINT,     // print
     RETURN,    // return
     THIS,      // this
     VAR,       // var
@@ -139,7 +139,7 @@ static std::unordered_map<TokenType, std::string> TokenTypeToString = {
     {TokenType::BREAK, "BREAK"},
     {TokenType::WHILE, "WHILE"},
     {TokenType::CLASS, "CLASS"},
-    {TokenType::PRINT, "PRINT"},
+    //{TokenType::PRINT, "PRINT"},
     {TokenType::RETURN, "RETURN"},
     {TokenType::THIS, "THIS"},
     {TokenType::VAR, "VAR"},

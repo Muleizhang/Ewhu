@@ -40,7 +40,8 @@ public:
         int lineNum = 1;
         while (std::getline(file, line))
         {
-            std::cout << lineNum++ << " ";
+            std::cout << std::endl
+                      << lineNum++ << " ";
             run(line, token, lexer, parser, evaluator);
         }
         file.close();
@@ -242,7 +243,7 @@ public:
         }
         else
         {
-            std::cerr << "\033[33m" << "Warning: Incomplete statement" << "\033[0m" << std::endl;
+            // std::cerr << "\033[33m" << "Warning: Incomplete statement" << "\033[0m" << std::endl;
         }
     };
 

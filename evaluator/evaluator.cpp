@@ -90,6 +90,16 @@ std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node, Scope
         std::shared_ptr<Ob_Continue> e(new Ob_Continue);
         return e;
     }
+    case Node::NODE_FUNCTION:
+    {
+        auto e = std::dynamic_pointer_cast<Function>(node);
+        return eval_function_declaration(e, scp);
+    }
+    case Node::NODE_FUNCTION_IDENTIFIER:
+    {
+        auto e = std::dynamic_pointer_cast<FunctionIdentifier>(node);
+        return eval_function(e, scp);
+    }
 
     default:
     {

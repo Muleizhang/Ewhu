@@ -1,16 +1,16 @@
-a=2;
-sum=0;
-while(a<10000){
+a=3;
+sum=1;
+while(a<100000){
     isprime = 1;
     b=2;
-    while(1){
-        if(b*b>a) break;
+    while(b*b<=a){
         if(a%b==0){
             isprime = 0;
+            break;
         }
         b=b+1;
     }
     if(isprime){sum=sum+a;}
-    a=a+1;
+    a=a+2;
 }
 sum;
