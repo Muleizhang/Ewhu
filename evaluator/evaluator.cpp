@@ -93,7 +93,7 @@ std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node, Scope
 
     default:
     {
-        return new_error("Evaluator: node type error: %d", Node::m_names[node->type()]);
+        return new_error(("Evaluator: node type error: " + Node::m_names[node->type()]).c_str());
         break;
     }
     }
