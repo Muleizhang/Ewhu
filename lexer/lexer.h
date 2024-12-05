@@ -32,6 +32,7 @@ private:
     int line = 1;
     int read_current = 0;
     int bracketStatus = 0; // := 前括号数量 - 后括号数量
+    int size = 0;          // 字符数
 
     void scanToken(char inpt);                  // 读取一个 Token
     char nextChar();                            // 读取下一个字符

@@ -45,6 +45,7 @@ std::vector<Token> Lexer::scanTokens()
     current = 0;
     line = 1;
     read_current = 0;
+    size = (int)tokens.size();
     return tokens;
 }
 
@@ -231,9 +232,9 @@ void Lexer::scanToken(char inpt)
     }
 }
 
-Token Lexer::nextToken()
+inline Token Lexer::nextToken()
 {
-    if (read_current >= (int)tokens.size())
+    if (read_current >= size)
     {
         return Token(TokenType::EMPTY, std::monostate(), line);
     }
@@ -242,15 +243,12 @@ Token Lexer::nextToken()
 
 void Lexer::addToken(TokenType type)
 {
-    std::string text = source.substr(start, current - start);
     tokens.push_back(Token(type, std::monostate(), line));
 }
 
 inline char Lexer::nextChar()
 {
-    char inpt = source[current];
-    current++;
-    return inpt;
+    return source[current++];
 }
 
 inline bool Lexer::isEmpty(char inpt)

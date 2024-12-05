@@ -5,7 +5,7 @@ class Identifier : public Expression
 {
 public:
     Identifier() : Expression(Type::NODE_IDENTIFIER) {}
-    ~Identifier(){};
+    ~Identifier() {};
 
     virtual rapidjson::Value json(rapidjson::Document &father)
     {
@@ -27,7 +27,7 @@ class Integer : public Expression
 {
 public:
     Integer() : Expression(Type::NODE_INTEGER) {}
-    ~Integer(){};
+    ~Integer() {};
 
     virtual rapidjson::Value json(rapidjson::Document &father)
     {
@@ -49,7 +49,7 @@ class Boolean : public Expression
 {
 public:
     Boolean() : Expression(Type::NODE_BOOLEAN) {}
-    ~Boolean(){};
+    ~Boolean() {};
 
     virtual rapidjson::Value json(rapidjson::Document &father)
     {
@@ -71,7 +71,7 @@ class String : public Expression
 {
 public:
     String() : Expression(Type::NODE_STRING) {}
-    ~String(){};
+    ~String() {};
 
     virtual rapidjson::Value json(rapidjson::Document &father)
     {
@@ -165,7 +165,7 @@ class FunctionIdentifier : public Expression // 函数的调用
 {
 public:
     FunctionIdentifier() : Expression(Type::NODE_FUNCTION_IDENTIFIER) {}
-    ~FunctionIdentifier(){};
+    ~FunctionIdentifier() {};
 
     virtual rapidjson::Value json(rapidjson::Document &father)
     {

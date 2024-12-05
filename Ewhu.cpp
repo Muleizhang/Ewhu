@@ -159,10 +159,6 @@ public:
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
         std::cout << "lexer time: " << duration.count() << "ms" << std::endl;
 
-        // for (auto token : tokens)
-        //     std::cout << token.toString();
-        std::cout << lexer.braceStatus << std::endl;
-
         if ((lexer.braceStatus == 0) &&
             ((--tokens.end())->type == TokenType::SEMICOLON ||
              (--tokens.end())->type == TokenType::RIGHT_BRACE))
