@@ -1,14 +1,42 @@
 #include "evaluator.h"
+#include "../lexer/lexer.h"
+#include "../parser/parser.h"
+
+std::shared_ptr<Object> Evaluator::eval_eval(const std::string &line, Scope &scp)
+{
+    Lexer lexer;
+    Parser parser;
+    Evaluator evaluator;
+
+    lexer.source = line;
+    std::vector<Token> new_tokens = lexer.scanTokens();
+
+    if ((lexer.braceStatus == 0) &&
+        ((--new_tokens.end())->type == TokenType::SEMICOLON ||
+         (--new_tokens.end())->type == TokenType::RIGHT_BRACE))
+    {
+        parser.new_sentence(new_tokens.begin(), new_tokens.end());
+        parser.parse_program();
+        new_tokens.clear();
+        auto program = parser.m_program;
+        return evaluator.eval(program, scp);
+    }
+    return nullptr;
+}
 
 std::shared_ptr<Object> Evaluator::eval_function(const std::shared_ptr<FunctionIdentifier> &node, Scope &scp)
 {
     auto it = scp.m_func.find(node->m_name);
     if (it == scp.m_func.end())
     {
-        if (node->m_name == "print") // 内置函数print
+        if (node->m_name == "print")
         {
             std::cout << eval(node->m_initial_list[0], scp)->str() << std::endl;
             return std::make_shared<Ob_Null>(Ob_Null());
+        }
+        if (node->m_name == "eval")
+        {
+            return eval_eval(eval(node->m_initial_list[0], scp)->str(), scp);
         }
         return new_error("Evaluator::eval_function: function %s not found", node->m_name.c_str());
     }
@@ -24,11 +52,8 @@ std::shared_ptr<Object> Evaluator::eval_function(const std::shared_ptr<FunctionI
     {
         eval_assign_expression(new_identifier(function->m_initial_list[i]->m_name), eval(node->m_initial_list[i], scp), temp_scp);
     }
-    std::shared_ptr<Object> returnvalue(new Ob_Null());
-    result = eval_statement_block(it->second->m_statement->m_statements, temp_scp);
-    if (result->type() == Object::OBJECT_RETURN)
-        returnvalue = std::dynamic_pointer_cast<Ob_Return>(result)->m_expression;
-    return returnvalue;
+
+    return eval_statement_block(it->second->m_statement->m_statements, temp_scp);
 }
 
 std::shared_ptr<Object> Evaluator::eval_assign_expression(const std::shared_ptr<Object> &name, const std::shared_ptr<Object> &value, Scope &scp)
