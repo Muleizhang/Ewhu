@@ -3,6 +3,7 @@
 #include <list>
 #include <memory>
 #include <unordered_map>
+#include <sstream>
 #include "../lexer/lexer.h"
 #include "../lexer/token.h"
 #include "../ast/node.h"
