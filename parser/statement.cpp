@@ -155,6 +155,5 @@ std::shared_ptr<Statement> Parser::parse_return_statement()
     std::shared_ptr<ReturnStatement> ele(new ReturnStatement);
     next_token();
     ele->m_expression = parse_expression_statement();
-    next_token();
     return ele;
 }
