@@ -62,7 +62,10 @@ public:
                 std::cout << "\033[36m" << "( ﾟдﾟ)つBye" << "\033[0m" << std::endl;
                 break;
             }
-            run(line, tokens, lexer, parser, evaluator);
+            if (!line.empty())
+            {
+                run(line, tokens, lexer, parser, evaluator);
+            }
         }
     }
 
@@ -199,6 +202,7 @@ public:
         lexer.tokens.clear();
         lexer.source = source;
         std::vector<Token> new_tokens = lexer.scanTokens();
+
         tokens.insert(tokens.end(), new_tokens.begin(), new_tokens.end());
 
         // for (auto token : tokens)
