@@ -37,6 +37,7 @@ public:
     std::shared_ptr<Object> eval_function_declaration(const std::shared_ptr<Function> &node, Scope &scp);
     std::shared_ptr<Object> eval_function(const std::shared_ptr<FunctionIdentifier> &node, Scope &scp);
     std::shared_ptr<Object> eval_return_statement(const std::shared_ptr<ExpressionStatement> &node, Scope &scp);
+    std::shared_ptr<Object> eval_eval(const std::string &line, Scope &scp);
     std::shared_ptr<Object> eval_assign_expression(const std::shared_ptr<Object> &name,
                                                    const std::shared_ptr<Object> &value, Scope &scp); // 赋值
     std::shared_ptr<Object> eval_infix(const TokenType op, const std::shared_ptr<Object> &left,
