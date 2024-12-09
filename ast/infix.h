@@ -20,7 +20,6 @@ public:
     }
 
 public:
-    std::string m_name;
 };
 
 class Integer : public Expression
@@ -42,7 +41,6 @@ public:
     }
 
 public:
-    __INT64_TYPE__ m_value;
 };
 
 class Boolean : public Expression
@@ -57,14 +55,13 @@ public:
         std::string *typeStr = new std::string;
         *typeStr = name();
         std::string *valueStr = new std::string;
-        *valueStr = m_value ? "true" : "false";
+        *valueStr = m_bool ? "true" : "false";
         json.AddMember("type", rapidjson::StringRef(typeStr->c_str()), father.GetAllocator());
         json.AddMember("value", rapidjson::StringRef(valueStr->c_str()), father.GetAllocator());
         return json;
     }
 
 public:
-    bool m_value;
 };
 
 class String : public Expression
@@ -79,14 +76,13 @@ public:
         std::string *typeStr = new std::string;
         *typeStr = name();
         std::string *valueStr = new std::string;
-        *valueStr = m_value;
+        *valueStr = m_string;
         json.AddMember("type", rapidjson::StringRef(typeStr->c_str()), father.GetAllocator());
         json.AddMember("value", rapidjson::StringRef(valueStr->c_str()), father.GetAllocator());
         return json;
     }
 
 public:
-    std::string m_value;
 };
 
 class Infix : public Expression // 中缀表达式
@@ -116,9 +112,6 @@ public:
     }
 
 public:
-    TokenType m_operator;                // 运算符
-    std::shared_ptr<Expression> m_left;  // 左表达式
-    std::shared_ptr<Expression> m_right; // 右表达式
 };
 
 class Prefix : public Expression // 前缀表达式
@@ -157,8 +150,6 @@ public:
     }
 
 public:
-    TokenType m_operator;                // 运算符
-    std::shared_ptr<Expression> m_right; // 右表达式
 };
 
 class FunctionIdentifier : public Expression // 函数的调用
@@ -186,6 +177,4 @@ public:
     }
 
 public:
-    std::string m_name;
-    std::vector<std::shared_ptr<Expression>> m_initial_list;
 };

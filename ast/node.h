@@ -7,6 +7,13 @@
 #include "../rapidjson/include/rapidjson/writer.h"
 #include "../rapidjson/include/rapidjson/stringbuffer.h"
 
+class Identifier;
+class StatementBlock;
+class Function;
+class ExpressionStatement;
+class Statement;
+class Expression;
+
 class Node
 {
 public:
@@ -44,6 +51,37 @@ public:
     Type m_type;
     Token m_token;
     static std::unordered_map<Type, std::string> m_names;
+
+public:
+    std::vector<std::shared_ptr<Node>> m_statements;
+
+    std::shared_ptr<Identifier> m_func;
+    std::shared_ptr<StatementBlock> m_statement;
+    std::vector<std::shared_ptr<Node>> m_initial_list;
+
+    // re std::vector<std::shared_ptr<Statement>> m_statements;
+    std::vector<std::shared_ptr<Function>> m_functions;
+
+    std::shared_ptr<Expression> m_expression;
+
+    // std::shared_ptr<Expression> m_expression;
+    std::shared_ptr<Statement> m_true_statement;
+    // std::shared_ptr<Statement> m_false_statement;
+
+    // std::shared_ptr<Expression> m_expression;
+    std::shared_ptr<Statement> m_cycle_statement;
+    // std::shared_ptr<Statement> m_false_statement;
+
+    std::shared_ptr<ExpressionStatement> m_expression_statement;
+
+    std::string m_name;
+    __INT64_TYPE__ m_value;
+    bool m_bool;
+    std::string m_string;
+
+    TokenType m_operator;                // 运算符
+    std::shared_ptr<Expression> m_left;  // 左表达式
+    std::shared_ptr<Expression> m_right; // 右表达式
 };
 
 class Expression : public Node

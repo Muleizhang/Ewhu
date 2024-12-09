@@ -14,7 +14,7 @@ std::shared_ptr<Expression> Parser::parse_identifier()
 
 std::shared_ptr<Expression> Parser::parse_identifier_function()
 {
-    std::shared_ptr<FunctionIdentifier> ele(new FunctionIdentifier());
+    std::shared_ptr<FunctionIdentifier> ele = std::make_shared<FunctionIdentifier>();
     ele->m_token = this->m_curr;
     ele->m_name = m_curr.literalToString(); // 转换
     next_token();
@@ -45,7 +45,7 @@ std::shared_ptr<Expression> Parser::parse_boolean()
 {
     std::shared_ptr<Boolean> ele(new Boolean());
     ele->m_token = this->m_curr;
-    ele->m_value = (m_curr.type == TokenType::TRUE) ? true : false;
+    ele->m_bool = (m_curr.type == TokenType::TRUE) ? true : false;
     return ele;
 }
 
@@ -53,6 +53,6 @@ std::shared_ptr<Expression> Parser::parse_string()
 {
     std::shared_ptr<String> ele(new String());
     ele->m_token = this->m_curr;
-    ele->m_value = m_curr.literalToString(); // 转换
+    ele->m_string = m_curr.literalToString(); // 转换
     return ele;
 }
