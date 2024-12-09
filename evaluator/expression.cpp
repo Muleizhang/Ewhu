@@ -49,7 +49,7 @@ std::shared_ptr<Object> Evaluator::eval_function(const std::shared_ptr<FunctionI
 
     for (int i = 0; i < function->m_initial_list.size(); i++)
     {
-        eval_assign_expression(new_identifier(function->m_initial_list[i]->m_name), eval(node->m_initial_list[i], scp), temp_scp);
+        eval_assign_expression(function->m_initial_list[i]->m_name, eval(node->m_initial_list[i], scp), temp_scp);
     }
     auto result = eval_statement_block(it->second->m_statement->m_statements, temp_scp);
     if (result->type() == Object::OBJECT_RETURN)
@@ -57,13 +57,12 @@ std::shared_ptr<Object> Evaluator::eval_function(const std::shared_ptr<FunctionI
     return std::make_shared<Ob_Null>();
 }
 
-std::shared_ptr<Object> Evaluator::eval_assign_expression(const std::shared_ptr<Object> &name, const std::shared_ptr<Object> &value, Scope &scp)
+std::shared_ptr<Object> Evaluator::eval_assign_expression(const std::string &name, const std::shared_ptr<Object> &value, Scope &scp)
 {
-    auto a = std::dynamic_pointer_cast<Ob_Identifier>(name)->m_name;
-    auto it = scp.m_var.find(std::dynamic_pointer_cast<Ob_Identifier>(name)->m_name);
+    auto it = scp.m_var.find(name);
     if (it == scp.m_var.end())
     {
-        scp.m_var.insert(std::make_pair(std::dynamic_pointer_cast<Ob_Identifier>(name)->m_name, value));
+        scp.m_var.insert(std::make_pair(name, value));
     }
     else
     {
@@ -150,11 +149,6 @@ std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, const std::sha
     // std::cout << "eval_infix: " << left->str() << "(" << left->name() << ") " << TokenTypeToString[op]
     //           << " " << right->str() << "(" << right->name() << ")" << std::endl;
 
-    // assign
-    if (op == TokenType::EQUAL)
-    {
-        return eval_assign_expression(left, right, scp);
-    }
     // int(bool) op int(bool)
     if (((left->type() == Object::OBJECT_INTEGER) || (left->type() == Object::OBJECT_BOOLEAN)) &&
         ((right->type() == Object::OBJECT_INTEGER) || (right->type() == Object::OBJECT_BOOLEAN)))
@@ -218,6 +212,15 @@ std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, const std::sha
             return new_error("Evaluator::eval_infix unknown operation: %s %s %s", left->name().c_str(), TokenTypeToString[op].c_str(), right->name().c_str());
         }
     }
+    if (left->OBJECT_ERROR)
+    {
+        return left;
+    }
+    if (right->OBJECT_ERROR)
+    {
+        return right;
+    }
+
     return new_error("Evaluator::eval_infix unknown operation: %s %s %s", left->name().c_str(), TokenTypeToString[op].c_str(), right->name().c_str());
 }
 

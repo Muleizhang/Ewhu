@@ -18,6 +18,7 @@ std::shared_ptr<Object> Evaluator::eval_statement_block(const std::vector<std::s
             break;
         }
     }
+
     for (auto it : temp_scope.m_var)
     {
         auto org_it = scp.m_var.find(it.first);
