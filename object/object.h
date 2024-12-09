@@ -6,7 +6,7 @@
 #include <memory>
 #include <stdarg.h>
 #include <stdexcept>
-
+#include <vector>
 class Object
 {
 public:
@@ -22,14 +22,15 @@ public:
         OBJECT_BREAK,      // break
         OBJECT_CONTINUE,   // continue
         OBJECT_RETURN,     // 函数返回
-        // OBJECT_EMPTY,      // 空
+        OBJECT_ARRAY,      // 数组
+        OBJECT_INDEX,
     };
 
 public:
     Object() {}
     Object(Type type) : m_type(type) {}
-    Object(const Object &obj) : m_type(obj.m_type) {};
-    virtual ~Object() {};
+    Object(const Object &obj) : m_type(obj.m_type){};
+    virtual ~Object(){};
 
     Type type() const { return m_type; }
     std::string name() const;
@@ -306,4 +307,44 @@ public:
     {
         return "";
     }
+};
+
+class Ob_Array : public Object
+{
+public:
+    Ob_Array() : Object(Object::OBJECT_ARRAY) {}
+    ~Ob_Array() {}
+
+    virtual std::string str() const
+    {
+        std::string r;
+        r += '[';
+        for (auto &i : m_array)
+        {
+            r += i->str();
+            r += ',';
+        }
+        r.pop_back();
+        r += ']';
+        return r;
+    }
+
+public:
+    std::vector<std::shared_ptr<Object>> m_array;
+};
+
+class Ob_Index : public Object
+{
+public:
+    Ob_Index() : Object(Object::OBJECT_INDEX) {}
+    ~Ob_Index() {}
+
+    virtual std::string str() const
+    {
+        return "";
+    }
+
+public:
+    std::shared_ptr<Object> m_array;
+    std::shared_ptr<Ob_Integer> m_index;
 };

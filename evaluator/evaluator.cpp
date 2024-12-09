@@ -106,6 +106,15 @@ std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node, Scope
         returnvalue->m_expression = eval(std::dynamic_pointer_cast<ReturnStatement>(node)->m_expression, scp);
         return returnvalue;
     }
+    case Node::NODE_ARRAY:
+    {
+        std::shared_ptr<Ob_Array> ary(new Ob_Array);
+        for (auto ele : std::dynamic_pointer_cast<Array>(node)->m_array)
+        {
+            ary->m_array.push_back(eval(ele, scp));
+        }
+        return ary;
+    }
 
     default:
     {
@@ -146,7 +155,10 @@ std::shared_ptr<Object> Evaluator::new_identifier(const std::string &value)
 std::shared_ptr<Object> Evaluator::eval_left(const std::shared_ptr<Node> &node, Scope &scp)
 {
     if (node->type() != Node::NODE_IDENTIFIER)
-        return Evaluator::eval(node, scp);
+        if (node->type() == Node::NODE_INFIX && std::dynamic_pointer_cast<Infix>(node)->m_operator == TokenType::LEFT_BRACKET)
+            return Evaluator::eval_assgin_array_statement(node, scp);
+        else
+            return Evaluator::eval(node, scp);
     else
     {
         auto e = std::dynamic_pointer_cast<Identifier>(node);

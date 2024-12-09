@@ -44,6 +44,19 @@ std::shared_ptr<Expression> Parser::parse_prefix()
     return ele;
 }
 
+std::shared_ptr<Expression> Parser::parse_index(const std::shared_ptr<Expression> &left)
+{
+    std::shared_ptr<Infix> ele(new Infix());
+    ele->m_token = m_curr;
+    ele->m_operator = m_curr.type;
+    ele->m_left = left;
+    next_token();
+    ele->m_right = parse_expression(LOWEST);
+    if (m_peek.type != TokenType::RIGHT_BRACKET)
+        return nullptr;
+    next_token();
+    return ele;
+}
 std::shared_ptr<Expression> Parser::parse_infix(const std::shared_ptr<Expression> &left)
 {
     std::shared_ptr<Infix> ele(new Infix());
@@ -54,4 +67,26 @@ std::shared_ptr<Expression> Parser::parse_infix(const std::shared_ptr<Expression
     next_token();
     ele->m_right = parse_expression(precedence);
     return ele;
+}
+
+std::shared_ptr<Expression> Parser::parse_array()
+{
+    std::shared_ptr<Array> ary(new Array());
+    if (m_curr.type == TokenType::LEFT_BRACKET)
+    {
+        while (m_peek.type != TokenType::RIGHT_BRACKET)
+        {
+            next_token();
+            auto arg = parse_expression(LOWEST);
+            if (arg == nullptr)
+            {
+                return nullptr;
+            }
+            ary->m_array.push_back(arg);
+            if (m_peek.type == TokenType::COMMA)
+                next_token();
+        }
+        next_token();
+    }
+    return ary;
 }
