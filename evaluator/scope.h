@@ -12,6 +12,7 @@ public:
     Scope(std::unordered_map<std::string, std::shared_ptr<Object>> scp,
           std::unordered_map<std::string, std::shared_ptr<Function>> func)
         : m_var(scp), m_func(func) {}
+
     Scope() {}
     ~Scope()
     {

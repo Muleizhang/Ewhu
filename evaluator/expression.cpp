@@ -49,7 +49,7 @@ std::shared_ptr<Object> Evaluator::eval_function(const std::shared_ptr<FunctionI
 
     for (int i = 0; i < function->m_initial_list.size(); i++)
     {
-        eval_assign_expression(new_identifier(function->m_initial_list[i]->m_name), eval(node->m_initial_list[i], scp), temp_scp);
+        eval_assign_expression(function->m_initial_list[i]->m_name, eval(node->m_initial_list[i], scp), temp_scp);
     }
     auto result = eval_statement_block(it->second->m_statement->m_statements, temp_scp);
     if (result->type() == Object::OBJECT_RETURN)
@@ -57,13 +57,12 @@ std::shared_ptr<Object> Evaluator::eval_function(const std::shared_ptr<FunctionI
     return std::make_shared<Ob_Null>();
 }
 
-std::shared_ptr<Object> Evaluator::eval_assign_expression(const std::shared_ptr<Object> &name, const std::shared_ptr<Object> &value, Scope &scp)
+std::shared_ptr<Object> Evaluator::eval_assign_expression(const std::string &name, const std::shared_ptr<Object> &value, Scope &scp)
 {
-    auto a = std::dynamic_pointer_cast<Ob_Identifier>(name)->m_name;
-    auto it = scp.m_var.find(std::dynamic_pointer_cast<Ob_Identifier>(name)->m_name);
+    auto it = scp.m_var.find(name);
     if (it == scp.m_var.end())
     {
-        scp.m_var.insert(std::make_pair(std::dynamic_pointer_cast<Ob_Identifier>(name)->m_name, value));
+        scp.m_var.insert(std::make_pair(name, value));
     }
     else
     {
@@ -227,6 +226,15 @@ std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, std::shared_pt
             return new_error("Evaluator::eval_infix unknown operation: %s %s %s", left->name().c_str(), TokenTypeToString[op].c_str(), right->name().c_str());
         }
     }
+    if (left->OBJECT_ERROR)
+    {
+        return left;
+    }
+    if (right->OBJECT_ERROR)
+    {
+        return right;
+    }
+
     return new_error("Evaluator::eval_infix unknown operation: %s %s %s", left->name().c_str(), TokenTypeToString[op].c_str(), right->name().c_str());
 }
 
@@ -325,9 +333,3 @@ std::shared_ptr<Object> &Evaluator::eval_index(std::shared_ptr<Object> &name,
     return std::dynamic_pointer_cast<Ob_Array>(name)->m_array[idx];
 }
 
-std::shared_ptr<Object> Evaluator::eval_assgin_array_statement(const std::shared_ptr<Node> &node, Scope &scp)
-{
-    auto id = std::dynamic_pointer_cast<Ob_Integer>(eval(std::dynamic_pointer_cast<Infix>(node)->m_right, scp));
-    auto ary = std::dynamic_pointer_cast<Ob_Array>(eval(std::dynamic_pointer_cast<Infix>(node)->m_left, scp));
-    return ary->m_array[id];
-}

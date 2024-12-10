@@ -54,25 +54,22 @@ std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node, Scope
     case Node::NODE_INFIX:
     {
         auto e = std::dynamic_pointer_cast<Infix>(node);
-        std::shared_ptr<Object> left;
-        if (e->m_operator != TokenType::EQUAL)
+        if (e->m_operator == TokenType::EQUAL)
         {
-            left = eval(e->m_left, scp);
+            if (e->m_left->type() != Node::NODE_IDENTIFIER)
+                return new_error(("Evaluator::eval_left: not an identifier: " + Node::m_names[e->m_left->type()]).c_str());
+            else
+            {
+                auto name = std::dynamic_pointer_cast<Identifier>(e->m_left)->m_name;
+                return eval_assign_expression(name, eval(e->m_right, scp), scp);
+            }
         }
         else
         {
-            left = eval_left(e->m_left, scp);
+            auto left = eval(e->m_left, scp);
+            auto right = eval(e->m_right, scp);
+            return eval_infix(e->m_operator, left, right, scp);
         }
-        if (is_error(left))
-        {
-            return left;
-        }
-        auto right = eval(e->m_right, scp);
-        if (is_error(right))
-        {
-            return right;
-        }
-        return eval_infix(e->m_operator, left, right, scp);
     }
     case Node::NODE_PREFIX:
     {
@@ -82,13 +79,11 @@ std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node, Scope
     }
     case Node::NODE_BREAKSTATEMENT:
     {
-        std::shared_ptr<Ob_Break> e(new Ob_Break);
-        return e;
+        return std::make_shared<Ob_Break>();
     }
     case Node::NODE_CONTINUESTATEMENT:
     {
-        std::shared_ptr<Ob_Continue> e(new Ob_Continue);
-        return e;
+        return std::make_shared<Ob_Continue>();
     }
     case Node::NODE_FUNCTION:
     {
