@@ -47,7 +47,28 @@ std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node, Scope
         if (node->m_operator == TokenType::EQUAL)
         {
             if (node->m_left->type() != Node::NODE_IDENTIFIER)
+            {
+                if (node->m_left->type() == Node::NODE_INFIX && node->m_left->m_operator == TokenType::LEFT_BRACKET)
+                {
+                    int idex = eval(node->m_left->m_right, scp)->m_int;
+                    if (node->m_left->m_left->type() == Node::NODE_IDENTIFIER)
+                    {
+                        auto it = scp.m_var.find(node->m_left->m_left->m_name);
+                        if (it == scp.m_var.end())
+                            return nullptr;
+                        else
+                        {
+                            return std::dynamic_pointer_cast<Ob_Array>(it->second)->m_array[idex] = eval(node->m_right, scp);
+                        }
+                    }
+                    else
+                    {
+                        return std::dynamic_pointer_cast<Ob_Array>(eval_assign_array(node->m_left->m_left, scp))->m_array[idex] = eval(node->m_right, scp);
+                    }
+                }
                 return new_error(("Evaluator::eval_left: not an identifier: " + Node::m_names[node->m_left->type()]).c_str());
+            }
+
             else
             {
                 auto name = node->m_left->m_name;
@@ -92,7 +113,7 @@ std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node, Scope
         auto ary = std::make_shared<Ob_Array>();
         for (auto ele : std::dynamic_pointer_cast<Array>(node)->m_array)
         {
-            ary->m_array.push_back(eval(ele, scp));
+            ary->Object::m_array.push_back(eval(ele, scp));
         }
         return ary;
     }
@@ -137,4 +158,23 @@ std::shared_ptr<Object> Evaluator::eval_program(const std::vector<std::shared_pt
     //     }
     // }
     return result;
+}
+
+std::shared_ptr<Object> &Evaluator::eval_assign_array(const std::shared_ptr<Node> node, Scope &scp)
+{
+    //if (node->tpye == Node::NODE_INFIX && node->m_operator == TokenType::LEFT_BRACKET)
+    {
+        int idex = eval(node->m_right, scp)->m_int;
+        if (node->m_left->type() != Node::NODE_IDENTIFIER)
+            return eval_assign_array(node->m_left, scp)->m_array[idex];
+        else
+        {
+            auto it = scp.m_var.find(node->m_left->m_name);
+            if (it != scp.m_var.end())
+            {
+                return it->second->m_array[idex];
+            }
+        }
+    }
+
 }

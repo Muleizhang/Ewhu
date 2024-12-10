@@ -346,13 +346,13 @@ std::shared_ptr<Object> Evaluator::eval_fraction_infix_expression(const TokenTyp
     }
 }
 
-std::shared_ptr<Object> &Evaluator::eval_index(std::shared_ptr<Object> &name,
+std::shared_ptr<Object> Evaluator::eval_index(std::shared_ptr<Object> &name,
                                                const std::shared_ptr<Object> &index, Scope &scp)
 {
-    int idx = index->m_int;
-    // if (idx < 0)
-    //     return new_error("Evaluator::eval_index: index of %s can not be negative", name->name().c_str());
-    // if (idx >= std::dynamic_pointer_cast<Ob_Array>(name)->m_array.size())
-    //     return new_error("Evaluator::eval_index: index of %s out of range", name->name().c_str());
+    const int idx = index->m_int;
+    if (idx < 0)
+        return new_error("Evaluator::eval_index: index of %s can not be negative", name->name().c_str());
+    if (idx >= std::dynamic_pointer_cast<Ob_Array>(name)->m_array.size())
+        return new_error("Evaluator::eval_index: index of %s out of range", name->name().c_str());
     return std::dynamic_pointer_cast<Ob_Array>(name)->m_array[idx];
 }

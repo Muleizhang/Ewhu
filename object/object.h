@@ -29,8 +29,8 @@ public:
 public:
     Object() {}
     Object(Type type) : m_type(type) {}
-    Object(const Object &obj) : m_type(obj.m_type) {};
-    virtual ~Object() {};
+    Object(const Object &obj) : m_type(obj.m_type){};
+    virtual ~Object(){};
 
     virtual std::shared_ptr<Object> clone() const = 0;
 
@@ -55,6 +55,7 @@ public:
     long long m_integerPart;
     long long num;
     long long den;
+    std::vector<std::shared_ptr<Object>> m_array;
 };
 
 class Ob_Error : public Object
@@ -386,6 +387,8 @@ class Ob_Array : public Object
 {
 public:
     Ob_Array() : Object(Object::OBJECT_ARRAY) {}
+    Ob_Array(const Ob_Array &obj) : Object(Object::OBJECT_ARRAY) { m_array = obj.m_array; }
+
     ~Ob_Array() {}
 
     virtual std::shared_ptr<Object> clone() const
@@ -396,7 +399,7 @@ public:
     {
         std::string r;
         r += '[';
-        for (auto &i : m_array)
+        for (auto &i : Object::m_array)
         {
             r += i->str();
             r += ',';
@@ -407,7 +410,6 @@ public:
     }
 
 public:
-    std::vector<std::shared_ptr<Object>> m_array;
 };
 
 class Ob_Index : public Object

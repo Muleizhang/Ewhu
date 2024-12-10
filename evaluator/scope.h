@@ -3,6 +3,7 @@
 #include <string>
 #include <memory>
 #include <unordered_map>
+#include <set>
 #include "../object/object.h"
 #include "../ast/statement.h"
 
