@@ -175,9 +175,9 @@ std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, std::shared_pt
         return eval_index(left, right, scp);
     }
     // int(bool) op int(bool)
-    // if (((left->type() == Object::OBJECT_INTEGER) || (left->type() == Object::OBJECT_BOOLEAN)) &&
-    //    ((right->type() == Object::OBJECT_INTEGER) || (right->type() == Object::OBJECT_BOOLEAN)))
-    return eval_integer_infix_expression(op, left, right);
+    if (((left->type() == Object::OBJECT_INTEGER) || (left->type() == Object::OBJECT_BOOLEAN)) &&
+        ((right->type() == Object::OBJECT_INTEGER) || (right->type() == Object::OBJECT_BOOLEAN)))
+        return eval_integer_infix_expression(op, left, right);
 
     // fraction op fraction
     if (left->type() == Object::OBJECT_FRACTION && right->type() == Object::OBJECT_FRACTION)
@@ -185,25 +185,25 @@ std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, std::shared_pt
 
     // fraction op int
     if (left->type() == Object::OBJECT_FRACTION && right->type() == Object::OBJECT_INTEGER)
-        return eval_fraction_infix_expression(op, left, std::make_shared<Ob_Fraction>(std::dynamic_pointer_cast<Ob_Integer>(right)->m_int, 1));
+        return eval_fraction_infix_expression(op, left, std::make_shared<Ob_Fraction>(right->m_int, 1));
 
     // int op fraction
     if (left->type() == Object::OBJECT_INTEGER && right->type() == Object::OBJECT_FRACTION)
-        return eval_fraction_infix_expression(op, std::make_shared<Ob_Fraction>(std::dynamic_pointer_cast<Ob_Integer>(left)->m_int, 1), right);
+        return eval_fraction_infix_expression(op, std::make_shared<Ob_Fraction>(left->m_int, 1), right);
 
     // fraction op bool
     if (left->type() == Object::OBJECT_FRACTION && right->type() == Object::OBJECT_BOOLEAN)
-        return eval_fraction_infix_expression(op, left, std::make_shared<Ob_Fraction>(std::dynamic_pointer_cast<Ob_Boolean>(right)->m_int, 1));
+        return eval_fraction_infix_expression(op, left, std::make_shared<Ob_Fraction>(right->m_int, 1));
 
     // bool op fraction
     if (left->type() == Object::OBJECT_BOOLEAN && right->type() == Object::OBJECT_FRACTION)
-        return eval_fraction_infix_expression(op, std::make_shared<Ob_Fraction>(std::dynamic_pointer_cast<Ob_Boolean>(left)->m_int, 1), right);
+        return eval_fraction_infix_expression(op, std::make_shared<Ob_Fraction>(left->m_int, 1), right);
 
     // string op string
     if (left->type() == Object::OBJECT_STRING && right->type() == Object::OBJECT_STRING)
     {
-        auto l = std::dynamic_pointer_cast<Ob_String>(left)->m_string;
-        auto r = std::dynamic_pointer_cast<Ob_String>(right)->m_string;
+        auto l = left->m_string;
+        auto r = right->m_string;
         switch (op)
         {
         case TokenType::PLUS:
@@ -219,8 +219,8 @@ std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, std::shared_pt
     // string op int
     if (left->type() == Object::OBJECT_STRING && right->type() == Object::OBJECT_INTEGER)
     {
-        auto l = std::dynamic_pointer_cast<Ob_String>(left)->m_string;
-        auto r = std::dynamic_pointer_cast<Ob_Integer>(right)->m_int;
+        auto l = left->m_string;
+        auto r = right->m_int;
         std::string result;
         switch (op)
         {
