@@ -41,7 +41,7 @@ std::shared_ptr<Object> Evaluator::eval_function(const std::shared_ptr<Node> &no
         return new_error("Evaluator::eval_function: function %s not found", node->m_name.c_str());
     }
     auto function = it->second;
-    Scope temp_scp(scp.m_var, scp.m_func);
+    Scope temp_scp(scp);
     if (function->m_initial_list.size() != node->m_initial_list.size())
     {
         return new_error("Evaluator::eval_function: function %s arguments not match", node->m_name.c_str());
@@ -60,14 +60,25 @@ std::shared_ptr<Object> Evaluator::eval_function(const std::shared_ptr<Node> &no
 std::shared_ptr<Object> Evaluator::eval_assign_expression(const std::string &name, const std::shared_ptr<Object> &value, Scope &scp)
 {
     auto it = scp.m_var.find(name);
-    if (it == scp.m_var.end())
-    {
-        scp.m_var.insert(std::make_pair(name, value));
-    }
-    else
+    if (it != scp.m_var.end())
     {
         it->second = value;
+        return value;
     }
+
+    Scope *temp_scp = &scp;
+    while (temp_scp->father)
+    {
+        temp_scp = temp_scp->father;
+        auto it = temp_scp->m_var.find(name);
+        if (it != temp_scp->m_var.end())
+        {
+            it->second = value;
+            return value;
+        }
+    }
+
+    scp.m_var.insert(std::make_pair(name, value));
     return value;
 }
 

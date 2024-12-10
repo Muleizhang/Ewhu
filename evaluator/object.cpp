@@ -5,9 +5,19 @@ std::shared_ptr<Object> Evaluator::eval_identifier(const std::shared_ptr<Node> &
     auto it = scp.m_var.find(node->m_name);
     if (it != scp.m_var.end())
     {
-        // std::cout << it->second->str() << std::endl;
         return it->second->clone();
     }
-    else
-        return new_error("Evaluator::eval_identifier: identifier not found: %s", node->m_name.c_str());
+
+    auto current_scope = &scp;
+    while (current_scope->father != nullptr)
+    {
+        current_scope = current_scope->father;
+        auto it = current_scope->m_var.find(node->m_name);
+        if (it != current_scope->m_var.end())
+        {
+            return it->second->clone();
+        }
+    }
+
+    return new_error("Evaluator::eval_identifier: identifier not found: %s", node->m_name.c_str());
 }

@@ -4,7 +4,8 @@ std::shared_ptr<Object> Evaluator::eval_statement_block(const std::vector<std::s
 {
     std::shared_ptr<Object> result(new Ob_Null());
     std::shared_ptr<Object> returnvalue(new Ob_Null());
-    Scope temp_scope(scp.m_var, scp.m_func); // 局部作用域
+    Scope temp_scope; // 局部作用域
+    temp_scope.father = &scp;
     for (auto &stat : stmts)
     {
         result = eval(stat, temp_scope);
@@ -19,12 +20,12 @@ std::shared_ptr<Object> Evaluator::eval_statement_block(const std::vector<std::s
         }
     }
 
-    for (auto it : temp_scope.m_var)
-    {
-        auto org_it = scp.m_var.find(it.first);
-        if (org_it != scp.m_var.end())
-            scp.m_var[it.first] = it.second;
-    }
+    // for (auto it : temp_scope.m_var)
+    // {
+    //     auto org_it = scp.m_var.find(it.first);
+    //     if (org_it != scp.m_var.end())
+    //         scp.m_var[it.first] = it.second;
+    // }
 
     return returnvalue;
 }
