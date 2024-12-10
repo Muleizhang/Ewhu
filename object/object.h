@@ -29,8 +29,8 @@ public:
 public:
     Object() {}
     Object(Type type) : m_type(type) {}
-    Object(const Object &obj) : m_type(obj.m_type){};
-    virtual ~Object(){};
+    Object(const Object &obj) : m_type(obj.m_type) {};
+    virtual ~Object() {};
 
     virtual std::shared_ptr<Object> clone() const = 0;
 
@@ -388,6 +388,10 @@ public:
     Ob_Array() : Object(Object::OBJECT_ARRAY) {}
     ~Ob_Array() {}
 
+    virtual std::shared_ptr<Object> clone() const
+    {
+        return std::make_shared<Ob_Array>(*this);
+    }
     virtual std::string str() const
     {
         std::string r;
@@ -412,6 +416,10 @@ public:
     Ob_Index() : Object(Object::OBJECT_INDEX) {}
     ~Ob_Index() {}
 
+    virtual std::shared_ptr<Object> clone() const
+    {
+        return std::make_shared<Ob_Index>(*this);
+    }
     virtual std::string str() const
     {
         return "";
