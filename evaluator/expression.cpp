@@ -154,12 +154,26 @@ std::shared_ptr<Object> Evaluator::eval_boolean_prefix_expression(const TokenTyp
     }
 }
 
-std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, const std::shared_ptr<Object> &left,
+std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, std::shared_ptr<Object> &left,
                                               const std::shared_ptr<Object> &right, Scope &scp) // 中缀表达式求值
 {
     // std::cout << "eval_infix: " << left->str() << "(" << left->name() << ") " << TokenTypeToString[op]
     //           << " " << right->str() << "(" << right->name() << ")" << std::endl;
 
+    // assign
+    // if (op == TokenType::EQUAL)
+    // {
+    //     // if (left->type() != Object::OBJECT_IDENTIFIER)
+    //     // return eval_assgin_array_statement(left, right, scp);
+    //     if (left->type() == Object::OBJECT_IDENTIFIER)
+    //         return eval_assign_expression(left, right, scp);
+    // }
+    if (op == TokenType::LEFT_BRACKET)
+    {
+        if (left->type() != Object::OBJECT_ARRAY)
+            return new_error("Evaluator: can not convert %s to Array", left->name().c_str());
+        return eval_index(left, right, scp);
+    }
     // int(bool) op int(bool)
     // if (((left->type() == Object::OBJECT_INTEGER) || (left->type() == Object::OBJECT_BOOLEAN)) &&
     //    ((right->type() == Object::OBJECT_INTEGER) || (right->type() == Object::OBJECT_BOOLEAN)))
@@ -331,3 +345,15 @@ std::shared_ptr<Object> Evaluator::eval_fraction_infix_expression(const TokenTyp
         return new_error("Evaluator::eval_fraction_infix_expression unknown operation: %s %s %s", left->name().c_str(), TokenTypeToString[op].c_str(), right->name().c_str());
     }
 }
+
+std::shared_ptr<Object> &Evaluator::eval_index(std::shared_ptr<Object> &name,
+                                               const std::shared_ptr<Object> &index, Scope &scp)
+{
+    int idx = std::dynamic_pointer_cast<Ob_Integer>(index)->m_value;
+    // if (idx < 0)
+    //     return new_error("Evaluator::eval_index: index of %s can not be negative", name->name().c_str());
+    // if (idx >= std::dynamic_pointer_cast<Ob_Array>(name)->m_array.size())
+    //     return new_error("Evaluator::eval_index: index of %s out of range", name->name().c_str());
+    return std::dynamic_pointer_cast<Ob_Array>(name)->m_array[idx];
+}
+

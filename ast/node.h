@@ -37,6 +37,7 @@ public:
         NODE_FUNCTION,            // 声明
         NODE_FUNCTION_IDENTIFIER, // 调用
         NODE_RETURNSTATEMENT,     // 函数返回
+        NODE_ARRAY,               // 数组
     };
 
     Node() {}

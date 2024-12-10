@@ -33,10 +33,15 @@ public:
     std::shared_ptr<Object> eval_function_declaration(const std::shared_ptr<Node> &node, Scope &scp);
     std::shared_ptr<Object> eval_function(const std::shared_ptr<Node> &node, Scope &scp);
     std::shared_ptr<Object> eval_return_statement(const std::shared_ptr<Node> &node, Scope &scp);
+
+    std::shared_ptr<Object> &eval_index(std::shared_ptr<Object> &name,
+                                        const std::shared_ptr<Object> &index, Scope &scp);
+    std::shared_ptr<Object> eval_assgin_array_statement(const std::shared_ptr<Node> &node, Scope &scp);
+
     std::shared_ptr<Object> eval_eval(const std::string &line, Scope &scp);
     std::shared_ptr<Object> eval_assign_expression(const std::string &name,
                                                    const std::shared_ptr<Object> &value, Scope &scp); // 赋值
-    std::shared_ptr<Object> eval_infix(const TokenType op, const std::shared_ptr<Object> &left,
+    std::shared_ptr<Object> eval_infix(const TokenType op, std::shared_ptr<Object> &left,
                                        const std::shared_ptr<Object> &right, Scope &Scp); // 求值
     std::shared_ptr<Object> eval_integer_infix_expression(const TokenType &op, const std::shared_ptr<Object> &left,
                                                           const std::shared_ptr<Object> &right);

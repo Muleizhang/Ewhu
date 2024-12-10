@@ -22,6 +22,7 @@ std::map<TokenType, int> Parser::m_precedences =
         {TokenType::SLASH_SLASH, PRODUCT},
 
         {TokenType::DOT, DOT},
+        {TokenType::LEFT_BRACKET, INDEX},
 };
 std::unordered_map<TokenType, Parser::prefix_parse_fn> Parser::m_prefix_parse_fns =
     {
@@ -34,6 +35,7 @@ std::unordered_map<TokenType, Parser::prefix_parse_fn> Parser::m_prefix_parse_fn
         {TokenType::MINUS, &Parser::parse_prefix},
         {TokenType::BANG, &Parser::parse_prefix},
         {TokenType::IDENTIFIER, &Parser::parse_identifier},
+        {TokenType::LEFT_BRACKET, &Parser::parse_array},
 };
 std::unordered_map<TokenType, Parser::infix_parse_fn> Parser::m_infix_parse_fns =
     {
@@ -56,7 +58,7 @@ std::unordered_map<TokenType, Parser::infix_parse_fn> Parser::m_infix_parse_fns 
         {TokenType::EQUAL, &Parser::parse_infix},
         {TokenType::BIT_XOR, &Parser::parse_infix},
         {TokenType::BIT_AND, &Parser::parse_infix},
-
+        {TokenType::LEFT_BRACKET, &Parser::parse_index}
 };
 std::unordered_map<TokenType, Parser::control_flow_fn> Parser::m_control_flow_fns =
     {
@@ -67,6 +69,12 @@ std::unordered_map<TokenType, Parser::control_flow_fn> Parser::m_control_flow_fn
         {TokenType::CONTINUE, &Parser::parse_continue_statement},
         {TokenType::FUNC, &Parser::parse_function_declaration},
         {TokenType::RETURN, &Parser::parse_return_statement},
+};
+
+std::unordered_map<TokenType, Parser::suffix_parse_fn> Parser::m_suffix_parse_fns =
+    {
+        
+    
 };
 
 void Parser::next_token() // 读取下一个token

@@ -23,6 +23,7 @@ public:
         PRODUCT,  // 乘除
         PRE_SIGN, // 前缀正号负号
         DOT,      // 小数
+        INDEX,    // 索引
     };
 
     Parser();
@@ -33,6 +34,8 @@ public:
     typedef std::shared_ptr<Expression> (Parser::*prefix_parse_fn)(void);
     // 中缀表达式函数原型定义
     typedef std::shared_ptr<Expression> (Parser::*infix_parse_fn)(const std::shared_ptr<Expression> &left);
+    // 后缀表达式函数原型定义
+    typedef std::shared_ptr<Expression> (Parser::*suffix_parse_fn)(const std::shared_ptr<Expression> &left);
     // 控制流语句函数原型定义
     typedef std::shared_ptr<Statement> (Parser::*control_flow_fn)(void);
 
@@ -58,8 +61,13 @@ public:
     std::shared_ptr<Expression> parse_prefix();
     std::shared_ptr<Expression> parse_identifier();
     std::shared_ptr<Expression> parse_identifier_function();
+    std::shared_ptr<Expression> parse_array();
     // 中缀
     std::shared_ptr<Expression> parse_infix(const std::shared_ptr<Expression> &left);
+    std::shared_ptr<Expression> parse_index(const std::shared_ptr<Expression> &left);
+
+    // 后缀
+    // std::shared_ptr<Expression> parse_suffix(const std::shared_ptr<Expression> &left){};
 
     // 控制流
     std::shared_ptr<Statement> parse_statement_block(); // 语句块
@@ -90,5 +98,6 @@ private:
     static std::map<TokenType, int> m_precedences; // 一个从运算符TokenType类型到优先级类型的映射
     static std::unordered_map<TokenType, prefix_parse_fn> m_prefix_parse_fns;
     static std::unordered_map<TokenType, infix_parse_fn> m_infix_parse_fns;
+    static std::unordered_map<TokenType, suffix_parse_fn> m_suffix_parse_fns;
     static std::unordered_map<TokenType, control_flow_fn> m_control_flow_fns;
 };

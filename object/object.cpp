@@ -12,6 +12,7 @@ std::unordered_map<Object::Type, std::string> Object::m_names = {
     {Object::OBJECT_NULL, "Null"},
     {Object::OBJECT_BREAK, "Break"},
     {Object::OBJECT_RETURN, "Return"},
+    {Object::OBJECT_ARRAY, "Array"},
 };
 
 std::string Object::name() const
