@@ -145,7 +145,7 @@ void Lexer::scanToken(char inpt)
         addToken(AT);
         break;
     case '|':
-        addToken(PIPE);
+        addToken(BIT_OR);
         break;
     case '%':
         addToken(PERCENT);
@@ -273,12 +273,12 @@ inline bool Lexer::isRelationalOperator(char inpt)
 
 inline bool Lexer::isMathematicalOperator(char inpt)
 {
-    return (inpt == '+' || inpt == '-' || inpt == '*' || inpt == '/' || inpt == '%' || inpt == '^' || inpt == '&');
+    return (inpt == '+' || inpt == '-' || inpt == '*' || inpt == '/' || inpt == '%' || inpt == '^' || inpt == '&'|| inpt == '|');
 }
 
 inline bool Lexer::isDelimiter(char inpt)
 {
-    return (inpt == ';') || (inpt == ',') || (inpt == ',') || (inpt == '[') || (inpt == ']') || (inpt == '{') || (inpt == '}') || (inpt == '(') || (inpt == ')');
+    return (inpt == ';') || (inpt == ',') || (inpt == '[') || (inpt == ']') || (inpt == '{') || (inpt == '}') || (inpt == '(') || (inpt == ')');
 }
 
 int Lexer::findType(char inpt)

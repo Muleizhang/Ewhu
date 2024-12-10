@@ -3,8 +3,14 @@
 std::map<TokenType, int> Parser::m_precedences =
     {
         {TokenType::EQUAL, ASSIGN},
+
+        {TokenType::AND, LOGICAL},
+        {TokenType::OR, LOGICAL},
+        {TokenType::XOR, LOGICAL},
+
         {TokenType::BIT_XOR, BIT},
         {TokenType::BIT_AND, BIT},
+        {TokenType::BIT_OR,BIT},
 
         {TokenType::EQUAL_EQUAL, EQUALS},
         {TokenType::BANG_EQUAL, EQUALS},
@@ -57,8 +63,13 @@ std::unordered_map<TokenType, Parser::infix_parse_fn> Parser::m_infix_parse_fns 
 
         {TokenType::EQUAL, &Parser::parse_infix},
         {TokenType::BIT_XOR, &Parser::parse_infix},
+        {TokenType::BIT_OR, &Parser::parse_infix},
         {TokenType::BIT_AND, &Parser::parse_infix},
-        {TokenType::LEFT_BRACKET, &Parser::parse_index}
+        {TokenType::LEFT_BRACKET, &Parser::parse_index},
+        {TokenType::AND, &Parser::parse_infix},
+        {TokenType::OR, &Parser::parse_infix},
+        {TokenType::XOR, &Parser::parse_infix}
+
 };
 std::unordered_map<TokenType, Parser::control_flow_fn> Parser::m_control_flow_fns =
     {

@@ -17,6 +17,7 @@ public:
     {
         LOWEST = 0,
         ASSIGN,   // =
+        LOGICAL,  // && || ^
         BIT,      // 位运算
         EQUALS,   // == != > < >= <=
         SUM,      // 加减
