@@ -147,19 +147,19 @@ std::shared_ptr<Object> Evaluator::new_identifier(const std::string &value)
     return std::make_shared<Ob_Identifier>(value);
 }
 
-std::shared_ptr<Object> Evaluator::eval_left(const std::shared_ptr<Node> &node, Scope &scp)
-{
-    if (node->type() != Node::NODE_IDENTIFIER)
-        if (node->type() == Node::NODE_INFIX && std::dynamic_pointer_cast<Infix>(node)->m_operator == TokenType::LEFT_BRACKET)
-            return Evaluator::eval_assgin_array_statement(node, scp);
-        else
-            return Evaluator::eval(node, scp);
-    else
-    {
-        auto e = std::dynamic_pointer_cast<Identifier>(node);
-        return eval_new_identifier(e);
-    }
-}
+// std::shared_ptr<Object> Evaluator::eval_left(const std::shared_ptr<Node> &node, Scope &scp)
+// {
+//     if (node->type() != Node::NODE_IDENTIFIER)
+//         if (node->type() == Node::NODE_INFIX && std::dynamic_pointer_cast<Infix>(node)->m_operator == TokenType::LEFT_BRACKET)
+//             return Evaluator::eval_assgin_array_statement(node, scp);
+//         else
+//             return Evaluator::eval(node, scp);
+//     else
+//     {
+//         auto e = std::dynamic_pointer_cast<Identifier>(node);
+//         return eval_new_identifier(e);
+//     }
+// }
 
 std::shared_ptr<Object> Evaluator::eval_program(const std::vector<std::shared_ptr<Statement>> &stmts, Scope &global_scp)
 {

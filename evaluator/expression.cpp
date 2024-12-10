@@ -150,13 +150,13 @@ std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, std::shared_pt
     //           << " " << right->str() << "(" << right->name() << ")" << std::endl;
 
     // assign
-    if (op == TokenType::EQUAL)
-    {
-        // if (left->type() != Object::OBJECT_IDENTIFIER)
-        // return eval_assgin_array_statement(left, right, scp);
-        if (left->type() == Object::OBJECT_IDENTIFIER)
-            return eval_assign_expression(left, right, scp);
-    }
+    // if (op == TokenType::EQUAL)
+    // {
+    //     // if (left->type() != Object::OBJECT_IDENTIFIER)
+    //     // return eval_assgin_array_statement(left, right, scp);
+    //     if (left->type() == Object::OBJECT_IDENTIFIER)
+    //         return eval_assign_expression(left, right, scp);
+    // }
     if (op == TokenType::LEFT_BRACKET)
     {
         if (left->type() != Object::OBJECT_ARRAY)
