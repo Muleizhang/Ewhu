@@ -110,7 +110,7 @@ std::shared_ptr<Statement> Parser::parse_function_declaration()
     std::shared_ptr<Identifier> ele(new Identifier());
     ele->m_token = this->m_curr;
     ele->m_name = m_curr.literalToString(); // 转换
-    fn->m_name = ele;
+    fn->m_func = ele;
     next_token();
     if (m_curr.type == TokenType::LEFT_PAREN)
     {
@@ -154,6 +154,6 @@ std::shared_ptr<Statement> Parser::parse_return_statement()
 {
     std::shared_ptr<ReturnStatement> ele(new ReturnStatement);
     next_token();
-    ele->m_expression = parse_expression_statement();
+    ele->m_expression_statement = parse_expression_statement();
     return ele;
 }

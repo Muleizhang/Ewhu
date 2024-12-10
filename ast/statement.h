@@ -24,7 +24,6 @@ public:
     }
 
 public:
-    std::vector<std::shared_ptr<Statement>> m_statements;
 };
 
 class Function : public Statement // 函数的声明
@@ -53,9 +52,6 @@ public:
     }
 
 public:
-    std::shared_ptr<Identifier> m_name;
-    std::shared_ptr<StatementBlock> m_statement;
-    std::vector<std::shared_ptr<Identifier>> m_initial_list;
 };
 
 class Program : public Statement // 根节点
@@ -90,8 +86,6 @@ public:
     }
 
 public:
-    std::vector<std::shared_ptr<Statement>> m_statements;
-    std::vector<std::shared_ptr<Function>> m_functions;
 };
 
 class ExpressionStatement : public Statement
@@ -111,7 +105,6 @@ public:
     }
 
 public:
-    std::shared_ptr<Expression> m_expression;
 };
 
 class IfStatement : public Statement
@@ -133,9 +126,6 @@ public:
     }
 
 public:
-    std::shared_ptr<Expression> m_expression;
-    std::shared_ptr<Statement> m_true_statement;
-    // std::shared_ptr<Statement> m_false_statement;
 };
 
 class WhileStatement : public Statement
@@ -156,9 +146,6 @@ public:
     }
 
 public:
-    std::shared_ptr<Expression> m_expression;
-    std::shared_ptr<Statement> m_cycle_statement;
-    // std::shared_ptr<Statement> m_false_statement;
 };
 
 class BreakStatement : public Statement
@@ -202,10 +189,9 @@ public:
         std::string *typeStr = new std::string;
         *typeStr = name();
         json.AddMember("type", rapidjson::StringRef(typeStr->c_str()), father.GetAllocator());
-        json.AddMember("return expression", m_expression->json(father), father.GetAllocator());
+        json.AddMember("return expression", m_expression_statement->json(father), father.GetAllocator());
         return json;
     }
 
 public:
-    std::shared_ptr<ExpressionStatement> m_expression;
 };

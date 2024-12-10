@@ -32,15 +32,29 @@ public:
     Object(const Object &obj) : m_type(obj.m_type){};
     virtual ~Object(){};
 
+    virtual std::shared_ptr<Object> clone() const = 0;
+
     Type type() const { return m_type; }
     std::string name() const;
     virtual std::string str() const = 0;
+    // virtual std::shared_ptr<Object> operator+() const = 0;
 
     static std::shared_ptr<Object> new_error(const char *format, ...);
 
-protected:
+public:
     Type m_type;
     static std::unordered_map<Type, std::string> m_names;
+
+public:
+    std::string m_string;
+    std::string m_messages;
+    std::string m_name;        // 变量名
+    void *m_value;             // 指向变量的指针
+    Object::Type m_value_type; // 变量类型
+    long long m_int;
+    long long m_integerPart;
+    long long num;
+    long long den;
 };
 
 class Ob_Error : public Object
@@ -48,81 +62,122 @@ class Ob_Error : public Object
 public:
     Ob_Error() : Object(Object::OBJECT_ERROR) {}
     Ob_Error(const std::string &message) : Object(Object::OBJECT_ERROR) {}
+    Ob_Error(const Ob_Error &obj) : Object(Object::OBJECT_ERROR) { m_messages = obj.m_messages; }
     ~Ob_Error() {}
 
+    virtual std::shared_ptr<Object> clone() const
+    {
+        return std::make_shared<Ob_Error>(*this);
+    }
     virtual std::string str() const
     {
         return m_messages;
     }
 
 public:
-    std::string m_messages;
 };
 
 class Ob_Identifier : public Object
 {
 public:
-    Ob_Identifier() : Object(Object::OBJECT_IDENTIFIER), m_name(NULL), m_value(nullptr), m_type(Object::OBJECT_NULL) {}
-    Ob_Identifier(std::string name) : Object(Object::OBJECT_IDENTIFIER), m_name(name), m_value(nullptr), m_type(Object::OBJECT_NULL) {}
-    Ob_Identifier(std::string name, void *value, Object::Type type) : Object(Object::OBJECT_IDENTIFIER), m_name(name), m_value(value), m_type(type) {}
+    Ob_Identifier() : Object(Object::OBJECT_IDENTIFIER) {}
+    Ob_Identifier(std::string name) : Object(Object::OBJECT_IDENTIFIER) { m_name = name; }
+    Ob_Identifier(std::string name, void *value, Object::Type type) : Object(Object::OBJECT_IDENTIFIER)
+    {
+        m_name = name, m_value = value, m_value_type = type;
+    }
+    Ob_Identifier(const Ob_Identifier &obj) : Object(Object::OBJECT_IDENTIFIER)
+    {
+        m_name = obj.m_name;
+        m_value = obj.m_value;
+        m_value_type = obj.m_value_type;
+    }
     ~Ob_Identifier() {}
 
+    virtual std::shared_ptr<Object> clone() const
+    {
+        return std::make_shared<Ob_Identifier>(*this);
+    }
     virtual std::string str() const
     {
         return m_name;
     }
 
 public:
-    std::string m_name;  // 变量名
-    void *m_value;       // 指向变量的指针
-    Object::Type m_type; // 变量类型
 };
 
 class Ob_Boolean : public Object
 {
 public:
-    Ob_Boolean() : Object(Object::OBJECT_BOOLEAN), m_value(NULL) {}
-    Ob_Boolean(bool value) : Object(Object::OBJECT_BOOLEAN), m_value(value) {}
+    Ob_Boolean() : Object(Object::OBJECT_BOOLEAN) {}
+    Ob_Boolean(__INT64_TYPE__ value) : Object(Object::OBJECT_BOOLEAN) { m_int = value; }
+    Ob_Boolean(const Ob_Boolean &obj) : Object(Object::OBJECT_BOOLEAN) { m_int = obj.m_int; }
     ~Ob_Boolean() {}
 
+    virtual std::shared_ptr<Object> clone() const
+    {
+        return std::make_shared<Ob_Boolean>(*this);
+    }
     virtual std::string str() const
     {
-        return (m_value ? "true" : "false");
+        return (m_int ? "true" : "false");
     }
 
 public:
-    bool m_value;
 };
 
 class Ob_Integer : public Object
 {
 public:
-    Ob_Integer() : Object(Object::OBJECT_INTEGER), m_value(0) {}
-    Ob_Integer(__INT64_TYPE__ value) : Object(Object::OBJECT_INTEGER), m_value(value) {}
+    Ob_Integer() : Object(Object::OBJECT_INTEGER) { m_int = (0); }
+    Ob_Integer(__INT64_TYPE__ value) : Object(Object::OBJECT_INTEGER) { m_int = (value); }
+    Ob_Integer(const Ob_Integer &obj) : Object(Object::OBJECT_INTEGER) { m_int = obj.m_int; }
     ~Ob_Integer() {}
 
+    virtual std::shared_ptr<Object> clone() const
+    {
+        return std::make_shared<Ob_Integer>(*this);
+    }
     virtual std::string str() const
     {
-        return std::to_string(m_value);
+        return std::to_string(m_int);
     }
 
 public:
-    __INT64_TYPE__ m_value;
 };
 
 class Ob_Fraction : public Object
 {
 public:
-    Ob_Fraction() : Object(Object::OBJECT_FRACTION), m_integerPart(0), num(0), den(1) {}
-    Ob_Fraction(__INT64_TYPE__ numerator, __INT64_TYPE__ denominator) : Object(Object::OBJECT_FRACTION), m_integerPart(0), num(numerator), den(denominator)
+    Ob_Fraction() : Object(Object::OBJECT_FRACTION)
     {
-        if (denominator == 0)
+        m_integerPart = (0);
+        num = (0);
+        den = (1);
+    }
+    Ob_Fraction(__INT64_TYPE__ numerator, __INT64_TYPE__ denominator) : Object(Object::OBJECT_FRACTION)
+    {
+        m_integerPart = (0);
+        num = (numerator);
+        den = (denominator);
+        if (den == 0)
         {
             throw std::runtime_error("Denominator cannot be zero");
         }
         simplify();
     }
+    Ob_Fraction(const Ob_Fraction &fraction) : Object(Object::OBJECT_FRACTION)
+    {
+        m_integerPart = (fraction.m_integerPart);
+        num = (fraction.num);
+        den = (fraction.den);
+    }
     ~Ob_Fraction() {}
+
+    virtual std::shared_ptr<Object> clone() const
+    {
+        return std::make_shared<Ob_Fraction>(*this);
+    }
 
     static Ob_Fraction simplify(const Ob_Fraction &fraction)
     {
@@ -235,27 +290,29 @@ public:
     }
 
 public:
-    __INT64_TYPE__ m_integerPart;
-    __INT64_TYPE__ num;
-    __INT64_TYPE__ den;
 };
 
 class Ob_String : public Object
 {
 public:
-    Ob_String() : Object(Object::OBJECT_STRING), m_value(0) {}
-    Ob_String(std::string value) : Object(Object::OBJECT_STRING), m_value(value) {}
-    Ob_String(char value) : Object(Object::OBJECT_STRING), m_value(1, value) {}
-    Ob_String(char *value) : Object(Object::OBJECT_STRING), m_value(value) {}
+    Ob_String() : Object(Object::OBJECT_STRING) {}
+    Ob_String(std::string value) : Object(Object::OBJECT_STRING) { m_string = (value); }
+    Ob_String(char value) : Object(Object::OBJECT_STRING) { m_string = (1, value); }
+    Ob_String(char *value) : Object(Object::OBJECT_STRING) { m_string = (value); }
+    Ob_String(const Ob_String &obj) : Object(Object::OBJECT_STRING) { m_string = obj.m_string; }
     ~Ob_String() {}
+
+    virtual std::shared_ptr<Object> clone() const
+    {
+        return std::make_shared<Ob_String>(*this);
+    }
 
     virtual std::string str() const
     {
-        return m_value;
+        return m_string;
     }
 
 public:
-    std::string m_value;
 };
 
 class Ob_Break : public Object
@@ -264,6 +321,10 @@ public:
     Ob_Break() : Object(Object::OBJECT_BREAK) {}
     ~Ob_Break() {}
 
+    virtual std::shared_ptr<Object> clone() const
+    {
+        return std::make_shared<Ob_Break>(*this);
+    }
     virtual std::string str() const
     {
         return "";
@@ -276,6 +337,10 @@ public:
     Ob_Continue() : Object(Object::OBJECT_CONTINUE) {}
     ~Ob_Continue() {}
 
+    virtual std::shared_ptr<Object> clone() const
+    {
+        return std::make_shared<Ob_Continue>(*this);
+    }
     virtual std::string str() const
     {
         return "";
@@ -288,6 +353,10 @@ public:
     Ob_Return() : Object(Object::OBJECT_RETURN) {}
     ~Ob_Return() {}
 
+    virtual std::shared_ptr<Object> clone() const
+    {
+        return std::make_shared<Ob_Return>(*this);
+    }
     virtual std::string str() const
     {
         return "";
@@ -303,6 +372,10 @@ public:
     Ob_Null() : Object(Object::OBJECT_NULL) {}
     ~Ob_Null() {}
 
+    virtual std::shared_ptr<Object> clone() const
+    {
+        return std::make_shared<Ob_Null>(*this);
+    }
     virtual std::string str() const
     {
         return "";

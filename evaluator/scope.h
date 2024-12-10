@@ -10,8 +10,9 @@ class Scope
 {
 public:
     Scope(std::unordered_map<std::string, std::shared_ptr<Object>> scp,
-          std::unordered_map<std::string, std::shared_ptr<Function>> func)
+          std::unordered_map<std::string, std::shared_ptr<Node>> func)
         : m_var(scp), m_func(func) {}
+    Scope(Scope *father) : father(father) {}
 
     Scope() {}
     ~Scope()
@@ -24,6 +25,7 @@ public:
     };
 
 public:
+    Scope *father = nullptr;
     std::unordered_map<std::string, std::shared_ptr<Object>> m_var;
-    std::unordered_map<std::string, std::shared_ptr<Function>> m_func;
+    std::unordered_map<std::string, std::shared_ptr<Node>> m_func;
 };

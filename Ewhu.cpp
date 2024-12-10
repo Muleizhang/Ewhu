@@ -11,10 +11,13 @@
 #include "rapidjson/include/rapidjson/writer.h"
 #include "rapidjson/include/rapidjson/stringbuffer.h"
 
+#ifdef _WIN32
 namespace hl
 {
-#include "highlight.h"
+#include <windows.h>
+#include <conio.h>
 }
+#endif
 
 class Ewhu
 {
