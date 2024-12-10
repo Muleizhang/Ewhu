@@ -83,13 +83,13 @@ std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node, Scope
     }
     case Node::NODE_RETURNSTATEMENT:
     {
-        std::shared_ptr<Ob_Return> returnvalue(new Ob_Return);
+        auto returnvalue = std::make_shared<Ob_Return>();
         returnvalue->m_expression = eval(node->m_expression_statement, scp);
         return returnvalue;
     }
     case Node::NODE_ARRAY:
     {
-        std::shared_ptr<Ob_Array> ary(new Ob_Array);
+        auto ary = std::make_shared<Ob_Array>();
         for (auto ele : std::dynamic_pointer_cast<Array>(node)->m_array)
         {
             ary->m_array.push_back(eval(ele, scp));

@@ -52,9 +52,9 @@ std::shared_ptr<Object> Evaluator::eval_function(const std::shared_ptr<Node> &no
         eval_assign_expression(function->m_initial_list[i]->m_name, eval(node->m_initial_list[i], scp), temp_scp);
     }
     auto result = eval_statement_block(it->second->m_statement->m_statements, temp_scp);
-    if (result->type() == Object::OBJECT_RETURN)
+    if (result)
         return std::dynamic_pointer_cast<Ob_Return>(result)->m_expression;
-    return std::make_shared<Ob_Null>();
+    return nullptr;
 }
 
 std::shared_ptr<Object> Evaluator::eval_assign_expression(const std::string &name, const std::shared_ptr<Object> &value, Scope &scp)
@@ -349,11 +349,10 @@ std::shared_ptr<Object> Evaluator::eval_fraction_infix_expression(const TokenTyp
 std::shared_ptr<Object> &Evaluator::eval_index(std::shared_ptr<Object> &name,
                                                const std::shared_ptr<Object> &index, Scope &scp)
 {
-    int idx = std::dynamic_pointer_cast<Ob_Integer>(index)->m_value;
+    int idx = index->m_int;
     // if (idx < 0)
     //     return new_error("Evaluator::eval_index: index of %s can not be negative", name->name().c_str());
     // if (idx >= std::dynamic_pointer_cast<Ob_Array>(name)->m_array.size())
     //     return new_error("Evaluator::eval_index: index of %s out of range", name->name().c_str());
     return std::dynamic_pointer_cast<Ob_Array>(name)->m_array[idx];
 }
-
