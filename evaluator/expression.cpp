@@ -300,12 +300,27 @@ std::shared_ptr<Object> Evaluator::eval_integer_infix_expression(const TokenType
     case TokenType::GREATER_EQUAL:
         left->m_int = l >= r;
         left->m_type = Object::OBJECT_BOOLEAN;
-        return left;
+        return left;   
     case TokenType::BIT_XOR:
         left->m_int = l ^ r;
         return left;
     case TokenType::BIT_AND:
         left->m_int = l & r;
+        return left;
+    case TokenType::BIT_OR:
+        left->m_int = l | r;
+        return left;
+    case TokenType::XOR:
+        left->m_int = l ^ r;
+        left->m_type = Object::OBJECT_BOOLEAN;
+        return left;
+    case TokenType::AND:
+        left->m_int = l && r;
+        left->m_type = Object::OBJECT_BOOLEAN;
+        return left;
+    case TokenType::OR:
+        left->m_int = l || r;
+        left->m_type = Object::OBJECT_BOOLEAN;
         return left;
     default:
         return new_error("Evaluator::eval_integer_infix_expression unknown operation: %s %s %s", left->name().c_str(), TokenTypeToString[op].c_str(), right->name().c_str());

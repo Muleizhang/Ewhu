@@ -31,7 +31,7 @@ enum TokenType
     AT,            // @
 
     // bitwise operator
-    PIPE,    // |
+    BIT_OR,    // |
     PERCENT, // %
     BIT_XOR, // ^
     BIT_AND, // &
@@ -104,7 +104,7 @@ static std::unordered_map<TokenType, std::string> TokenTypeToString = {
     {TokenType::STAR, "STAR"},
     {TokenType::HASH, "HASH"},
     {TokenType::AT, "AT"},
-    {TokenType::PIPE, "PIPE"},
+    {TokenType::BIT_OR, "BIT_OR"},
     {TokenType::PERCENT, "PERCENT"},
     {TokenType::BIT_XOR, "BIT_XOR"},
     {TokenType::BIT_AND, "BIT_AND"},
