@@ -29,12 +29,7 @@ public:
                                                 std::shared_ptr<Node> node, Scope &scp); // 对函数语句块求值
 
     // std::shared_ptr<Object> eval_function_block(const std::vector<std::shared_ptr<Statement>> &stmts, Scope &temp_scp); // 对函数语句块求值
-<<<<<<< Updated upstream
-    std::shared_ptr<Object> eval_assign_array(const std::shared_ptr<Node>, Scope &scp);
-
-=======
     std::shared_ptr<Object> eval_assign_array(const std::shared_ptr<Node>, Scope &scp);                                                     // 对数组求值
->>>>>>> Stashed changes
     std::shared_ptr<Object> eval_if_statement(const std::shared_ptr<Node> &exp, const std::shared_ptr<Node> true_statement, Scope &scp);    // 对语句块求值
     std::shared_ptr<Object> eval_while_statement(const std::shared_ptr<Node> &exp, const std::shared_ptr<Node> true_statement, Scope &scp); // 对语句块求值
     std::shared_ptr<Object> eval_identifier(const std::shared_ptr<Node> &node, Scope &scp);                                                 // 对标识符求值

@@ -254,10 +254,6 @@ std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, std::shared_pt
     // string op string
     if (left->type() == Object::OBJECT_STRING && right->type() == Object::OBJECT_STRING)
     {
-<<<<<<< Updated upstream
-=======
-        std::cout << 1;
->>>>>>> Stashed changes
         auto l = left->m_string;
         auto r = right->m_string;
         switch (op)
