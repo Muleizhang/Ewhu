@@ -169,10 +169,7 @@ public:
         m_integerPart = (0);
         num = (numerator);
         den = (denominator);
-        if (den == 0)
-        {
-            throw std::runtime_error("Denominator cannot be zero");
-        }
+
         simplify();
     }
     Ob_Fraction(const Ob_Fraction &fraction) : Object(Object::OBJECT_FRACTION)
@@ -302,7 +299,7 @@ public:
 
 public:
 };
-
+/*
 class Ob_Trignometry : public Object
 {
 public:
@@ -350,6 +347,7 @@ private:
     void *m_value;
     Object::Type m_type;
 };
+*/
 
 class Ob_String : public Object
 {

@@ -145,3 +145,50 @@ std::shared_ptr<Object> Evaluator::eval_pop(const std::shared_ptr<Node> &node, S
         return top;
     }
 }
+
+std::shared_ptr<Object> Evaluator::eval_int(const std::shared_ptr<Node> &node, Scope &scp)
+{
+    if (node->m_initial_list.size() != 1)
+        return new_error("Evaluator:eval_function: function append arguments not match");
+    auto obj = eval(node->m_initial_list[0], scp);
+    switch (obj->type())
+    {
+    case Object::OBJECT_INTEGER:
+        return obj;
+    case Object::OBJECT_FRACTION:
+        return std::make_shared<Ob_Integer>(obj->m_integerPart);
+    case Object::OBJECT_BOOLEAN:
+        return std::make_shared<Ob_Integer>(obj->m_int);
+    case Object::OBJECT_STRING:
+    {
+        std::shared_ptr<Ob_Integer> newint;
+        try
+        {
+            newint = std::make_shared<Ob_Integer>(std::stoll(obj->m_string));
+        }
+        catch (const std::invalid_argument &e)
+        {
+            return new_error("Evaluator:eval_function: invalid literal for int(): %s", obj->m_string.c_str());
+        }
+        catch (const std::out_of_range &e)
+        {
+            return new_error("Evaluator:eval_function: value out of range for int(): %s", obj->m_string.c_str());
+        }
+        return newint;
+    }
+    default:
+        return new_error("Evaluator:eval_function: can not convert %s to Integer", obj->name().c_str());
+    }
+}
+/*
+std::shared_ptr<Object> Evaluator::eval_ast()
+{
+    rapidjson::Document root;
+    root.SetObject();
+    root.AddMember("program", program->json(root), root.GetAllocator());
+    rapidjson::StringBuffer buffer;
+    rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+    root.Accept(writer);
+    return std::make_shared<Ob_String>(buffer.GetString());
+    //std::cout << "\033[32m" << "AST output to ast.jsonヾ(✿ﾟ▽ﾟ)ノ" << "\033[0m" << std::endl;
+}*/
