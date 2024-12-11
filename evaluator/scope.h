@@ -1,4 +1,3 @@
-// 负责局部变量的作用范围
 #pragma once
 #include <string>
 #include <memory>
@@ -24,6 +23,18 @@ public:
         }
         m_var.clear();
     };
+    void print()
+    {
+        for (const auto &var : m_var)
+        {
+            std::cout << "Variable: " << var.first << std::endl;
+        }
+
+        for (const auto &func : m_func)
+        {
+            std::cout << "Function: " << func.first << std::endl;
+        }
+    }
 
 public:
     Scope *father = nullptr;

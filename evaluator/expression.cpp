@@ -30,15 +30,29 @@ std::shared_ptr<Object> Evaluator::eval_function(const std::shared_ptr<Node> &no
     auto it = scp.m_func.find(node->m_name);
     if (it == scp.m_func.end())
     {
+        auto current_scope = &scp;
+        while (current_scope->father != nullptr)
+        {
+            current_scope = current_scope->father;
+            it = current_scope->m_func.find(node->m_name);
+            if (it != current_scope->m_func.end())
+            {
+                return eval_function_block(it->second, node, scp);
+            }
+        }
         if (node->m_name == "print")
         {
             std::cout << eval(node->m_initial_list[0], scp)->str() << std::endl;
-            return std::make_shared<Ob_Null>(Ob_Null());
+            return nullptr;
         }
         if (node->m_name == "eval")
         {
             return eval_eval(eval(node->m_initial_list[0], scp)->str(), scp);
         }
+        if (node->m_name == "scope")
+        {
+            scp.print();
+            return nullptr;
         if (node->m_name == "append")
         {
             return eval_append(node, scp);
@@ -49,21 +63,7 @@ std::shared_ptr<Object> Evaluator::eval_function(const std::shared_ptr<Node> &no
         }
         return new_error("Evaluator::eval_function: function %s not found", node->m_name.c_str());
     }
-    auto function = it->second;
-    Scope temp_scp(scp);
-    if (function->m_initial_list.size() != node->m_initial_list.size())
-    {
-        return new_error("Evaluator::eval_function: function %s arguments not match", node->m_name.c_str());
-    }
-
-    for (int i = 0; i < function->m_initial_list.size(); i++)
-    {
-        eval_assign_expression(function->m_initial_list[i]->m_name, eval(node->m_initial_list[i], scp), temp_scp);
-    }
-    auto result = eval_statement_block(it->second->m_statement->m_statements, temp_scp);
-    if (result)
-        return std::dynamic_pointer_cast<Ob_Return>(result)->m_expression;
-    return nullptr;
+    return eval_function_block(it->second, node, scp);
 }
 
 std::shared_ptr<Object> Evaluator::eval_assign_expression(const std::string &name, const std::shared_ptr<Object> &value, Scope &scp)
@@ -217,9 +217,9 @@ std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, std::shared_pt
         return eval_index(left, right, scp);
     }
     // int(bool) op int(bool)
-    // if (((left->type() == Object::OBJECT_INTEGER) || (left->type() == Object::OBJECT_BOOLEAN)) &&
-    //    ((right->type() == Object::OBJECT_INTEGER) || (right->type() == Object::OBJECT_BOOLEAN)))
-    return eval_integer_infix_expression(op, left, right);
+    if (((left->type() == Object::OBJECT_INTEGER) || (left->type() == Object::OBJECT_BOOLEAN)) &&
+        ((right->type() == Object::OBJECT_INTEGER) || (right->type() == Object::OBJECT_BOOLEAN)))
+        return eval_integer_infix_expression(op, left, right);
 
     // fraction op fraction
     if (left->type() == Object::OBJECT_FRACTION && right->type() == Object::OBJECT_FRACTION)
@@ -227,25 +227,25 @@ std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, std::shared_pt
 
     // fraction op int
     if (left->type() == Object::OBJECT_FRACTION && right->type() == Object::OBJECT_INTEGER)
-        return eval_fraction_infix_expression(op, left, std::make_shared<Ob_Fraction>(std::dynamic_pointer_cast<Ob_Integer>(right)->m_int, 1));
+        return eval_fraction_infix_expression(op, left, std::make_shared<Ob_Fraction>(right->m_int, 1));
 
     // int op fraction
     if (left->type() == Object::OBJECT_INTEGER && right->type() == Object::OBJECT_FRACTION)
-        return eval_fraction_infix_expression(op, std::make_shared<Ob_Fraction>(std::dynamic_pointer_cast<Ob_Integer>(left)->m_int, 1), right);
+        return eval_fraction_infix_expression(op, std::make_shared<Ob_Fraction>(left->m_int, 1), right);
 
     // fraction op bool
     if (left->type() == Object::OBJECT_FRACTION && right->type() == Object::OBJECT_BOOLEAN)
-        return eval_fraction_infix_expression(op, left, std::make_shared<Ob_Fraction>(std::dynamic_pointer_cast<Ob_Boolean>(right)->m_int, 1));
+        return eval_fraction_infix_expression(op, left, std::make_shared<Ob_Fraction>(right->m_int, 1));
 
     // bool op fraction
     if (left->type() == Object::OBJECT_BOOLEAN && right->type() == Object::OBJECT_FRACTION)
-        return eval_fraction_infix_expression(op, std::make_shared<Ob_Fraction>(std::dynamic_pointer_cast<Ob_Boolean>(left)->m_int, 1), right);
+        return eval_fraction_infix_expression(op, std::make_shared<Ob_Fraction>(left->m_int, 1), right);
 
     // string op string
     if (left->type() == Object::OBJECT_STRING && right->type() == Object::OBJECT_STRING)
     {
-        auto l = std::dynamic_pointer_cast<Ob_String>(left)->m_string;
-        auto r = std::dynamic_pointer_cast<Ob_String>(right)->m_string;
+        auto l = left->m_string;
+        auto r = right->m_string;
         switch (op)
         {
         case TokenType::PLUS:
@@ -261,8 +261,8 @@ std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, std::shared_pt
     // string op int
     if (left->type() == Object::OBJECT_STRING && right->type() == Object::OBJECT_INTEGER)
     {
-        auto l = std::dynamic_pointer_cast<Ob_String>(left)->m_string;
-        auto r = std::dynamic_pointer_cast<Ob_Integer>(right)->m_int;
+        auto l = left->m_string;
+        auto r = right->m_int;
         std::string result;
         switch (op)
         {

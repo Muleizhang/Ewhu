@@ -43,7 +43,10 @@ public:
         {
             std::cout << std::endl
                       << lineNum++ << " ";
-            run(line, token, lexer, parser, evaluator);
+            if (!line.empty())
+            {
+                run(line, token, lexer, parser, evaluator);
+            }
         }
         file.close();
     }
@@ -60,10 +63,15 @@ public:
         while (true)
         {
             std::cout << lineNum++ << " > ";
-            if (!std::getline(std::cin, line)) // if (line == "exit")
+            if (!std::getline(std::cin, line))
             {
                 std::cout << "\033[36m" << "( ﾟдﾟ)つBye" << "\033[0m" << std::endl;
-                break;
+                exit(-1);
+            }
+            if (line == "exit")
+            {
+                std::cout << "\033[36m" << "( ﾟдﾟ)つBye" << "\033[0m" << std::endl;
+                exit(-1);
             }
             if (!line.empty())
             {
@@ -207,7 +215,6 @@ public:
         // for (auto token : tokens)
         //     std::cout << token.toString();
         // std::cout << lexer.braceStatus << std::endl;
-
         if ((lexer.braceStatus == 0) &&
             ((--tokens.end())->type == TokenType::SEMICOLON ||
              (--tokens.end())->type == TokenType::RIGHT_BRACE))

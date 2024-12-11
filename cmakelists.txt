@@ -13,6 +13,12 @@ set(CMAKE_C_FLAGS_RELEASE "-O3")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 # set(CMAKE_VERBOSE_MAKEFILE ON)
 
+if (MSVC)
+    add_compile_options(/utf-8)
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2")
+endif()
+
+
 # Create libraries for each folder
 add_library(lexer STATIC lexer/lexer.cpp)
 target_include_directories(lexer PRIVATE lexer)

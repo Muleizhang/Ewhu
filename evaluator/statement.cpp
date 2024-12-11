@@ -32,6 +32,39 @@ std::shared_ptr<Object> Evaluator::eval_statement_block(const std::vector<std::s
     return nullptr;
 }
 
+std::shared_ptr<Object> Evaluator::eval_function_block(const std::shared_ptr<Node> function,
+                                                       std::shared_ptr<Node> node, Scope &scp)
+{
+    Scope temp_scp(scp);
+    if (function->m_initial_list.size() != node->m_initial_list.size())
+    {
+        return new_error("Evaluator::eval_function: function %s arguments not match", node->m_name.c_str());
+    }
+
+    for (int i = 0; i < function->m_initial_list.size(); i++)
+    {
+        eval_assign_expression(function->m_initial_list[i]->m_name, eval(node->m_initial_list[i], scp), temp_scp);
+    }
+
+    std::shared_ptr<Object> result;
+    for (auto &stat : function->m_statement->m_statements)
+    {
+        result = eval(stat, temp_scp);
+        if (result)
+        {
+            if (result->type() == Object::OBJECT_BREAK || result->type() == Object::OBJECT_CONTINUE)
+            {
+                return nullptr;
+            }
+            if (result->type() == Object::OBJECT_RETURN || is_error(result))
+            {
+                return std::dynamic_pointer_cast<Ob_Return>(result)->m_expression;
+            }
+        }
+    }
+    return nullptr;
+}
+
 std::shared_ptr<Object> Evaluator::eval_function_declaration(const std::shared_ptr<Node> &node, Scope &scp)
 {
     scp.m_func.insert(std::make_pair((node->m_func)->m_name, node));
