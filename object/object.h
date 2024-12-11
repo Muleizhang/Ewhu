@@ -153,7 +153,6 @@ public:
     {
         return std::to_string(m_int);
     }
-
 };
 
 class Ob_Fraction : public Object
@@ -170,10 +169,7 @@ public:
         m_integerPart = (0);
         num = (numerator);
         den = (denominator);
-        if (den == 0)
-        {
-            throw std::runtime_error("Denominator cannot be zero");
-        }
+
         simplify();
     }
     Ob_Fraction(const Ob_Fraction &fraction) : Object(Object::OBJECT_FRACTION)
@@ -206,24 +202,7 @@ public:
         }
     }
 
-
-
-
-
-
-
-
-
-//***********************************************************写三角函数！！！！！！！！！！！！！！！！！！！ */
-
-
-
-
-
-
-
-
-
+    //***********************************************************写三角函数！！！！！！！！！！！！！！！！！！！ */
 
     virtual std::string realStr() const
     {
@@ -320,7 +299,7 @@ public:
 
 public:
 };
-
+/*
 class Ob_Trignometry : public Object
 {
 public:
@@ -357,18 +336,18 @@ public:
     {
         return "cos(" + std::to_string(*static_cast<double *>(m_value)) + ")";
     }
-    
+
     std::string tanStr() const
     {
         return "tan(" + std::to_string(*static_cast<double *>(m_value)) + ")";
     }
-    
+
 private:
     std::string m_name;
     void *m_value;
     Object::Type m_type;
 };
-
+*/
 
 class Ob_String : public Object
 {

@@ -62,6 +62,14 @@ std::shared_ptr<Object> Evaluator::eval_function(const std::shared_ptr<Node> &no
         {
             return eval_pop(node, scp);
         }
+        if (node->m_name == "int")
+        {
+            return eval_int(node, scp);
+        }
+        if (node->m_name == "__ast__")
+        {
+            // return eval_ast();
+        }
         return new_error("Evaluator::eval_function: function %s not found", node->m_name.c_str());
     }
     return eval_function_block(it->second, node, scp);
@@ -170,27 +178,28 @@ std::shared_ptr<Object> Evaluator::eval_boolean_prefix_expression(const TokenTyp
 /*
 std::shared_ptr<Object> Evaluator::eval_trignometry_prefix_expression(const TokenType &op, const std::shared_ptr<Object> &right)
 {
-    auto r = std::dynamic_pointer_cast<Ob_Trignometry>(right);
-    if (op == TokenType::SIN)
-    {
-        return std::make_shared<Ob_Trignometry>(std::sin(r->m_int));
-    }
-    else if (op == TokenType::COS)
-    {
-        return std::make_shared<Ob_Trignometry>(std::cos(r->m_int));
-    }
-    else if (op == TokenType::TAN)
-    {
-        return std::make_shared<Ob_Trignometry>(std::tan(r->m_int));
-    }
-    else if (op == TokenType::MINUS)
-    {
-        return std::make_shared<Ob_Trignometry>(-r->m_int);
-    }
-    else
-    {
-        return new_error("Evaluator: unknown operator: %s %s", TokenTypeToString[op].c_str(), right->name().c_str());
-    }
+    // auto r = std::dynamic_pointer_cast<Ob_Trignometry>(right);
+    // if (op == TokenType::SIN)
+    // {
+    //     return std::make_shared<Ob_Trignometry>(std::sin(r->m_int));
+    // }
+    // else if (op == TokenType::COS)
+    // {
+    //     return std::make_shared<Ob_Trignometry>(std::cos(r->m_int));
+    // }
+    // else if (op == TokenType::TAN)
+    // {
+    //     return std::make_shared<Ob_Trignometry>(std::tan(r->m_int));
+    // }
+    // else if (op == TokenType::MINUS)
+    // {
+    //     return std::make_shared<Ob_Trignometry>(-r->m_int);
+    // }
+    // else
+    // {
+    //     return new_error("Evaluator: unknown operator: %s %s", TokenTypeToString[op].c_str(), right->name().c_str());
+    // }
+    return nullptr;
 }
 */
 std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, std::shared_ptr<Object> &left,
@@ -245,6 +254,10 @@ std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, std::shared_pt
     // string op string
     if (left->type() == Object::OBJECT_STRING && right->type() == Object::OBJECT_STRING)
     {
+<<<<<<< Updated upstream
+=======
+        std::cout << 1;
+>>>>>>> Stashed changes
         auto l = left->m_string;
         auto r = right->m_string;
         switch (op)
@@ -277,7 +290,8 @@ std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, std::shared_pt
             else
                 return new_error("Evaluator::eval_infix: index %d out of length %d", r, l.length());
         default:
-            return new_error("Evaluator::eval_infix unknown operation: %s %s %s", left->name().c_str(), TokenTypeToString[op].c_str(), right->name().c_str());
+            return new_error("Evaluator::eval_infix unknown operation: %s %s %s", left->name().c_str(),
+                             TokenTypeToString[op].c_str(), right->name().c_str());
         }
     }
     if (left->OBJECT_ERROR)
@@ -289,7 +303,8 @@ std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, std::shared_pt
         return right;
     }
 
-    return new_error("Evaluator::eval_infix unknown operation: %s %s %s", left->name().c_str(), TokenTypeToString[op].c_str(), right->name().c_str());
+    return new_error("Evaluator::eval_infix unknown operation: %s %s %s", left->name().c_str(),
+                     TokenTypeToString[op].c_str(), right->name().c_str());
 }
 
 std::shared_ptr<Object> Evaluator::eval_integer_infix_expression(const TokenType &op, const std::shared_ptr<Object> &left,
@@ -311,6 +326,8 @@ std::shared_ptr<Object> Evaluator::eval_integer_infix_expression(const TokenType
         left->m_int = l * r;
         return left;
     case TokenType::SLASH:
+        if (r == 0)
+            return new_error("ZeroDivisionError: division by zero");
         return std::make_shared<Ob_Fraction>(l, r);
     case TokenType::SLASH_SLASH:
         left->m_int = l / r;
