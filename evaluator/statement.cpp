@@ -84,3 +84,31 @@ std::shared_ptr<Object> Evaluator::eval_return_statement(const std::shared_ptr<N
     e->m_expression = eval(std::dynamic_pointer_cast<ReturnStatement>(node)->m_expression_statement, scp);
     return e;
 }
+
+std::shared_ptr<Object> Evaluator::eval_append(const std::shared_ptr<Node> &node, Scope &scp)
+{
+    if (node->m_initial_list.size() != 2)
+        return new_error("Evaluator::eval_function: function append arguments not match");
+    else
+    {
+        auto ele = eval(node->m_initial_list[1], scp);
+        auto array = eval_assign_array(node->m_initial_list[0], scp);
+        array->m_array.push_back(ele);
+        return nullptr;
+    }
+}
+
+std::shared_ptr<Object> Evaluator::eval_pop(const std::shared_ptr<Node> &node, Scope &scp)
+{
+    if (node->m_initial_list.size() != 1)
+        return new_error("Evaluator:eval_function: function append arguments not match");
+    else
+    {
+        auto array = eval_assign_array(node->m_initial_list[0], scp);
+        if (array->m_array.empty())
+            return new_error("Evaluator:eval_pop: pop from empty array");
+        auto top = array->m_array.back();
+        array->m_array.pop_back();
+        return top;
+    }
+}

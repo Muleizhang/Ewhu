@@ -26,7 +26,7 @@ public:
 
     std::shared_ptr<Object> eval_statement_block(const std::vector<std::shared_ptr<Node>> &stmts, Scope &scp); // 对语句块求值
     // std::shared_ptr<Object> eval_function_block(const std::vector<std::shared_ptr<Statement>> &stmts, Scope &temp_scp); // 对函数语句块求值
-    std::shared_ptr<Object>  &eval_assign_array(const std::shared_ptr<Node>, Scope &scp);
+    std::shared_ptr<Object> eval_assign_array(const std::shared_ptr<Node>, Scope &scp);
     std::shared_ptr<Object> eval_if_statement(const std::shared_ptr<Node> &exp, const std::shared_ptr<Node> true_statement, Scope &scp);    // 对语句块求值
     std::shared_ptr<Object> eval_while_statement(const std::shared_ptr<Node> &exp, const std::shared_ptr<Node> true_statement, Scope &scp); // 对语句块求值
     std::shared_ptr<Object> eval_identifier(const std::shared_ptr<Node> &node, Scope &scp);                                                 // 求值
@@ -35,8 +35,10 @@ public:
     std::shared_ptr<Object> eval_return_statement(const std::shared_ptr<Node> &node, Scope &scp);
 
     std::shared_ptr<Object> eval_index(std::shared_ptr<Object> &name,
-                                        const std::shared_ptr<Object> &index, Scope &scp);
+                                       const std::shared_ptr<Object> &index, Scope &scp);
     std::shared_ptr<Object> eval_eval(const std::string &line, Scope &scp);
+    std::shared_ptr<Object> eval_append(const std::shared_ptr<Node> &node, Scope &scp);
+    std::shared_ptr<Object> eval_pop(const std::shared_ptr<Node> &node, Scope &scp);
     std::shared_ptr<Object> eval_assign_expression(const std::string &name,
                                                    const std::shared_ptr<Object> &value, Scope &scp); // 赋值
     std::shared_ptr<Object> eval_infix(const TokenType op, std::shared_ptr<Object> &left,

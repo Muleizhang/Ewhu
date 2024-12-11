@@ -38,6 +38,14 @@ std::shared_ptr<Object> Evaluator::eval_function(const std::shared_ptr<Node> &no
         {
             return eval_eval(eval(node->m_initial_list[0], scp)->str(), scp);
         }
+        if (node->m_name == "append")
+        {
+            return eval_append(node, scp);
+        }
+        if (node->m_name == "pop")
+        {
+            return eval_pop(node, scp);
+        }
         return new_error("Evaluator::eval_function: function %s not found", node->m_name.c_str());
     }
     auto function = it->second;
@@ -168,6 +176,10 @@ std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, std::shared_pt
     //     if (left->type() == Object::OBJECT_IDENTIFIER)
     //         return eval_assign_expression(left, right, scp);
     // }
+    if (left->type() == Object::OBJECT_ERROR)
+        return left;
+    if (right->type() == Object::OBJECT_ERROR)
+        return right;
     if (op == TokenType::LEFT_BRACKET)
     {
         if (left->type() != Object::OBJECT_ARRAY)
@@ -347,7 +359,7 @@ std::shared_ptr<Object> Evaluator::eval_fraction_infix_expression(const TokenTyp
 }
 
 std::shared_ptr<Object> Evaluator::eval_index(std::shared_ptr<Object> &name,
-                                               const std::shared_ptr<Object> &index, Scope &scp)
+                                              const std::shared_ptr<Object> &index, Scope &scp)
 {
     const int idx = index->m_int;
     if (idx < 0)
