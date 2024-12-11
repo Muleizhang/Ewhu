@@ -16,7 +16,10 @@ public:
 
     std::string source;
     std::vector<Token> tokens; // 保存 Token 的列表
+    // {} [] ()括号数量
     int braceStatus = 0;
+    // assign 修正
+    int bracketFix = 0;
 
     Lexer() {}
     Lexer(const std::string &source) : source(source) {}
@@ -31,8 +34,7 @@ private:
     int current = 0;
     int line = 1;
     int read_current = 0;
-    int bracketStatus = 0; // := 前括号数量 - 后括号数量
-    int size = 0;          // 字符数
+    int size = 0; // 字符数
 
     void scanToken(char inpt);                  // 读取一个 Token
     char nextChar();                            // 读取下一个字符

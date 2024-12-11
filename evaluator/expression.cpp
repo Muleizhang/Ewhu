@@ -290,6 +290,22 @@ std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, std::shared_pt
                              TokenTypeToString[op].c_str(), right->name().c_str());
         }
     }
+    // array op array
+    if (left->type() == Object::OBJECT_ARRAY && right->type() == Object::OBJECT_ARRAY)
+    {
+        std::string result;
+        switch (op)
+        {
+        case TokenType::PLUS:
+            return std::dynamic_pointer_cast<Ob_Array>(left)->add(std::dynamic_pointer_cast<Ob_Array>(right));
+        case TokenType::EQUAL_EQUAL:
+            return std::make_shared<Ob_Boolean>(left->m_array == right->m_array);
+        default:
+            return new_error("Evaluator::eval_infix unknown operation: %s %s %s", left->name().c_str(),
+                             TokenTypeToString[op].c_str(), right->name().c_str());
+        }
+    }
+
     if (left->OBJECT_ERROR)
     {
         return left;

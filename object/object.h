@@ -444,25 +444,36 @@ class Ob_Array : public Object
 public:
     Ob_Array() : Object(Object::OBJECT_ARRAY) {}
     Ob_Array(const Ob_Array &obj) : Object(Object::OBJECT_ARRAY) { m_array = obj.m_array; }
-
     ~Ob_Array() {}
 
     virtual std::shared_ptr<Object> clone() const
     {
         return std::make_shared<Ob_Array>(*this);
     }
+    std::shared_ptr<Object> add(const std::shared_ptr<Object> &obj)
+    {
+        m_array.insert(m_array.end(), obj->m_array.begin(), obj->m_array.end());
+        return std::make_shared<Ob_Array>(*this);
+    }
     virtual std::string str() const
     {
-        std::string r;
-        r += '[';
-        for (auto &i : Object::m_array)
+        if (!m_array.empty())
         {
-            r += i->str();
-            r += ',';
+            std::string r;
+            r += '[';
+            for (auto &i : Object::m_array)
+            {
+                r += i->str();
+                r += ',';
+            }
+            r.pop_back();
+            r += ']';
+            return r;
         }
-        r.pop_back();
-        r += ']';
-        return r;
+        else
+        {
+            return "[]";
+        }
     }
 
 public:

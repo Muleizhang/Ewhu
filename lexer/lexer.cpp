@@ -65,14 +65,17 @@ void Lexer::scanToken(char inpt)
         line++;
         break;
     case '(':
+        braceStatus++;
+
         addToken(LEFT_PAREN);
         break;
     case ')':
-        for (int i = 0; i < bracketStatus; i++)
+        for (int i = 0; i < bracketFix; i++)
         {
             addToken(RIGHT_PAREN);
         }
-        bracketStatus = 0;
+        bracketFix = 0;
+        braceStatus--;
         addToken(RIGHT_PAREN);
         break;
     case '{':
@@ -84,9 +87,11 @@ void Lexer::scanToken(char inpt)
         braceStatus--;
         break;
     case '[':
+        braceStatus++;
         addToken(LEFT_BRACKET);
         break;
     case ']':
+        braceStatus--;
         addToken(RIGHT_BRACKET);
         break;
     case '"':
@@ -105,11 +110,11 @@ void Lexer::scanToken(char inpt)
         addToken(COLON);
         break;
     case ';':
-        for (int i = 0; i < bracketStatus; i++)
+        for (int i = 0; i < bracketFix; i++)
         {
             addToken(RIGHT_PAREN);
         }
-        bracketStatus = 0;
+        bracketFix = 0;
         addToken(SEMICOLON);
         break;
     case '?':
@@ -171,7 +176,7 @@ void Lexer::scanToken(char inpt)
             current--;
             addToken(EQUAL);
             addToken(LEFT_PAREN);
-            bracketStatus++;
+            bracketFix++;
         }
         break;
     case '>':
@@ -273,7 +278,7 @@ inline bool Lexer::isRelationalOperator(char inpt)
 
 inline bool Lexer::isMathematicalOperator(char inpt)
 {
-    return (inpt == '+' || inpt == '-' || inpt == '*' || inpt == '/' || inpt == '%' || inpt == '^' || inpt == '&'|| inpt == '|');
+    return (inpt == '+' || inpt == '-' || inpt == '*' || inpt == '/' || inpt == '%' || inpt == '^' || inpt == '&' || inpt == '|');
 }
 
 inline bool Lexer::isDelimiter(char inpt)
