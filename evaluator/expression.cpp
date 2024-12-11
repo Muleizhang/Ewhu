@@ -1,6 +1,7 @@
 #include "evaluator.h"
 #include "../lexer/lexer.h"
 #include "../parser/parser.h"
+#include <cmath>
 
 std::shared_ptr<Object> Evaluator::eval_eval(const std::string &line, Scope &scp)
 {
@@ -90,6 +91,7 @@ std::shared_ptr<Object> Evaluator::eval_assign_expression(const std::string &nam
     return value;
 }
 
+
 std::shared_ptr<Object> Evaluator::eval_prefix(const TokenType &op, const std::shared_ptr<Object> &right)
 {
     switch (right->type())
@@ -105,6 +107,10 @@ std::shared_ptr<Object> Evaluator::eval_prefix(const TokenType &op, const std::s
     case Object::OBJECT_BOOLEAN:
     {
         return eval_boolean_prefix_expression(op, right);
+    }
+    case Object::OBJECT_TRIGNOMETRY:
+    {
+        return eval_trignometry_prefix_expression(op, right);
     }
     default:
         break;
@@ -162,6 +168,30 @@ std::shared_ptr<Object> Evaluator::eval_boolean_prefix_expression(const TokenTyp
     }
 }
 
+std::shared_ptr<Object> Evaluator::eval_trignometry_prefix_expression(const TokenType &op, const std::shared_ptr<Object> &right)
+{
+    auto r = std::dynamic_pointer_cast<Ob_Trignometry>(right);
+    if (op == TokenType::SIN)
+    {
+        return std::make_shared<Ob_Trignometry>(std::sin(r->m_int));
+    }
+    else if (op == TokenType::COS)
+    {
+        return std::make_shared<Ob_Trignometry>(std::cos(r->m_int));
+    }
+    else if (op == TokenType::TAN)
+    {
+        return std::make_shared<Ob_Trignometry>(std::tan(r->m_int));
+    }
+    else if (op == TokenType::MINUS)
+    {
+        return std::make_shared<Ob_Trignometry>(-r->m_int);
+    }
+    else
+    {
+        return new_error("Evaluator: unknown operator: %s %s", TokenTypeToString[op].c_str(), right->name().c_str());
+    }
+}
 std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, std::shared_ptr<Object> &left,
                                               const std::shared_ptr<Object> &right, Scope &scp) // 中缀表达式求值
 {

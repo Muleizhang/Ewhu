@@ -29,6 +29,10 @@ std::map<TokenType, int> Parser::m_precedences =
         {TokenType::PERCENT, PRODUCT},
         {TokenType::SLASH_SLASH, PRODUCT},
 
+        {TokenType::SIN, TRIGNOMETRY},
+        {TokenType::COS, TRIGNOMETRY},
+        {TokenType::TAN, TRIGNOMETRY},
+
         {TokenType::DOT, DOT},
         {TokenType::LEFT_BRACKET, INDEX},
 };
@@ -44,6 +48,10 @@ std::unordered_map<TokenType, Parser::prefix_parse_fn> Parser::m_prefix_parse_fn
         {TokenType::BANG, &Parser::parse_prefix},
         {TokenType::IDENTIFIER, &Parser::parse_identifier},
         {TokenType::LEFT_BRACKET, &Parser::parse_array},
+        {TokenType::SIN, &Parser::parse_trignometry},
+        {TokenType::COS, &Parser::parse_trignometry},
+        {TokenType::TAN, &Parser::parse_trignometry}
+    
 };
 std::unordered_map<TokenType, Parser::infix_parse_fn> Parser::m_infix_parse_fns =
     {

@@ -13,16 +13,17 @@ public:
     enum Type
     {
         OBJECT_ERROR = 0,
-        OBJECT_BOOLEAN,    // 布尔值
-        OBJECT_INTEGER,    // 整数
-        OBJECT_FRACTION,   // 分数
-        OBJECT_STRING,     // 字符串
-        OBJECT_IDENTIFIER, // 标识符
-        OBJECT_NULL,       // 用于空指针
-        OBJECT_BREAK,      // break
-        OBJECT_CONTINUE,   // continue
-        OBJECT_RETURN,     // 函数返回
-        OBJECT_ARRAY,      // 数组
+        OBJECT_TRIGNOMETRY, // 三角函数
+        OBJECT_BOOLEAN,     // 布尔值
+        OBJECT_INTEGER,     // 整数
+        OBJECT_FRACTION,    // 分数
+        OBJECT_STRING,      // 字符串
+        OBJECT_IDENTIFIER,  // 标识符
+        OBJECT_NULL,        // 用于空指针
+        OBJECT_BREAK,       // break
+        OBJECT_CONTINUE,    // continue
+        OBJECT_RETURN,      // 函数返回
+        OBJECT_ARRAY,       // 数组
         OBJECT_INDEX,
     };
 
@@ -144,7 +145,6 @@ public:
         return std::to_string(m_int);
     }
 
-public:
 };
 
 class Ob_Fraction : public Object
@@ -196,6 +196,25 @@ public:
             den = -den;
         }
     }
+
+
+
+
+
+
+
+
+
+//***********************************************************写三角函数！！！！！！！！！！！！！！！！！！！ */
+
+
+
+
+
+
+
+
+
 
     virtual std::string realStr() const
     {
@@ -292,6 +311,55 @@ public:
 
 public:
 };
+
+class Ob_Trignometry : public Object
+{
+public:
+    Ob_Trignometry() : Object(Object::OBJECT_TRIGNOMETRY) {}
+    Ob_Trignometry(std::string name) : Object(Object::OBJECT_TRIGNOMETRY) { m_name = name; }
+    Ob_Trignometry(std::string name, void *value, Object::Type type) : Object(Object::OBJECT_TRIGNOMETRY)
+    {
+        m_name = name;
+        m_value = value;
+        m_type = type;
+    }
+
+    double sinValue() const
+    {
+        return std::sin(*static_cast<double *>(m_value));
+    }
+
+    double cosValue() const
+    {
+        return std::cos(*static_cast<double *>(m_value));
+    }
+
+    double tanValue() const
+    {
+        return std::tan(*static_cast<double *>(m_value));
+    }
+
+    std::string sinStr() const
+    {
+        return "sin(" + std::to_string(*static_cast<double *>(m_value)) + ")";
+    }
+
+    std::string cosStr() const
+    {
+        return "cos(" + std::to_string(*static_cast<double *>(m_value)) + ")";
+    }
+    
+    std::string tanStr() const
+    {
+        return "tan(" + std::to_string(*static_cast<double *>(m_value)) + ")";
+    }
+    
+private:
+    std::string m_name;
+    void *m_value;
+    Object::Type m_type;
+};
+
 
 class Ob_String : public Object
 {
