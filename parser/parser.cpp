@@ -3,8 +3,16 @@
 std::map<TokenType, int> Parser::m_precedences =
     {
         {TokenType::EQUAL, ASSIGN},
+
+        {TokenType::AND, LOGICAL},
+        {TokenType::OR, LOGICAL},
+        {TokenType::XOR, LOGICAL},
+
+        {TokenType::SHL, BIT},
+        {TokenType::SHR, BIT},
         {TokenType::BIT_XOR, BIT},
         {TokenType::BIT_AND, BIT},
+        {TokenType::BIT_OR,BIT},
 
         {TokenType::EQUAL_EQUAL, EQUALS},
         {TokenType::BANG_EQUAL, EQUALS},
@@ -21,6 +29,10 @@ std::map<TokenType, int> Parser::m_precedences =
         {TokenType::PERCENT, PRODUCT},
         {TokenType::SLASH_SLASH, PRODUCT},
 
+        {TokenType::SIN, TRIGNOMETRY},
+        {TokenType::COS, TRIGNOMETRY},
+        {TokenType::TAN, TRIGNOMETRY},
+
         {TokenType::DOT, DOT},
         {TokenType::LEFT_BRACKET, INDEX},
 };
@@ -36,6 +48,10 @@ std::unordered_map<TokenType, Parser::prefix_parse_fn> Parser::m_prefix_parse_fn
         {TokenType::BANG, &Parser::parse_prefix},
         {TokenType::IDENTIFIER, &Parser::parse_identifier},
         {TokenType::LEFT_BRACKET, &Parser::parse_array},
+        {TokenType::SIN, &Parser::parse_trignometry},
+        {TokenType::COS, &Parser::parse_trignometry},
+        {TokenType::TAN, &Parser::parse_trignometry}
+    
 };
 std::unordered_map<TokenType, Parser::infix_parse_fn> Parser::m_infix_parse_fns =
     {
@@ -56,9 +72,16 @@ std::unordered_map<TokenType, Parser::infix_parse_fn> Parser::m_infix_parse_fns 
         {TokenType::DOT, &Parser::parse_infix},
 
         {TokenType::EQUAL, &Parser::parse_infix},
+        {TokenType::SHR, &Parser::parse_infix},
+        {TokenType::SHL, &Parser::parse_infix},
         {TokenType::BIT_XOR, &Parser::parse_infix},
+        {TokenType::BIT_OR, &Parser::parse_infix},
         {TokenType::BIT_AND, &Parser::parse_infix},
-        {TokenType::LEFT_BRACKET, &Parser::parse_index}
+        {TokenType::LEFT_BRACKET, &Parser::parse_index},
+        {TokenType::AND, &Parser::parse_infix},
+        {TokenType::OR, &Parser::parse_infix},
+        {TokenType::XOR, &Parser::parse_infix}
+
 };
 std::unordered_map<TokenType, Parser::control_flow_fn> Parser::m_control_flow_fns =
     {

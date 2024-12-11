@@ -44,6 +44,16 @@ std::shared_ptr<Expression> Parser::parse_prefix()
     return ele;
 }
 
+std::shared_ptr<Expression> Parser::parse_trignometry()
+{
+    std::shared_ptr<Prefix> ele(new Prefix());
+    ele->m_token = m_curr;
+    ele->m_operator = m_curr.type;
+    next_token();
+    ele->m_right = parse_expression(LOWEST);
+    return ele;
+}
+
 std::shared_ptr<Expression> Parser::parse_index(const std::shared_ptr<Expression> &left)
 {
     std::shared_ptr<Infix> ele(new Infix());

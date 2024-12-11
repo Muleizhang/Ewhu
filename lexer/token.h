@@ -30,8 +30,12 @@ enum TokenType
     HASH,          // #
     AT,            // @
 
+    // Trignometry
+    SIN,           // sin
+    COS,           // cos
+    TAN,           // tan
     // bitwise operator
-    PIPE,    // |
+    BIT_OR,    // |
     PERCENT, // %
     BIT_XOR, // ^
     BIT_AND, // &
@@ -43,10 +47,10 @@ enum TokenType
     EQUAL_EQUAL,     //==
     GREATER,         //>
     GREATER_EQUAL,   //>=
-    GREATER_GREATER, //>>
     LESS,            //<
     LESS_EQUAL,      //<=
-    LESS_LESS,       //<<
+    SHL,             //<<
+    SHR,             //>>
 
     // Literals.
     IDENTIFIER, // a
@@ -104,10 +108,11 @@ static std::unordered_map<TokenType, std::string> TokenTypeToString = {
     {TokenType::STAR, "STAR"},
     {TokenType::HASH, "HASH"},
     {TokenType::AT, "AT"},
-    {TokenType::PIPE, "PIPE"},
     {TokenType::PERCENT, "PERCENT"},
+    {TokenType::BIT_OR, "BIT_OR"},
     {TokenType::BIT_XOR, "BIT_XOR"},
     {TokenType::BIT_AND, "BIT_AND"},
+
 
     // One or two character tokens.
     {TokenType::BANG, "BANG"},
@@ -116,10 +121,10 @@ static std::unordered_map<TokenType, std::string> TokenTypeToString = {
     {TokenType::EQUAL_EQUAL, "EQUAL_EQUAL"},
     {TokenType::GREATER, "GREATER"},
     {TokenType::GREATER_EQUAL, "GREATER_EQUAL"},
-    {TokenType::GREATER_GREATER, "GREATER_GREATER"},
     {TokenType::LESS, "LESS"},
     {TokenType::LESS_EQUAL, "LESS_EQUAL"},
-    {TokenType::LESS_LESS, "LESS_LESS"},
+    {TokenType::SHR, "SHR"},
+    {TokenType::SHL, "SHL"},
 
     // Literals.
     {TokenType::IDENTIFIER, "IDENTIFIER"},

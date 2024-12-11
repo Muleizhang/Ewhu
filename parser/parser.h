@@ -16,14 +16,16 @@ public:
     enum Precedence
     {
         LOWEST = 0,
-        ASSIGN,   // =
-        BIT,      // 位运算
-        EQUALS,   // == != > < >= <=
-        SUM,      // 加减
-        PRODUCT,  // 乘除
-        PRE_SIGN, // 前缀正号负号
-        DOT,      // 小数
-        INDEX,    // 索引
+        ASSIGN,      // =
+        LOGICAL,     // && || ^
+        BIT,         // 位运算
+        EQUALS,      // == != > < >= <=
+        SUM,         // 加减
+        PRODUCT,     // 乘除
+        TRIGNOMETRY, // 三角函数
+        PRE_SIGN,    // 前缀正号负号
+        DOT,         // 小数
+        INDEX,       // 索引
     };
 
     Parser();
@@ -62,6 +64,7 @@ public:
     std::shared_ptr<Expression> parse_identifier();
     std::shared_ptr<Expression> parse_identifier_function();
     std::shared_ptr<Expression> parse_array();
+    std::shared_ptr<Expression> parse_trignometry();
     // 中缀
     std::shared_ptr<Expression> parse_infix(const std::shared_ptr<Expression> &left);
     std::shared_ptr<Expression> parse_index(const std::shared_ptr<Expression> &left);
