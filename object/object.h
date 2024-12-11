@@ -46,14 +46,23 @@ public:
     static std::unordered_map<Type, std::string> m_names;
 
 public:
+    // 字符串
     std::string m_string;
+    // 错误信息
     std::string m_messages;
-    std::string m_name;        // 变量名
-    void *m_value;             // 指向变量的指针
-    Object::Type m_value_type; // 变量类型
+    // 变量名
+    std::string m_name;
+    // 指向变量的指针
+    void *m_value;
+    // 变量类型
+    Object::Type m_value_type;
+    // 整数 or 布尔值
     long long m_int;
+    // 分数整数部分
     long long m_integerPart;
+    // 分数分子
     long long num;
+    // 分数分母
     long long den;
 };
 
@@ -110,7 +119,7 @@ class Ob_Boolean : public Object
 {
 public:
     Ob_Boolean() : Object(Object::OBJECT_BOOLEAN) {}
-    Ob_Boolean(__INT64_TYPE__ value) : Object(Object::OBJECT_BOOLEAN) { m_int = value; }
+    Ob_Boolean(long long value) : Object(Object::OBJECT_BOOLEAN) { m_int = value; }
     Ob_Boolean(const Ob_Boolean &obj) : Object(Object::OBJECT_BOOLEAN) { m_int = obj.m_int; }
     ~Ob_Boolean() {}
 
@@ -130,7 +139,7 @@ class Ob_Integer : public Object
 {
 public:
     Ob_Integer() : Object(Object::OBJECT_INTEGER) { m_int = (0); }
-    Ob_Integer(__INT64_TYPE__ value) : Object(Object::OBJECT_INTEGER) { m_int = (value); }
+    Ob_Integer(long long value) : Object(Object::OBJECT_INTEGER) { m_int = (value); }
     Ob_Integer(const Ob_Integer &obj) : Object(Object::OBJECT_INTEGER) { m_int = obj.m_int; }
     ~Ob_Integer() {}
 
@@ -155,7 +164,7 @@ public:
         num = (0);
         den = (1);
     }
-    Ob_Fraction(__INT64_TYPE__ numerator, __INT64_TYPE__ denominator) : Object(Object::OBJECT_FRACTION)
+    Ob_Fraction(long long numerator, long long denominator) : Object(Object::OBJECT_FRACTION)
     {
         m_integerPart = (0);
         num = (numerator);
@@ -181,12 +190,12 @@ public:
 
     static Ob_Fraction simplify(const Ob_Fraction &fraction)
     {
-        __INT64_TYPE__ gcd = std::gcd(fraction.num, fraction.den);
+        long long gcd = std::gcd(fraction.num, fraction.den);
         return Ob_Fraction(fraction.num / gcd, fraction.den / gcd);
     }
     void simplify()
     {
-        __INT64_TYPE__ gcd = std::gcd(num, den);
+        long long gcd = std::gcd(num, den);
         num /= gcd;
         den /= gcd;
         if (den < 0)
@@ -203,12 +212,12 @@ public:
 
     virtual std::string str() const
     {
-        __INT64_TYPE__ integerPart = num / den;
+        long long integerPart = num / den;
         if (integerPart == 0)
         {
             return std::to_string(num) + "/" + std::to_string(den);
         }
-        __INT64_TYPE__ decimalPart = num % den;
+        long long decimalPart = num % den;
         if (decimalPart == 0)
         {
             return std::to_string(integerPart);
@@ -236,8 +245,8 @@ public:
     }
     static Ob_Fraction mod(const std::shared_ptr<Ob_Fraction> &left, const std::shared_ptr<Ob_Fraction> &right)
     {
-        __INT64_TYPE__ numerator = (left->num * right->den) % (left->den * right->num);
-        __INT64_TYPE__ denominator = left->den * right->den;
+        long long numerator = (left->num * right->den) % (left->den * right->num);
+        long long denominator = left->den * right->den;
         return simplify(Ob_Fraction(numerator, denominator));
     }
     Ob_Boolean equal(const std::shared_ptr<Ob_Fraction> &right) const
@@ -265,7 +274,7 @@ public:
         return Ob_Boolean(num * right->den >= right->num * den);
     }
 
-    static Ob_Fraction decimalToFraction(__INT64_TYPE__ integerPart, __INT64_TYPE__ decimalPart)
+    static Ob_Fraction decimalToFraction(long long integerPart, long long decimalPart)
     {
 
         // 计算小数部分的位数
@@ -278,11 +287,11 @@ public:
         }
 
         // 分子和分母的计算
-        __INT64_TYPE__ denominator = std::pow(10, decimalDigits);
-        __INT64_TYPE__ numerator = integerPart * denominator + decimalPart;
+        long long denominator = std::pow(10, decimalDigits);
+        long long numerator = integerPart * denominator + decimalPart;
 
         // 约分
-        __INT64_TYPE__ gcd = std::gcd(numerator, denominator);
+        long long gcd = std::gcd(numerator, denominator);
         numerator /= gcd;
         denominator /= gcd;
 

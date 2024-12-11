@@ -75,10 +75,10 @@ public:
 
     std::shared_ptr<ExpressionStatement> m_expression_statement;
 
-    std::string m_name;
-    __INT64_TYPE__ m_value;
-    bool m_bool;
-    std::string m_string;
+    std::string m_name = "";
+    long long m_value = 0;
+    bool m_bool = false;
+    std::string m_string = "";
 
     TokenType m_operator;                // 运算符
     std::shared_ptr<Expression> m_left;  // 左表达式
