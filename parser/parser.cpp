@@ -8,6 +8,8 @@ std::map<TokenType, int> Parser::m_precedences =
         {TokenType::OR, LOGICAL},
         {TokenType::XOR, LOGICAL},
 
+        {TokenType::SHL, BIT},
+        {TokenType::SHR, BIT},
         {TokenType::BIT_XOR, BIT},
         {TokenType::BIT_AND, BIT},
         {TokenType::BIT_OR,BIT},
@@ -62,6 +64,8 @@ std::unordered_map<TokenType, Parser::infix_parse_fn> Parser::m_infix_parse_fns 
         {TokenType::DOT, &Parser::parse_infix},
 
         {TokenType::EQUAL, &Parser::parse_infix},
+        {TokenType::SHR, &Parser::parse_infix},
+        {TokenType::SHL, &Parser::parse_infix},
         {TokenType::BIT_XOR, &Parser::parse_infix},
         {TokenType::BIT_OR, &Parser::parse_infix},
         {TokenType::BIT_AND, &Parser::parse_infix},
