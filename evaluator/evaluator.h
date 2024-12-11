@@ -25,7 +25,8 @@ public:
     std::shared_ptr<Object> eval_program(const std::vector<std::shared_ptr<Node>> &node, Scope &global_scp); // 对根节点求值
 
     std::shared_ptr<Object> eval_statement_block(const std::vector<std::shared_ptr<Node>> &stmts, Scope &scp); // 对语句块求值
-    // std::shared_ptr<Object> eval_function_block(const std::vector<std::shared_ptr<Statement>> &stmts, Scope &temp_scp); // 对函数语句块求值
+    std::shared_ptr<Object> eval_function_block(const std::shared_ptr<Node> function,
+                                                std::shared_ptr<Node> node, Scope &scp); // 对函数语句块求值
 
     std::shared_ptr<Object> eval_if_statement(const std::shared_ptr<Node> &exp, const std::shared_ptr<Node> true_statement, Scope &scp);    // 对语句块求值
     std::shared_ptr<Object> eval_while_statement(const std::shared_ptr<Node> &exp, const std::shared_ptr<Node> true_statement, Scope &scp); // 对语句块求值

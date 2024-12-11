@@ -29,32 +29,33 @@ std::shared_ptr<Object> Evaluator::eval_function(const std::shared_ptr<Node> &no
     auto it = scp.m_func.find(node->m_name);
     if (it == scp.m_func.end())
     {
+        auto current_scope = &scp;
+        while (current_scope->father != nullptr)
+        {
+            current_scope = current_scope->father;
+            it = current_scope->m_func.find(node->m_name);
+            if (it != current_scope->m_func.end())
+            {
+                return eval_function_block(it->second, node, scp);
+            }
+        }
         if (node->m_name == "print")
         {
             std::cout << eval(node->m_initial_list[0], scp)->str() << std::endl;
-            return std::make_shared<Ob_Null>(Ob_Null());
+            return nullptr;
         }
         if (node->m_name == "eval")
         {
             return eval_eval(eval(node->m_initial_list[0], scp)->str(), scp);
         }
+        if (node->m_name == "scope")
+        {
+            scp.print();
+            return nullptr;
+        }
         return new_error("Evaluator::eval_function: function %s not found", node->m_name.c_str());
     }
-    auto function = it->second;
-    Scope temp_scp(scp);
-    if (function->m_initial_list.size() != node->m_initial_list.size())
-    {
-        return new_error("Evaluator::eval_function: function %s arguments not match", node->m_name.c_str());
-    }
-
-    for (int i = 0; i < function->m_initial_list.size(); i++)
-    {
-        eval_assign_expression(function->m_initial_list[i]->m_name, eval(node->m_initial_list[i], scp), temp_scp);
-    }
-    auto result = eval_statement_block(it->second->m_statement->m_statements, temp_scp);
-    if (result)
-        return std::dynamic_pointer_cast<Ob_Return>(result)->m_expression;
-    return nullptr;
+    return eval_function_block(it->second, node, scp);
 }
 
 std::shared_ptr<Object> Evaluator::eval_assign_expression(const std::string &name, const std::shared_ptr<Object> &value, Scope &scp)

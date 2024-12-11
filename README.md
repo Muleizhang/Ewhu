@@ -5,6 +5,11 @@
 cmake -G "MinGW Makefiles" -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ ..
 cmake --build . -j4
 ```
+## bench
+
+```bash
+valgrind --tool=callgrind ./Ewhu -b [script]
+```
 ## Count line
 ```bash
 (Get-ChildItem -Recurse -Include *.h, *.cpp | Where-Object { $_.FullName -notmatch '\\(rapidjson|build)\\' } | Get-Content | Measure-Object -Line).Lines
@@ -38,10 +43,6 @@ not
 and
 ```
 
-### Key word
-```
-var
-```
 
 ### Type
 ```cpp
@@ -49,7 +50,7 @@ bool
 int
 fraction
 unreal
-unreal_frac（default）
+unreal_frac
 list = [a,b,c]
 ```
 
