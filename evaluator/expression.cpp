@@ -301,6 +301,12 @@ std::shared_ptr<Object> Evaluator::eval_integer_infix_expression(const TokenType
         left->m_int = l >= r;
         left->m_type = Object::OBJECT_BOOLEAN;
         return left;   
+    case TokenType::SHL:
+        left->m_int = l << r;
+        return left;
+    case TokenType::SHR:
+        left->m_int = l >> r;
+        return left;
     case TokenType::BIT_XOR:
         left->m_int = l ^ r;
         return left;

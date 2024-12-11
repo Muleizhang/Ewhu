@@ -184,7 +184,7 @@ void Lexer::scanToken(char inpt)
         }
         if (next == '>')
         {
-            addToken(GREATER_GREATER);
+            addToken(SHR);
             break;
         }
         current--;
@@ -201,7 +201,7 @@ void Lexer::scanToken(char inpt)
         }
         else if (next == '<')
         {
-            addToken(LESS_LESS);
+            addToken(SHL);
             break;
         }
         current--;
