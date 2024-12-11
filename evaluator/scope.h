@@ -25,14 +25,21 @@ public:
     };
     void print()
     {
+        std::cout << "Scope: " << std::endl;
         for (const auto &var : m_var)
         {
-            std::cout << "Variable: " << var.first << std::endl;
+            std::cout << "Variable: " << var.first << " = " << var.second->str() << std::endl;
         }
 
         for (const auto &func : m_func)
         {
-            std::cout << "Function: " << func.first << std::endl;
+            std::cout << "Function: " << func.first << "(";
+            for (int i = 0; i < func.second->m_initial_list.size() - 1; i++)
+            {
+                std::cout << func.second->m_initial_list[i]->m_name << ", ";
+            }
+            std::cout << func.second->m_initial_list[func.second->m_initial_list.size() - 1]->m_name
+                      << ")" << std::endl;
         }
     }
 

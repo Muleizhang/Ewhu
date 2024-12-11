@@ -30,8 +30,8 @@ public:
 public:
     Object() {}
     Object(Type type) : m_type(type) {}
-    Object(const Object &obj) : m_type(obj.m_type){};
-    virtual ~Object(){};
+    Object(const Object &obj) : m_type(obj.m_type) {};
+    virtual ~Object() {};
 
     virtual std::shared_ptr<Object> clone() const = 0;
 
@@ -153,7 +153,6 @@ public:
     {
         return std::to_string(m_int);
     }
-
 };
 
 class Ob_Fraction : public Object
@@ -206,24 +205,7 @@ public:
         }
     }
 
-
-
-
-
-
-
-
-
-//***********************************************************写三角函数！！！！！！！！！！！！！！！！！！！ */
-
-
-
-
-
-
-
-
-
+    //***********************************************************写三角函数！！！！！！！！！！！！！！！！！！！ */
 
     virtual std::string realStr() const
     {
@@ -357,18 +339,17 @@ public:
     {
         return "cos(" + std::to_string(*static_cast<double *>(m_value)) + ")";
     }
-    
+
     std::string tanStr() const
     {
         return "tan(" + std::to_string(*static_cast<double *>(m_value)) + ")";
     }
-    
+
 private:
     std::string m_name;
     void *m_value;
     Object::Type m_type;
 };
-
 
 class Ob_String : public Object
 {
@@ -387,7 +368,7 @@ public:
 
     virtual std::string str() const
     {
-        return m_string;
+        return "'" + m_string + "'";
     }
 
 public:

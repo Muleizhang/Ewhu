@@ -131,7 +131,10 @@ std::shared_ptr<Statement> Parser::parse_function_declaration()
         next_token();
     }
     else
-        ;
+    {
+        m_errors.push_back("Parser::Invalid Function Declaration");
+        return nullptr;
+    }
     std::shared_ptr<StatementBlock> stmt = std::dynamic_pointer_cast<StatementBlock>(parse_statement_block());
     if (stmt)
         fn->m_statement = stmt;
