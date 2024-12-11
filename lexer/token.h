@@ -30,6 +30,10 @@ enum TokenType
     HASH,          // #
     AT,            // @
 
+    // Trignometry
+    SIN,           // sin
+    COS,           // cos
+    TAN,           // tan
     // bitwise operator
     BIT_OR,    // |
     PERCENT, // %
