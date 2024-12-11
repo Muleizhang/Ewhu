@@ -53,6 +53,7 @@ std::shared_ptr<Object> Evaluator::eval_function(const std::shared_ptr<Node> &no
         {
             scp.print();
             return nullptr;
+        }
         if (node->m_name == "append")
         {
             return eval_append(node, scp);
@@ -91,7 +92,6 @@ std::shared_ptr<Object> Evaluator::eval_assign_expression(const std::string &nam
     return value;
 }
 
-
 std::shared_ptr<Object> Evaluator::eval_prefix(const TokenType &op, const std::shared_ptr<Object> &right)
 {
     switch (right->type())
@@ -110,7 +110,7 @@ std::shared_ptr<Object> Evaluator::eval_prefix(const TokenType &op, const std::s
     }
     case Object::OBJECT_TRIGNOMETRY:
     {
-        return eval_trignometry_prefix_expression(op, right);
+        // return eval_trignometry_prefix_expression(op, right);
     }
     default:
         break;
@@ -167,7 +167,7 @@ std::shared_ptr<Object> Evaluator::eval_boolean_prefix_expression(const TokenTyp
         return new_error("Evaluator: unknown operator: %s %s", TokenTypeToString[op].c_str(), right->name().c_str());
     }
 }
-
+/*
 std::shared_ptr<Object> Evaluator::eval_trignometry_prefix_expression(const TokenType &op, const std::shared_ptr<Object> &right)
 {
     auto r = std::dynamic_pointer_cast<Ob_Trignometry>(right);
@@ -192,6 +192,7 @@ std::shared_ptr<Object> Evaluator::eval_trignometry_prefix_expression(const Toke
         return new_error("Evaluator: unknown operator: %s %s", TokenTypeToString[op].c_str(), right->name().c_str());
     }
 }
+*/
 std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, std::shared_ptr<Object> &left,
                                               const std::shared_ptr<Object> &right, Scope &scp) // 中缀表达式求值
 {
@@ -342,7 +343,7 @@ std::shared_ptr<Object> Evaluator::eval_integer_infix_expression(const TokenType
     case TokenType::GREATER_EQUAL:
         left->m_int = l >= r;
         left->m_type = Object::OBJECT_BOOLEAN;
-        return left;   
+        return left;
     case TokenType::SHL:
         left->m_int = l << r;
         return left;
