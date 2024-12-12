@@ -109,8 +109,16 @@ std::shared_ptr<Object> Evaluator::eval_assign_expression(const std::string &nam
     return value;
 }
 
-std::shared_ptr<Object> Evaluator::eval_prefix(const TokenType &op, const std::shared_ptr<Object> &right)
+std::shared_ptr<Object> Evaluator::eval_prefix(const TokenType &op, const std::shared_ptr<Expression> &right_exp, Scope &scp)
 {
+    if (op == TokenType::PLUS_PLUS && right_exp->type() == Node::NODE_IDENTIFIER)
+    {
+        auto right = eval_identifier_self(right_exp, scp);
+        right->m_int += 1;
+        return right;
+    }
+
+    auto right = eval(right_exp, scp);
     switch (right->type())
     {
     case Object::OBJECT_INTEGER:
@@ -145,6 +153,10 @@ std::shared_ptr<Object> Evaluator::eval_integer_prefix_expression(const TokenTyp
     else if (op == TokenType::MINUS)
     {
         return std::make_shared<Ob_Integer>(-r->m_int);
+    }
+    else if (op == TokenType::PLUS_PLUS)
+    {
+        return std::make_shared<Ob_Integer>(++(r->m_int));
     }
     else
     {

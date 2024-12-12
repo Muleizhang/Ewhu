@@ -95,7 +95,7 @@ std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node, Scope
     }
     case Node::NODE_PREFIX:
     {
-        return eval_prefix(node->m_operator, eval(node->m_right, scp));
+        return eval_prefix(node->m_operator, node->m_right, scp);
     }
     case Node::NODE_BREAKSTATEMENT:
     {
