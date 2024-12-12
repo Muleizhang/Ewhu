@@ -10,25 +10,16 @@ func sieve(n){
     }
     i = 2;
     while(i <= n){
-        print("")
-        print("new");
-        print(i);
-        if(isComposite[i] == 0){
-            print("p:");
-            print(prime);
-            append(prime,i);
-            print(prime);
-        }
+        if(isComposite[i] == 0) append(prime,i);
         j = 0;
-
         while(j < len(prime)){
-            if(i * prime[j] > n){ break;}
+            if(i * prime[j] > n) break;
             isComposite[i * prime[j]] = 1;
-            if((i % prime[j]) == 0) {print("%");break;}
+            if((i % prime[j]) == 0) break;
             j = j + 1;
         }
-        print("b");
         i = i + 1;
     }
+    return prime;
 }
-sieve(100);
+print(sieve(10000));
