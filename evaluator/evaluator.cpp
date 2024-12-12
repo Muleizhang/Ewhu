@@ -54,11 +54,19 @@ std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node, Scope
                     if (node->m_left->m_left->type() == Node::NODE_IDENTIFIER)
                     {
                         auto it = scp.m_var.find(node->m_left->m_left->m_name);
-                        if (it == scp.m_var.end())
-                            return new_error("Evaluator::eval_assign_array: identifier %s not found", node->m_left->m_left->m_name.c_str());
-                        else
-                        {
+                        if (it != scp.m_var.end())
                             return (it->second)->m_array[idex] = eval(node->m_right, scp);
+
+                        auto current_scope = &scp;
+                        while (current_scope->father != nullptr)
+                        {
+                            current_scope = current_scope->father;
+                            auto it = current_scope->m_var.find(node->m_left->m_left->m_name);
+                            if (it != current_scope->m_var.end())
+                            {
+                                auto a = eval(node->m_right, scp);
+                                return (it->second)->m_array[idex] = a;
+                            }
                         }
                     }
                     else
@@ -142,16 +150,14 @@ std::shared_ptr<Object> Evaluator::new_error(const char *format, ...)
     vsnprintf(buf, sizeof(buf), format, arg_ptr);
     va_end(arg_ptr);
 
-    std::shared_ptr<Ob_Error> obj(new Ob_Error());
+    auto obj = std::make_shared<Ob_Error>();
     obj->m_messages = buf;
     return obj;
 }
 
 std::shared_ptr<Object> Evaluator::eval_program(const std::vector<std::shared_ptr<Node>> &stmts, Scope &global_scp)
 {
-    std::shared_ptr<Object> result;
-
-    result = eval(*(--stmts.end()), global_scp);
+    std::shared_ptr<Object> result = eval(*(--stmts.end()), global_scp);
     // for (auto &stat : stmts)
     // {
     //     result = eval(stat);
@@ -168,28 +174,51 @@ std::shared_ptr<Object> Evaluator::eval_assign_array(const std::shared_ptr<Node>
     {
         auto it = scp.m_var.find(node->m_name);
         if (it != scp.m_var.end())
+        {
             return it->second;
-        else
-            return new_error("Evaluator::eval_assign_array: identifier %s not found", node->m_name.c_str());
+        }
+
+        auto current_scope = &scp;
+        while (current_scope->father != nullptr)
+        {
+            current_scope = current_scope->father;
+            auto it = current_scope->m_var.find(node->m_name);
+            if (it != current_scope->m_var.end())
+            {
+                return it->second;
+            }
+        }
+        return new_error("Evaluator::eval_assign_array: identifier %s not found", node->m_name.c_str());
     }
     if (node->type() == Node::NODE_INFIX && node->m_operator == TokenType::LEFT_BRACKET)
     {
         int idex = eval(node->m_right, scp)->m_int;
-        if (node->m_left->type() != Node::NODE_IDENTIFIER)
+        if (node->m_left->type() == Node::NODE_IDENTIFIER)
+        {
+            auto it = scp.m_var.find(node->m_name);
+            if (it != scp.m_var.end())
+            {
+                return it->second->m_array[idex];
+            }
+
+            auto current_scope = &scp;
+            while (current_scope->father != nullptr)
+            {
+                current_scope = current_scope->father;
+                auto it = current_scope->m_var.find(node->m_name);
+                if (it != current_scope->m_var.end())
+                {
+                    return it->second->m_array[idex];
+                }
+            }
+            return new_error("Evaluator::eval_assign_array: identifier %s not found", node->m_left->m_name.c_str());
+        }
+        else
         {
             auto array = eval_assign_array(node->m_left, scp);
             if (array->type() == Object::OBJECT_ERROR)
                 return array;
-            return eval_assign_array(node->m_left, scp)->m_array[idex];
-        }
-
-        else
-        {
-            auto it = scp.m_var.find(node->m_left->m_name);
-            if (it != scp.m_var.end())
-                return it->second->m_array[idex];
-            else
-                return new_error("Evaluator::eval_assign_array: identifier %s not found", node->m_left->m_name.c_str());
+            return array->m_array[idex];
         }
     }
     else
