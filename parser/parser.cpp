@@ -12,7 +12,7 @@ std::map<TokenType, int> Parser::m_precedences =
         {TokenType::SHR, BIT},
         {TokenType::BIT_XOR, BIT},
         {TokenType::BIT_AND, BIT},
-        {TokenType::BIT_OR,BIT},
+        {TokenType::BIT_OR, BIT},
 
         {TokenType::EQUAL_EQUAL, EQUALS},
         {TokenType::BANG_EQUAL, EQUALS},
@@ -44,6 +44,7 @@ std::unordered_map<TokenType, Parser::prefix_parse_fn> Parser::m_prefix_parse_fn
         {TokenType::STRING, &Parser::parse_string},
         {TokenType::LEFT_PAREN, &Parser::parse_group},
         {TokenType::PLUS, &Parser::parse_prefix},
+        {TokenType::PLUS_PLUS, &Parser::parse_prefix},
         {TokenType::MINUS, &Parser::parse_prefix},
         {TokenType::BANG, &Parser::parse_prefix},
         {TokenType::IDENTIFIER, &Parser::parse_identifier},
@@ -51,7 +52,7 @@ std::unordered_map<TokenType, Parser::prefix_parse_fn> Parser::m_prefix_parse_fn
         {TokenType::SIN, &Parser::parse_trignometry},
         {TokenType::COS, &Parser::parse_trignometry},
         {TokenType::TAN, &Parser::parse_trignometry}
-    
+
 };
 std::unordered_map<TokenType, Parser::infix_parse_fn> Parser::m_infix_parse_fns =
     {
@@ -96,8 +97,7 @@ std::unordered_map<TokenType, Parser::control_flow_fn> Parser::m_control_flow_fn
 
 std::unordered_map<TokenType, Parser::suffix_parse_fn> Parser::m_suffix_parse_fns =
     {
-        
-    
+
 };
 
 void Parser::next_token() // 读取下一个token

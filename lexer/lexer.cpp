@@ -124,7 +124,15 @@ void Lexer::scanToken(char inpt)
         addToken(MINUS);
         break;
     case '+':
-        addToken(PLUS);
+        if (nextChar() == '+')
+        {
+            addToken(PLUS_PLUS);
+        }
+        else
+        {
+            current--;
+            addToken(PLUS);
+        }
         break;
     case '/':
         if (nextChar() == '/')
