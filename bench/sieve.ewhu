@@ -5,7 +5,7 @@ func sieve(n){
         i = 0;
         while(i < n+1){
             append(isComposite, 0);
-            i = i + 1;
+            ++i;
         }
     }
     i = 2;
@@ -15,11 +15,11 @@ func sieve(n){
         while(j < len(prime)){
             if(i * prime[j] > n) break;
             isComposite[i * prime[j]] = 1;
-            if(i % prime[j] == 0) break;
-            j = j + 1;
+            if((i % prime[j]) == 0) break;
+            ++j;
         }
-        i = i + 1;
+        ++i;
     }
     return prime;
 }
-print(sieve(10000));
+print(sieve(1000000));

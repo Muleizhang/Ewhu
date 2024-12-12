@@ -32,10 +32,15 @@ public:
     std::shared_ptr<Object> eval_assign_array(const std::shared_ptr<Node>, Scope &scp);                                                     // 对数组求值
     std::shared_ptr<Object> eval_if_statement(const std::shared_ptr<Node> &exp, const std::shared_ptr<Node> true_statement, Scope &scp);    // 对语句块求值
     std::shared_ptr<Object> eval_while_statement(const std::shared_ptr<Node> &exp, const std::shared_ptr<Node> true_statement, Scope &scp); // 对语句块求值
-    std::shared_ptr<Object> eval_identifier(const std::shared_ptr<Node> &node, Scope &scp);                                                 // 对标识符求值
-    std::shared_ptr<Object> eval_function_declaration(const std::shared_ptr<Node> &node, Scope &scp);                                       // 对函数声明求值
-    std::shared_ptr<Object> eval_function(const std::shared_ptr<Node> &node, Scope &scp);                                                   // 对函数调用求值
-    std::shared_ptr<Object> eval_return_statement(const std::shared_ptr<Node> &node, Scope &scp);                                           // 对返回语句求值
+
+    // return clone
+    std::shared_ptr<Object> eval_identifier(const std::shared_ptr<Node> &node, Scope &scp); // 对标识符求值
+    // return self
+    std::shared_ptr<Object> eval_identifier_self(const std::shared_ptr<Node> &node, Scope &scp); // 对标识符求值
+
+    std::shared_ptr<Object> eval_function_declaration(const std::shared_ptr<Node> &node, Scope &scp); // 对函数声明求值
+    std::shared_ptr<Object> eval_function(const std::shared_ptr<Node> &node, Scope &scp);             // 对函数调用求值
+    std::shared_ptr<Object> eval_return_statement(const std::shared_ptr<Node> &node, Scope &scp);     // 对返回语句求值
 
     std::shared_ptr<Object> eval_index(std::shared_ptr<Object> &name,
                                        const std::shared_ptr<Object> &index, Scope &scp); // 对数组索引求值
@@ -47,7 +52,7 @@ public:
                                                           const std::shared_ptr<Object> &right); // 整数中缀表达式
     std::shared_ptr<Object> eval_fraction_infix_expression(const TokenType &op, const std::shared_ptr<Object> &left,
                                                            const std::shared_ptr<Object> &right);                       // 分数中缀表达式
-    std::shared_ptr<Object> eval_prefix(const TokenType &op, const std::shared_ptr<Object> &right);                     // 对前缀表达式求值
+    std::shared_ptr<Object> eval_prefix(const TokenType &op, const std::shared_ptr<Expression> &right_exp, Scope &scp); // 对前缀表达式求值
     std::shared_ptr<Object> eval_integer_prefix_expression(const TokenType &op, const std::shared_ptr<Object> &right);  // 对整数前缀表达式求值
     std::shared_ptr<Object> eval_fraction_prefix_expression(const TokenType &op, const std::shared_ptr<Object> &right); // 对分数前缀表达式求值
     std::shared_ptr<Object> eval_boolean_prefix_expression(const TokenType &op, const std::shared_ptr<Object> &right);  // 对布尔前缀表达式求值

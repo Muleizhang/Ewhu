@@ -23,6 +23,7 @@ enum TokenType
     QUESTION,      // ?
     MINUS,         // -
     PLUS,          // +
+    PLUS_PLUS,     // ++
     SLASH,         // /
     SLASH_SLASH,   // //
     BACK_SLASH,    // '\'
@@ -31,26 +32,26 @@ enum TokenType
     AT,            // @
 
     // Trignometry
-    SIN,           // sin
-    COS,           // cos
-    TAN,           // tan
-    // bitwise operator
-    BIT_OR,    // |
+    SIN,     // sin
+    COS,     // cos
+    TAN,     // tan
+             // bitwise operator
+    BIT_OR,  // |
     PERCENT, // %
     BIT_XOR, // ^
     BIT_AND, // &
 
     // One or two character tokens.
-    BANG,            // !
-    BANG_EQUAL,      //!=
-    EQUAL,           // =
-    EQUAL_EQUAL,     //==
-    GREATER,         //>
-    GREATER_EQUAL,   //>=
-    LESS,            //<
-    LESS_EQUAL,      //<=
-    SHL,             //<<
-    SHR,             //>>
+    BANG,          // !
+    BANG_EQUAL,    //!=
+    EQUAL,         // =
+    EQUAL_EQUAL,   //==
+    GREATER,       //>
+    GREATER_EQUAL, //>=
+    LESS,          //<
+    LESS_EQUAL,    //<=
+    SHL,           //<<
+    SHR,           //>>
 
     // Literals.
     IDENTIFIER, // a
@@ -102,6 +103,7 @@ static std::unordered_map<TokenType, std::string> TokenTypeToString = {
     {TokenType::QUESTION, "QUESTION"},
     {TokenType::MINUS, "MINUS"},
     {TokenType::PLUS, "PLUS"},
+    {TokenType::PLUS_PLUS, "PLUSPLUS"},
     {TokenType::SLASH, "SLASH"},
     {TokenType::SLASH_SLASH, "SLASH_SLASH"},
     {TokenType::BACK_SLASH, "BACK_SLASH"},
@@ -112,7 +114,6 @@ static std::unordered_map<TokenType, std::string> TokenTypeToString = {
     {TokenType::BIT_OR, "BIT_OR"},
     {TokenType::BIT_XOR, "BIT_XOR"},
     {TokenType::BIT_AND, "BIT_AND"},
-
 
     // One or two character tokens.
     {TokenType::BANG, "BANG"},
