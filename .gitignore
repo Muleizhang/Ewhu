@@ -40,3 +40,4 @@ test.*
 /build_linux/
 ast.json
 callgrind.out.*
+temp.cpp
