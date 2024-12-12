@@ -44,7 +44,7 @@ public:
 
     std::shared_ptr<Object> eval_index(std::shared_ptr<Object> &name,
                                        const std::shared_ptr<Object> &index, Scope &scp); // 对数组索引求值
-    std::shared_ptr<Object> eval_assign_expression(const std::string &name,
+    std::shared_ptr<Object> eval_assign_expression(const int &name,
                                                    const std::shared_ptr<Object> &value, Scope &scp); // 赋值语句
     std::shared_ptr<Object> eval_infix(const TokenType op, std::shared_ptr<Object> &left,
                                        const std::shared_ptr<Object> &right, Scope &Scp); // 对中缀表达式求值

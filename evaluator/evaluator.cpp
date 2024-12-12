@@ -77,7 +77,7 @@ std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node, Scope
                         return ay->m_array[idex] = eval(node->m_right, scp);
                     }
                 }
-                return new_error(("Evaluator::eval_left: not an identifier: " + Node::m_names[node->m_left->type()]).c_str());
+                return new_error("Evaluator::eval_left: not an identifier: ");
             }
 
             else
@@ -188,7 +188,7 @@ std::shared_ptr<Object> Evaluator::eval_assign_array(const std::shared_ptr<Node>
                 return it->second;
             }
         }
-        return new_error("Evaluator::eval_assign_array: identifier %s not found", node->m_name.c_str());
+        return new_error("Evaluator::eval_assign_array: identifier %s not found", node->m_name);
     }
     if (node->type() == Node::NODE_INFIX && node->m_operator == TokenType::LEFT_BRACKET)
     {
@@ -211,7 +211,7 @@ std::shared_ptr<Object> Evaluator::eval_assign_array(const std::shared_ptr<Node>
                     return it->second->m_array[idex];
                 }
             }
-            return new_error("Evaluator::eval_assign_array: identifier %s not found", node->m_left->m_name.c_str());
+            return new_error("Evaluator::eval_assign_array: identifier %s not found", node->m_left->m_name);
         }
         else
         {

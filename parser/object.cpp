@@ -8,7 +8,7 @@ std::shared_ptr<Expression> Parser::parse_identifier()
     }
     std::shared_ptr<Identifier> ele(new Identifier());
     ele->m_token = this->m_curr;
-    ele->m_name = m_curr.literalToString(); // 转换
+    ele->m_name = hash_string_to_int(m_curr.literalToString()); // 转换
     return ele;
 }
 
@@ -16,7 +16,7 @@ std::shared_ptr<Expression> Parser::parse_identifier_function()
 {
     std::shared_ptr<FunctionIdentifier> ele = std::make_shared<FunctionIdentifier>();
     ele->m_token = this->m_curr;
-    ele->m_name = m_curr.literalToString(); // 转换
+    ele->m_name = hash_string_to_int(m_curr.literalToString()); // 转换
     next_token();
     if (m_curr.type == TokenType::LEFT_PAREN)
     {

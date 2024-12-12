@@ -19,7 +19,7 @@ std::shared_ptr<Object> Evaluator::eval_identifier(const std::shared_ptr<Node> &
         }
     }
 
-    return new_error("Evaluator::eval_identifier: identifier not found: %s", node->m_name.c_str());
+    return new_error("Evaluator::eval_identifier: identifier not found: %d", node->m_name);
 }
 
 std::shared_ptr<Object> Evaluator::eval_identifier_self(const std::shared_ptr<Node> &node, Scope &scp)
@@ -41,5 +41,5 @@ std::shared_ptr<Object> Evaluator::eval_identifier_self(const std::shared_ptr<No
         }
     }
 
-    return new_error("Evaluator::eval_identifier: identifier not found: %s", node->m_name.c_str());
+    return new_error("Evaluator::eval_identifier: identifier not found: %d", node->m_name);
 }

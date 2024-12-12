@@ -75,7 +75,7 @@ public:
 
     std::shared_ptr<ExpressionStatement> m_expression_statement;
 
-    std::string m_name = "";
+    int m_name = 0;
     long long m_value = 0;
     bool m_bool = false;
     std::string m_string = "";

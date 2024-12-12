@@ -100,6 +100,16 @@ std::unordered_map<TokenType, Parser::suffix_parse_fn> Parser::m_suffix_parse_fn
 
 };
 
+int Parser::hash_string_to_int(const std::string &str)
+{
+    int hash = 0;
+    for (char c : str)
+    {
+        hash = hash * 31 + c;
+    }
+    return hash;
+}
+
 void Parser::next_token() // 读取下一个token
 {
     m_curr = m_peek;

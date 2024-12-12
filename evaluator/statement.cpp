@@ -28,7 +28,7 @@ std::shared_ptr<Object> Evaluator::eval_function_block(const std::shared_ptr<Nod
     Scope temp_scp(scp);
     if (function->m_initial_list.size() != node->m_initial_list.size())
     {
-        return new_error("Evaluator::eval_function: function %s arguments not match", node->m_name.c_str());
+        return new_error("Evaluator::eval_function: function %d arguments not match", node->m_name);
     }
 
     for (int i = 0; i < function->m_initial_list.size(); i++)

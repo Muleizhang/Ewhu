@@ -41,6 +41,8 @@ public:
     // 控制流语句函数原型定义
     typedef std::shared_ptr<Statement> (Parser::*control_flow_fn)(void);
 
+    static int hash_string_to_int(const std::string &str);
+
     void next_token();                    // 读取下一个token
     bool curr_token_is(TokenType ty);     // 判断当前token是否是ty类型
     bool peek_token_is(TokenType ty);     // 判断下一个token是否是ty类型
