@@ -30,7 +30,7 @@ public:
 
     // std::shared_ptr<Object> eval_function_block(const std::vector<std::shared_ptr<Statement>> &stmts, Scope &temp_scp); // 对函数语句块求值
     std::shared_ptr<Object> eval_assign_array(const std::shared_ptr<Node>, Scope &scp);                                                     // 对数组求值
-    std::shared_ptr<Object> eval_if_statement(const std::shared_ptr<Node> &exp, const std::shared_ptr<Node> true_statement, Scope &scp);    // 对语句块求值
+    std::shared_ptr<Object> eval_if_statement(const std::shared_ptr<Node> &node, Scope &scp);                                               // 对if语句求值
     std::shared_ptr<Object> eval_while_statement(const std::shared_ptr<Node> &exp, const std::shared_ptr<Node> true_statement, Scope &scp); // 对语句块求值
 
     // return clone
@@ -63,5 +63,6 @@ public:
     std::shared_ptr<Object> eval_append(const std::shared_ptr<Node> &node, Scope &scp); // 对append函数求值
     std::shared_ptr<Object> eval_pop(const std::shared_ptr<Node> &node, Scope &scp);    // 对pop函数求值
     std::shared_ptr<Object> eval_int(const std::shared_ptr<Node> &node, Scope &scp);    // 对int类型转化函数求值
+    std::shared_ptr<Object> eval_input(const std::shared_ptr<Node> &node, Scope &scp);
     // std::shared_ptr<Object> eval_ast();
 };

@@ -2,6 +2,7 @@
 #include <memory>
 #include <unordered_map>
 #include <iostream>
+#include <string>
 #include "../lexer/token.h"
 #include "../rapidjson/include/rapidjson/document.h"
 #include "../rapidjson/include/rapidjson/writer.h"

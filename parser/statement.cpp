@@ -90,6 +90,7 @@ std::shared_ptr<Statement> Parser::parse_if_statement()
     if (m_peek.type == TokenType::ELSE)
     {
         next_token();
+        next_token();
         ele->m_false_statement = parse_statement();
     }
     else

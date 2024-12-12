@@ -16,7 +16,7 @@ std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node, Scope
     }
     case Node::NODE_IFSTATEMENT:
     {
-        return eval_if_statement(node->m_expression, node->m_true_statement, scp);
+        return eval_if_statement(node, scp);
     }
     case Node::NODE_WHILESTATEMENT:
     {
@@ -195,7 +195,7 @@ std::shared_ptr<Object> Evaluator::eval_assign_array(const std::shared_ptr<Node>
         int idex = eval(node->m_right, scp)->m_int;
         if (node->m_left->type() == Node::NODE_IDENTIFIER)
         {
-            auto it = scp.m_var.find(node->m_name);
+            auto it = scp.m_var.find(node->m_left->m_name);
             if (it != scp.m_var.end())
             {
                 return it->second->m_array[idex];

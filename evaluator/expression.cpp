@@ -75,6 +75,11 @@ std::shared_ptr<Object> Evaluator::eval_function(const std::shared_ptr<Node> &no
             }
             return new_error("Evaluator:eval_function: function len arguments not match");
         }
+        if (node->m_name == "input")
+        {
+            return eval_input(node, scp);
+        }
+
         if (node->m_name == "__ast__")
         {
             // return eval_ast();
