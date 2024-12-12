@@ -33,7 +33,7 @@ public:
     Object(const Object &obj) : m_type(obj.m_type) {};
     virtual ~Object() {};
 
-    virtual std::shared_ptr<Object> clone() const = 0;
+    virtual std::shared_ptr<Object> clone() = 0;
 
     Type type() const { return m_type; }
     std::string name() const;
@@ -76,7 +76,7 @@ public:
     Ob_Error(const Ob_Error &obj) : Object(Object::OBJECT_ERROR) { m_messages = obj.m_messages; }
     ~Ob_Error() {}
 
-    virtual std::shared_ptr<Object> clone() const
+    virtual std::shared_ptr<Object> clone()
     {
         return std::make_shared<Ob_Error>(*this);
     }
@@ -105,7 +105,7 @@ public:
     }
     ~Ob_Identifier() {}
 
-    virtual std::shared_ptr<Object> clone() const
+    virtual std::shared_ptr<Object> clone()
     {
         return std::make_shared<Ob_Identifier>(*this);
     }
@@ -125,7 +125,7 @@ public:
     Ob_Boolean(const Ob_Boolean &obj) : Object(Object::OBJECT_BOOLEAN) { m_int = obj.m_int; }
     ~Ob_Boolean() {}
 
-    virtual std::shared_ptr<Object> clone() const
+    virtual std::shared_ptr<Object> clone()
     {
         return std::make_shared<Ob_Boolean>(*this);
     }
@@ -145,7 +145,7 @@ public:
     Ob_Integer(const Ob_Integer &obj) : Object(Object::OBJECT_INTEGER) { m_int = obj.m_int; }
     ~Ob_Integer() {}
 
-    virtual std::shared_ptr<Object> clone() const
+    virtual std::shared_ptr<Object> clone()
     {
         return std::make_shared<Ob_Integer>(*this);
     }
@@ -180,7 +180,7 @@ public:
     }
     ~Ob_Fraction() {}
 
-    virtual std::shared_ptr<Object> clone() const
+    virtual std::shared_ptr<Object> clone()
     {
         return std::make_shared<Ob_Fraction>(*this);
     }
@@ -359,7 +359,7 @@ public:
     Ob_String(const Ob_String &obj) : Object(Object::OBJECT_STRING) { m_string = obj.m_string; }
     ~Ob_String() {}
 
-    virtual std::shared_ptr<Object> clone() const
+    virtual std::shared_ptr<Object> clone()
     {
         return std::make_shared<Ob_String>(*this);
     }
@@ -378,7 +378,7 @@ public:
     Ob_Break() : Object(Object::OBJECT_BREAK) {}
     ~Ob_Break() {}
 
-    virtual std::shared_ptr<Object> clone() const
+    virtual std::shared_ptr<Object> clone()
     {
         return std::make_shared<Ob_Break>(*this);
     }
@@ -394,7 +394,7 @@ public:
     Ob_Continue() : Object(Object::OBJECT_CONTINUE) {}
     ~Ob_Continue() {}
 
-    virtual std::shared_ptr<Object> clone() const
+    virtual std::shared_ptr<Object> clone()
     {
         return std::make_shared<Ob_Continue>(*this);
     }
@@ -410,7 +410,7 @@ public:
     Ob_Return() : Object(Object::OBJECT_RETURN) {}
     ~Ob_Return() {}
 
-    virtual std::shared_ptr<Object> clone() const
+    virtual std::shared_ptr<Object> clone()
     {
         return std::make_shared<Ob_Return>(*this);
     }
@@ -429,7 +429,7 @@ public:
     Ob_Null() : Object(Object::OBJECT_NULL) {}
     ~Ob_Null() {}
 
-    virtual std::shared_ptr<Object> clone() const
+    virtual std::shared_ptr<Object> clone()
     {
         return std::make_shared<Ob_Null>(*this);
     }
@@ -439,17 +439,18 @@ public:
     }
 };
 
-class Ob_Array : public Object
+class Ob_Array : public Object, public std::enable_shared_from_this<Ob_Array>
 {
 public:
     Ob_Array() : Object(Object::OBJECT_ARRAY) {}
     Ob_Array(const Ob_Array &obj) : Object(Object::OBJECT_ARRAY) { m_array = obj.m_array; }
     ~Ob_Array() {}
 
-    virtual std::shared_ptr<Object> clone() const
+    virtual std::shared_ptr<Object> clone() override
     {
-        return std::make_shared<Ob_Array>(*this);
+        return std::dynamic_pointer_cast<Object>(shared_from_this());
     }
+
     std::shared_ptr<Object> add(const std::shared_ptr<Object> &obj)
     {
         m_array.insert(m_array.end(), obj->m_array.begin(), obj->m_array.end());
@@ -485,7 +486,7 @@ public:
     Ob_Index() : Object(Object::OBJECT_INDEX) {}
     ~Ob_Index() {}
 
-    virtual std::shared_ptr<Object> clone() const
+    virtual std::shared_ptr<Object> clone()
     {
         return std::make_shared<Ob_Index>(*this);
     }
