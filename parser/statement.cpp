@@ -86,6 +86,14 @@ std::shared_ptr<Statement> Parser::parse_if_statement()
     ele->m_expression = parse_expression(LOWEST);
     next_token();
     ele->m_true_statement = parse_statement();
+    //next_token();
+    if (m_peek.type == TokenType::ELSE)
+    {
+        next_token();
+        ele->m_false_statement = parse_statement();
+    }
+    else
+        ele->m_false_statement = nullptr;
     return ele;
 }
 
