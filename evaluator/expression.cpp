@@ -66,6 +66,15 @@ std::shared_ptr<Object> Evaluator::eval_function(const std::shared_ptr<Node> &no
         {
             return eval_int(node, scp);
         }
+        if (node->m_name == "len")
+        {
+            auto obj = eval(node->m_initial_list[0], scp);
+            if (obj->type() == Object::OBJECT_ARRAY)
+            {
+                return std::make_shared<Ob_Integer>(obj->m_array.size());
+            }
+            return new_error("Evaluator:eval_function: function len arguments not match");
+        }
         if (node->m_name == "__ast__")
         {
             // return eval_ast();
@@ -216,10 +225,7 @@ std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, std::shared_pt
     //     if (left->type() == Object::OBJECT_IDENTIFIER)
     //         return eval_assign_expression(left, right, scp);
     // }
-    if (left->type() == Object::OBJECT_ERROR)
-        return left;
-    if (right->type() == Object::OBJECT_ERROR)
-        return right;
+
     if (op == TokenType::LEFT_BRACKET)
     {
         if (left->type() != Object::OBJECT_ARRAY)
@@ -265,7 +271,8 @@ std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, std::shared_pt
         case TokenType::BANG_EQUAL:
             return std::make_shared<Ob_Boolean>(l != r);
         default:
-            return new_error("Evaluator::eval_infix unknown operation: %s %s %s", left->name().c_str(), TokenTypeToString[op].c_str(), right->name().c_str());
+            return new_error("Evaluator::eval_infix unknown operation: %s %s %s", left->name().c_str(),
+                             TokenTypeToString[op].c_str(), right->name().c_str());
         }
     }
     // string op int
@@ -306,14 +313,10 @@ std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, std::shared_pt
         }
     }
 
-    if (left->OBJECT_ERROR)
-    {
+    if (left->type() == Object::OBJECT_ERROR)
         return left;
-    }
-    if (right->OBJECT_ERROR)
-    {
+    if (right->type() == Object::OBJECT_ERROR)
         return right;
-    }
 
     return new_error("Evaluator::eval_infix unknown operation: %s %s %s", left->name().c_str(),
                      TokenTypeToString[op].c_str(), right->name().c_str());
