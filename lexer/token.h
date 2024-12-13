@@ -199,7 +199,7 @@ public:
         }
 
         // 将 Token 的信息拼接成字符串
-        return std::string("[") + std::to_string(type) + ": " + TokenTypeToString[type] + " " + literalStr + "]";
+        return "[" + TokenTypeToString[type] + " " + literalStr + "]";
     }
 
     long long literalToLonglong()

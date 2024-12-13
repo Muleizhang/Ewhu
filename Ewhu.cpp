@@ -30,17 +30,22 @@ public:
         std::cerr << "Bench Prompt Usage: Ewhu -b" << std::endl;
         std::cerr << "Bench File Usage: Ewhu -b [script]" << "\033[0m" << std::endl;
     }
-    inline static void printError(const std::string &msg)
+    template <typename... Msgs>
+    inline static void printError(const Msgs &...msgs)
     {
-        std::cerr << "\033[31m" << msg << "\033[0m" << std::endl;
+        (std::cerr << "\033[31m" << ... << msgs) << "\033[0m" << std::endl;
     }
-    inline static void printGreen(const std::string &msg)
+
+    template <typename... Msgs>
+    inline static void printGreen(const Msgs &...msgs)
     {
-        std::cout << "\033[32m" << msg << "\033[0m" << std::endl;
+        (std::cout << "\033[32m" << ... << msgs) << "\033[0m" << std::endl;
     }
-    inline static void printBlue(const std::string &msg)
+
+    template <typename... Msgs>
+    inline static void printBlue(const Msgs &...msgs)
     {
-        std::cout << "\033[36m" << msg << "\033[0m" << std::endl;
+        (std::cout << "\033[36m" << ... << msgs) << "\033[0m" << std::endl;
     }
 
     template <typename T>
@@ -60,7 +65,7 @@ public:
     static void runFile(const std::string &path)
     {
         std::string line;
-        std::vector<Token> token;
+        std::vector<Token> tokens;
         Lexer lexer;
         Parser parser;
         Evaluator evaluator;
@@ -74,11 +79,18 @@ public:
         int lineNum = 1;
         while (std::getline(file, line))
         {
-            std::cout << std::endl
-                      << lineNum++ << " ";
+            lineNum++;
             if (!line.empty())
             {
-                run(line, token, lexer, parser, evaluator);
+                try
+                {
+                    run(line, tokens, lexer, parser, evaluator);
+                }
+                catch (const std::exception &e)
+                {
+                    printError(lineNum, ": ", line);
+                    printError(e.what());
+                }
             }
         }
         file.close();
@@ -95,7 +107,7 @@ public:
         int lineNum = 1;
         while (true)
         {
-            std::cout << lineNum++ << " > ";
+            std::cout << ++lineNum << " > ";
             if (!std::getline(std::cin, line))
             {
                 printBlue("( ﾟдﾟ)つBye");
@@ -107,9 +119,10 @@ public:
                 {
                     run(line, tokens, lexer, parser, evaluator);
                 }
-                catch (const std::runtime_error &e)
+                catch (const std::exception &e)
                 {
-                    std::cout << e.what() << std::endl;
+                    printError(lineNum, ": ", line);
+                    printError(e.what());
                 }
             }
         }
@@ -118,7 +131,7 @@ public:
     static void runBenchFile(const std::string &path)
     {
         std::string line;
-        std::vector<Token> token;
+        std::vector<Token> tokens;
         Lexer lexer;
         Parser parser;
         Evaluator evaluator;
@@ -133,7 +146,7 @@ public:
         file.rdbuf()->pubsetbuf(buffer.data(), buffer.size());
 
         bench([&]()
-              {while (std::getline(file, line)){onlyRun(line, token, lexer, parser, evaluator);} });
+              {while (std::getline(file, line)){onlyRun(line, tokens, lexer, parser, evaluator);} });
 
         file.close();
     }
@@ -174,7 +187,7 @@ public:
             tokens.clear();
             auto program = parser.m_program;
             static Scope global_scp;
-            auto evaluated = evaluator.eval(program, global_scp);
+            auto evaluated = evaluator.eval_program(program, global_scp);
         }
     }
 
@@ -204,7 +217,7 @@ public:
                 [&]()
                 {
                     static Scope global_scp;
-                    auto evaluated = evaluator.eval(parser.m_program, global_scp);
+                    auto evaluated = evaluator.eval_program(parser.m_program, global_scp);
                     if (evaluated)
                         std::cout << evaluated->str() << std::endl;
                 });
@@ -215,7 +228,13 @@ public:
     static void run(const std::string &source, std::vector<Token> &tokens, Lexer &lexer,
                     Parser &parser, Evaluator &evaluator)
     {
+        lexer.scanTokens(source);
         std::vector<Token> new_tokens = lexer.scanTokens(source);
+        for (auto &token : new_tokens)
+        {
+            std::cout << token.toString() << " ";
+        }
+        std::cout << std::endl;
         tokens.insert(tokens.end(), new_tokens.begin(), new_tokens.end());
 
         if ((lexer.braceStatus == 0) &&
@@ -230,7 +249,7 @@ public:
 
             printGreen("evaluatingヾ(✿ﾟ▽ﾟ)ノ");
             static Scope global_scp;
-            auto evaluated = evaluator.eval(program, global_scp);
+            auto evaluated = evaluator.eval_program(program, global_scp);
             if (evaluated)
                 std::cout << evaluated->str() << std::endl;
         }

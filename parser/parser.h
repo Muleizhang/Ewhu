@@ -31,7 +31,17 @@ public:
     Parser();
     Parser(std::vector<Token>::iterator ptokens); // 构造函数，接受token列表的一个迭代器
     ~Parser();
+    static int hash(const std::string &str);
+    static constexpr int hash_chars(const char *str);
 
+    void parse_program(std::vector<Token> &tokens); // 解析程序
+
+public:
+    std::shared_ptr<Program> m_program = nullptr;
+    std::unordered_map<int, std::string> identifier_map; // 标识符反映射
+    std::unordered_map<int, std::string> function_map;   // 函数反映射
+
+private:
     // 前缀表达式函数原型定义
     typedef std::shared_ptr<Expression> (Parser::*prefix_parse_fn)(void);
     // 中缀表达式函数原型定义
@@ -41,8 +51,12 @@ public:
     // 控制流语句函数原型定义
     typedef std::shared_ptr<Statement> (Parser::*control_flow_fn)(void);
 
-    static int hash(const std::string &str);
-    static constexpr int hash_chars(const char *str);
+    void new_sentence(std::vector<Token>::iterator ptokens, std::vector<Token>::iterator ptokens_end);
+    std::shared_ptr<Statement> parse_statement();
+
+    // 函数
+    std::shared_ptr<Statement> parse_function_declaration();
+    std::shared_ptr<ExpressionStatement> parse_expression_statement();
 
     void next_token();                    // 读取下一个token
     bool curr_token_is(TokenType ty);     // 判断当前token是否是ty类型
@@ -83,26 +97,13 @@ public:
     std::shared_ptr<Statement> parse_continue_statement();
     std::shared_ptr<Statement> parse_return_statement();
 
-    // 函数
-    std::shared_ptr<Statement> parse_function_declaration();
-
-    void parse_program(std::vector<Token> &tokens);
-    std::shared_ptr<Statement> parse_statement();
-    std::shared_ptr<ExpressionStatement> parse_expression_statement();
-
-    std::shared_ptr<Program> m_program = nullptr;
-
-    void new_sentence(std::vector<Token>::iterator ptokens, std::vector<Token>::iterator ptokens_end);
-
 private:
     std::vector<Token>::iterator m_ptokens;     // 指向下一个token的迭代器
     std::vector<Token>::iterator m_ptokens_end; // 指向tokens.end()的迭代器
     std::shared_ptr<Lexer> m_lexer;
-    Token m_curr;                                        // 当前的token
-    Token m_peek;                                        // 下一个token
-    std::list<std::string> m_errors;                     // 存储错误的列表
-    std::unordered_map<int, std::string> identifier_map; // 标识符映射
-    std::unordered_map<int, std::string> function_map;   // 函数映射
+    Token m_curr;                    // 当前的token
+    Token m_peek;                    // 下一个token
+    std::list<std::string> m_errors; // 存储错误的列表
 
     static std::map<TokenType, int> m_precedences; // 一个从运算符TokenType类型到优先级类型的映射
     static std::unordered_map<TokenType, prefix_parse_fn> m_prefix_parse_fns;

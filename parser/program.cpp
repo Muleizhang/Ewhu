@@ -7,7 +7,9 @@ void Parser::parse_program(std::vector<Token> &tokens)
     {
         std::shared_ptr<Statement> stmt = parse_statement();
         if (stmt == nullptr)
+        {
             return;
+        }
 
         if (stmt.get()->m_type != Node::Type::NODE_COMMENT && errors().empty()) // 如果指针有效
         {
@@ -19,4 +21,6 @@ void Parser::parse_program(std::vector<Token> &tokens)
         if (m_curr.type != TokenType::SEMICOLON)
             next_token();
     }
+    m_program->identifier_map = &identifier_map;
+    m_program->function_map = &function_map;
 }

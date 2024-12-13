@@ -406,7 +406,7 @@ public:
 class Ob_Return : public Object
 {
 public:
-    Ob_Return() : Object(Object::OBJECT_RETURN) {}
+    Ob_Return(std::shared_ptr<Object> obj) : Object(Object::OBJECT_RETURN) { m_expression = obj; }
     ~Ob_Return() {}
 
     virtual std::shared_ptr<Object> clone()

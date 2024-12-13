@@ -86,6 +86,8 @@ public:
     }
 
 public:
+    std::unordered_map<int, std::string> *identifier_map; // 标识符反映射
+    std::unordered_map<int, std::string> *function_map;   // 函数反映射
 };
 
 class ExpressionStatement : public Statement
@@ -121,7 +123,7 @@ public:
         rapidjson::Value statements(rapidjson::kArrayType);
         json.AddMember("expression", m_expression->json(father), father.GetAllocator());
         json.AddMember("true_statement", m_true_statement->json(father), father.GetAllocator());
-        if(m_false_statement)
+        if (m_false_statement)
         {
             json.AddMember("false_statement", m_false_statement->json(father), father.GetAllocator());
         }
