@@ -118,7 +118,7 @@ std::shared_ptr<Statement> Parser::parse_function_declaration()
     next_token();
     std::shared_ptr<Identifier> ele(new Identifier());
     ele->m_token = this->m_curr;
-    ele->m_name = m_curr.literalToString(); // 转换
+    ele->m_name = hash(m_curr.literalToString()); // 转换
     fn->m_func = ele;
     next_token();
     if (m_curr.type == TokenType::LEFT_PAREN)

@@ -29,21 +29,16 @@ static std::unordered_map<std::string, TokenType> keyWords = {
     {"ERR", TokenType::ERR},
 };
 
-std::vector<Token> Lexer::scanTokens()
+std::vector<Token> Lexer::scanTokens(std::string source)
 {
-    char inpt;
-    // int equal = 0;
+    tokens.clear();
+    this->source = source;
     int length = source.length();
     while (current < length)
     {
-        start = current;
-        inpt = nextChar();
-        scanToken(inpt);
+        scanToken(nextChar());
     }
-    // reinitialize
-    start = 0;
     current = 0;
-    line = 1;
     read_current = 0;
     size = (int)tokens.size();
     return tokens;

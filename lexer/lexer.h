@@ -27,7 +27,7 @@ public:
     // 返回下一个Token
     Token nextToken();
     // 读取一行代码，返回 Token 列表
-    std::vector<Token> scanTokens();
+    std::vector<Token> scanTokens(std::string source);
 
 private:
     int start = 0;

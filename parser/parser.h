@@ -41,6 +41,9 @@ public:
     // 控制流语句函数原型定义
     typedef std::shared_ptr<Statement> (Parser::*control_flow_fn)(void);
 
+    static int hash(const std::string &str);
+    static constexpr int hash_chars(const char *str);
+
     void next_token();                    // 读取下一个token
     bool curr_token_is(TokenType ty);     // 判断当前token是否是ty类型
     bool peek_token_is(TokenType ty);     // 判断下一个token是否是ty类型
@@ -83,7 +86,7 @@ public:
     // 函数
     std::shared_ptr<Statement> parse_function_declaration();
 
-    void parse_program();
+    void parse_program(std::vector<Token> &tokens);
     std::shared_ptr<Statement> parse_statement();
     std::shared_ptr<ExpressionStatement> parse_expression_statement();
 
@@ -95,9 +98,12 @@ private:
     std::vector<Token>::iterator m_ptokens;     // 指向下一个token的迭代器
     std::vector<Token>::iterator m_ptokens_end; // 指向tokens.end()的迭代器
     std::shared_ptr<Lexer> m_lexer;
-    Token m_curr;                                  // 当前的token
-    Token m_peek;                                  // 下一个token
-    std::list<std::string> m_errors;               // 存储错误的列表
+    Token m_curr;                                        // 当前的token
+    Token m_peek;                                        // 下一个token
+    std::list<std::string> m_errors;                     // 存储错误的列表
+    std::unordered_map<int, std::string> identifier_map; // 标识符映射
+    std::unordered_map<int, std::string> function_map;   // 函数映射
+
     static std::map<TokenType, int> m_precedences; // 一个从运算符TokenType类型到优先级类型的映射
     static std::unordered_map<TokenType, prefix_parse_fn> m_prefix_parse_fns;
     static std::unordered_map<TokenType, infix_parse_fn> m_infix_parse_fns;
