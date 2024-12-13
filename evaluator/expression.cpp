@@ -9,18 +9,14 @@ std::shared_ptr<Object> Evaluator::eval_eval(const std::string &line, Scope &scp
     Parser parser;
     Evaluator evaluator;
 
-    lexer.source = line;
-    std::vector<Token> new_tokens = lexer.scanTokens();
+    std::vector<Token> new_tokens = lexer.scanTokens(line);
 
     if ((lexer.braceStatus == 0) &&
         ((--new_tokens.end())->type == TokenType::SEMICOLON ||
          (--new_tokens.end())->type == TokenType::RIGHT_BRACE))
     {
-        parser.new_sentence(new_tokens.begin(), new_tokens.end());
-        parser.parse_program();
-        new_tokens.clear();
-        auto program = parser.m_program;
-        return evaluator.eval(program, scp);
+        parser.parse_program(new_tokens);
+        return evaluator.eval(parser.m_program, scp);
     }
     return nullptr;
 }
@@ -40,37 +36,34 @@ std::shared_ptr<Object> Evaluator::eval_function(const std::shared_ptr<Node> &no
                 return eval_function_block(it->second, node, scp);
             }
         }
-        if (node->m_name == 106934957) // print
+        if (node->m_name == Parser::hash("print"))
         {
             std::cout << eval(node->m_initial_list[0], scp)->str() << std::endl;
             return nullptr;
         }
-        /*
-        if (node->m_name == "eval")
+
+        if (node->m_name == Parser::hash("eval"))
         {
             return eval_eval(eval(node->m_initial_list[0], scp)->str(), scp);
         }
-        if (node->m_name == "scope")
+        if (node->m_name == Parser::hash("scope"))
         {
             scp.print();
             return nullptr;
         }
-        */
-        if (node->m_name == -1411068134) // append
+        if (node->m_name == Parser::hash("append"))
         {
             return eval_append(node, scp);
         }
-        /*
-        if (node->m_name == "pop")
+        if (node->m_name == Parser::hash("pop"))
         {
             return eval_pop(node, scp);
         }
-        if (node->m_name == "int")
+        if (node->m_name == Parser::hash("int"))
         {
             return eval_int(node, scp);
         }
-        */
-        if (node->m_name == 107029) // len
+        if (node->m_name == Parser::hash("len"))
         {
             auto obj = eval(node->m_initial_list[0], scp);
             if (obj->type() == Object::OBJECT_ARRAY)
@@ -79,13 +72,6 @@ std::shared_ptr<Object> Evaluator::eval_function(const std::shared_ptr<Node> &no
             }
             return new_error("Evaluator:eval_function: function len arguments not match");
         }
-        /*
-        if (node->m_name == "__ast__")
-        {
-            // return eval_ast();
-        }
-
-        */
         return new_error("Evaluator::eval_function: function %d not found", node->m_name);
     }
     return eval_function_block(it->second, node, scp);

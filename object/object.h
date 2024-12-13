@@ -46,7 +46,6 @@ public:
     Type m_type;
     static std::unordered_map<Type, std::string> m_names;
 
-public:
     // 字符串
     std::string m_string;
     // 错误信息

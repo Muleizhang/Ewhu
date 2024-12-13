@@ -100,12 +100,22 @@ std::unordered_map<TokenType, Parser::suffix_parse_fn> Parser::m_suffix_parse_fn
 
 };
 
-int Parser::hash_string_to_int(const std::string &str)
+int Parser::hash(const std::string &str)
 {
     int hash = 0;
     for (char c : str)
     {
         hash = hash * 31 + c;
+    }
+    return hash;
+}
+
+constexpr int Parser::hash_chars(const char *str)
+{
+    int hash = 0;
+    while (*str)
+    {
+        hash = hash * 31 + *str++;
     }
     return hash;
 }
@@ -120,7 +130,7 @@ void Parser::next_token() // 读取下一个token
     }
 }
 
-Parser::Parser() // 默认构造函数
+Parser::Parser()
 {
     m_program.reset(new Program());
 }

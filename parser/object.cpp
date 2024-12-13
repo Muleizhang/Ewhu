@@ -6,17 +6,21 @@ std::shared_ptr<Expression> Parser::parse_identifier()
     {
         return parse_identifier_function();
     }
-    std::shared_ptr<Identifier> ele(new Identifier());
+    auto ele = std::make_shared<Identifier>();
     ele->m_token = this->m_curr;
-    ele->m_name = hash_string_to_int(m_curr.literalToString()); // 转换
+    auto string_name = m_curr.literalToString();
+    ele->m_name = hash(string_name); // 转换
+    identifier_map.insert({ele->m_name, string_name});
     return ele;
 }
 
 std::shared_ptr<Expression> Parser::parse_identifier_function()
 {
-    std::shared_ptr<FunctionIdentifier> ele = std::make_shared<FunctionIdentifier>();
+    auto ele = std::make_shared<FunctionIdentifier>();
     ele->m_token = this->m_curr;
-    ele->m_name = hash_string_to_int(m_curr.literalToString()); // 转换
+    auto string_name = m_curr.literalToString();
+    ele->m_name = hash(string_name); // 转换
+    function_map.insert({ele->m_name, string_name});
     next_token();
     if (m_curr.type == TokenType::LEFT_PAREN)
     {
@@ -35,7 +39,7 @@ std::shared_ptr<Expression> Parser::parse_identifier_function()
 
 std::shared_ptr<Expression> Parser::parse_integer()
 {
-    std::shared_ptr<Integer> ele(new Integer());
+    auto ele = std::make_shared<Integer>();
     ele->m_token = this->m_curr;
     ele->m_value = m_curr.literalToLonglong(); // 转换
     return ele;
@@ -43,7 +47,7 @@ std::shared_ptr<Expression> Parser::parse_integer()
 
 std::shared_ptr<Expression> Parser::parse_boolean()
 {
-    std::shared_ptr<Boolean> ele(new Boolean());
+    auto ele = std::make_shared<Boolean>();
     ele->m_token = this->m_curr;
     ele->m_bool = (m_curr.type == TokenType::TRUE) ? true : false;
     return ele;

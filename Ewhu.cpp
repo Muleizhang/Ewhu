@@ -21,7 +21,41 @@ namespace hl
 
 class Ewhu
 {
-private:
+public:
+    inline static void printUsage()
+    {
+        std::cerr << "\033[34m";
+        std::cerr << "Run Prompt Usage: Ewhu" << std::endl;
+        std::cerr << "Run File Usage: Ewhu [script]" << std::endl;
+        std::cerr << "Bench Prompt Usage: Ewhu -b" << std::endl;
+        std::cerr << "Bench File Usage: Ewhu -b [script]" << "\033[0m" << std::endl;
+    }
+    inline static void printError(const std::string &msg)
+    {
+        std::cerr << "\033[31m" << msg << "\033[0m" << std::endl;
+    }
+    inline static void printGreen(const std::string &msg)
+    {
+        std::cout << "\033[32m" << msg << "\033[0m" << std::endl;
+    }
+    inline static void printBlue(const std::string &msg)
+    {
+        std::cout << "\033[36m" << msg << "\033[0m" << std::endl;
+    }
+
+    template <typename T>
+    inline static void bench(T Function, int times = 10000)
+    {
+        auto start = std::chrono::high_resolution_clock::now();
+        for (int i = 0; i < times; i++)
+        {
+            Function();
+        }
+        auto end = std::chrono::high_resolution_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+        std::cout << "run time: " << duration.count() << "ms" << std::endl;
+    }
+
 public:
     static void runFile(const std::string &path)
     {
@@ -34,8 +68,7 @@ public:
         std::ifstream file(path);
         if (!file.is_open())
         {
-            std::cerr << "\033[31m" << "Error: Could not open file "
-                      << path << "\033[0m" << std::endl;
+            printError("Error: Could not open file " + path);
             exit(1);
         }
         int lineNum = 1;
@@ -65,17 +98,19 @@ public:
             std::cout << lineNum++ << " > ";
             if (!std::getline(std::cin, line))
             {
-                std::cout << "\033[36m" << "( ﾟдﾟ)つBye" << "\033[0m" << std::endl;
-                exit(-1);
-            }
-            if (line == "exit")
-            {
-                std::cout << "\033[36m" << "( ﾟдﾟ)つBye" << "\033[0m" << std::endl;
+                printBlue("( ﾟдﾟ)つBye");
                 exit(-1);
             }
             if (!line.empty())
             {
-                run(line, tokens, lexer, parser, evaluator);
+                try
+                {
+                    run(line, tokens, lexer, parser, evaluator);
+                }
+                catch (const std::runtime_error &e)
+                {
+                    std::cout << e.what() << std::endl;
+                }
             }
         }
     }
@@ -91,21 +126,15 @@ public:
         std::ifstream file(path);
         if (!file.is_open())
         {
-            std::cerr << "\033[31m" << "Error: Could not open file "
-                      << path << "\033[0m" << std::endl;
+            printError("Error: Could not open file " + path);
             exit(1);
         }
         std::vector<char> buffer(1024 * 1024);
         file.rdbuf()->pubsetbuf(buffer.data(), buffer.size());
 
-        auto start = std::chrono::high_resolution_clock::now();
-        while (std::getline(file, line))
-        {
-            onlyRun(line, token, lexer, parser, evaluator);
-        }
-        auto end = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-        std::cout << "run time: " << duration.count() << "ms" << std::endl;
+        bench([&]()
+              {while (std::getline(file, line)){onlyRun(line, token, lexer, parser, evaluator);} });
+
         file.close();
     }
 
@@ -123,7 +152,7 @@ public:
             std::cout << lineNum++ << " > ";
             if (!std::getline(std::cin, line))
             {
-                std::cout << "\033[36m" << "( ﾟдﾟ)つBye" << "\033[0m" << std::endl;
+                printBlue("( ﾟдﾟ)つBye");
                 break;
             }
             benchRun(line, tokens, lexer, parser, evaluator);
@@ -134,17 +163,14 @@ public:
     static void onlyRun(const std::string &source, std::vector<Token> &tokens, Lexer &lexer,
                         Parser &parser, Evaluator &evaluator)
     {
-        lexer.tokens.clear();
-        lexer.source = source;
-        std::vector<Token> new_tokens = lexer.scanTokens();
+        std::vector<Token> new_tokens = lexer.scanTokens(source);
         tokens.insert(tokens.end(), new_tokens.begin(), new_tokens.end());
 
         if ((lexer.braceStatus == 0) &&
             ((--tokens.end())->type == TokenType::SEMICOLON ||
              (--tokens.end())->type == TokenType::RIGHT_BRACE))
         {
-            parser.new_sentence(tokens.begin(), tokens.end());
-            parser.parse_program();
+            parser.parse_program(tokens);
             tokens.clear();
             auto program = parser.m_program;
             static Scope global_scp;
@@ -156,49 +182,32 @@ public:
     static void benchRun(const std::string &source, std::vector<Token> &tokens, Lexer &lexer,
                          Parser &parser, Evaluator &evaluator)
     {
-
-        auto start = std::chrono::high_resolution_clock::now();
-        for (int i = 0; i < 10000; i++)
-        {
-            tokens.clear();
-            lexer.tokens.clear();
-            lexer.source = source;
-            std::vector<Token> new_tokens = lexer.scanTokens();
-            tokens.insert(tokens.end(), new_tokens.begin(), new_tokens.end());
-        }
-        auto end = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-        std::cout << "lexer time: " << duration.count() << "ms" << std::endl;
+        bench(
+            [&]()
+            {
+                tokens.clear();
+                std::vector<Token> new_tokens = lexer.scanTokens(source);
+                tokens.insert(tokens.end(), new_tokens.begin(), new_tokens.end());
+            });
 
         if ((lexer.braceStatus == 0) &&
             ((--tokens.end())->type == TokenType::SEMICOLON ||
              (--tokens.end())->type == TokenType::RIGHT_BRACE))
         {
-
-            auto start = std::chrono::high_resolution_clock::now();
-            for (int i = 0; i < 10000; i++)
-            {
-                parser.new_sentence(tokens.begin(), tokens.end());
-                parser.parse_program();
-            }
+            bench(
+                [&]()
+                {
+                    parser.parse_program(tokens);
+                });
             tokens.clear();
-            auto end = std::chrono::high_resolution_clock::now();
-            auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-            std::cout << "parser time: " << duration.count() << "ms" << std::endl;
-
-            start = std::chrono::high_resolution_clock::now();
-            std::shared_ptr<Object> evaluated;
-            for (int i = 0; i < 10000; i++)
-            {
-                auto program = parser.m_program;
-                static Scope global_scp;
-                evaluated = evaluator.eval(program, global_scp);
-            }
-            end = std::chrono::high_resolution_clock::now();
-            duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-            std::cout << "evaluate time: " << duration.count() << "ms" << std::endl;
-            if (evaluated)
-                std::cout << evaluated->str() << std::endl;
+            bench(
+                [&]()
+                {
+                    static Scope global_scp;
+                    auto evaluated = evaluator.eval(parser.m_program, global_scp);
+                    if (evaluated)
+                        std::cout << evaluated->str() << std::endl;
+                });
         }
     }
 
@@ -206,54 +215,26 @@ public:
     static void run(const std::string &source, std::vector<Token> &tokens, Lexer &lexer,
                     Parser &parser, Evaluator &evaluator)
     {
-        lexer.tokens.clear();
-        lexer.source = source;
-        std::vector<Token> new_tokens = lexer.scanTokens();
-
+        std::vector<Token> new_tokens = lexer.scanTokens(source);
         tokens.insert(tokens.end(), new_tokens.begin(), new_tokens.end());
 
-        // for (auto token : tokens)
-        //     std::cout << token.toString();
-        // std::cout << lexer.braceStatus << std::endl;
         if ((lexer.braceStatus == 0) &&
             ((--tokens.end())->type == TokenType::SEMICOLON ||
              (--tokens.end())->type == TokenType::RIGHT_BRACE))
         {
-            parser.new_sentence(tokens.begin(), tokens.end());
-            parser.parse_program();
+            parser.parse_program(tokens);
             tokens.clear();
 
-            auto errors = parser.errors();
+            auto &program = parser.m_program;
+            jsonOutput(program);
 
-            if (!errors.empty())
-            {
-                for (auto error : errors)
-                    std::cerr << "\033[31m" << "Error: " << error << "\033[0m" << std::endl;
-                parser.m_program->m_statements.clear();
-                parser.errors().clear();
-            }
-            else
-            {
-                std::cout << "\033[32m" << "Parser: No errorsヾ(✿ﾟ▽ﾟ)ノ" << "\033[0m" << std::endl;
-                auto program = parser.m_program;
-                jsonOutput(program); // 输出AST
-                static Scope global_scp;
-                auto evaluated = evaluator.eval(program, global_scp);
-
-                if (evaluated)
-                {
-                    if (evaluator.is_error(evaluated))
-                        std::cerr << "\033[31m" << "Error: " << evaluated->str() << "\033[0m" << std::endl;
-                    else
-                        std::cout << evaluated->str() << std::endl;
-                }
-            }
+            printGreen("evaluatingヾ(✿ﾟ▽ﾟ)ノ");
+            static Scope global_scp;
+            auto evaluated = evaluator.eval(program, global_scp);
+            if (evaluated)
+                std::cout << evaluated->str() << std::endl;
         }
-        else
-        {
-            // std::cerr << "\033[33m" << "Warning: Incomplete statement" << "\033[0m" << std::endl;
-        }
-    };
+    }
 
     static void jsonOutput(std::shared_ptr<Program> program)
     {
@@ -266,9 +247,10 @@ public:
         std::ofstream ofs("ast.json");
         ofs << buffer.GetString();
         ofs.close();
-        std::cout << "\033[32m" << "AST output to ast.jsonヾ(✿ﾟ▽ﾟ)ノ" << "\033[0m" << std::endl;
+        printGreen("AST output to ast.json");
     }
 };
+
 int main(int argc, char *argv[])
 {
 #ifdef _WIN32
@@ -276,27 +258,27 @@ int main(int argc, char *argv[])
     hl::SetConsoleOutputCP(CP_UTF8);
     hl::SetConsoleCP(CP_UTF8);
 #endif
-    std::cout << "\033[36m" << "Ewhu Programming Language Ciallo～(∠・ω< )⌒★" << "\033[0m" << std::endl;
+
+    Ewhu::printBlue("Ewhu Programming Language Ciallo～(∠・ω< )⌒★");
     if (argc > 3)
     {
-        std::cout << "\033[34m";
-        std::cerr << "Run Prompt Usage: Ewhu" << std::endl;
-        std::cerr << "Run File Usage: Ewhu [script]" << std::endl;
-        std::cerr << "Bench Prompt Usage: Ewhu -b" << std::endl;
-        std::cerr << "Bench File Usage: Ewhu -b [script]" << "\033[0m" << std::endl;
+        Ewhu::printError("Error: Too many arguments");
+        Ewhu::printUsage();
         exit(64);
     }
     else if (argc == 3)
     {
         if (std::string(argv[1]) == "-b")
-            Ewhu::runBenchFile(argv[2]); // 进入脚本基准测试模式
+            Ewhu::runBenchFile(argv[2]); // 进入脚本测试模式
     }
     else if (argc == 2)
+    {
         if (std::string(argv[1]) == "-b")
-            Ewhu::runBenchPrompt(); // 进入交互基准测试模式
+            Ewhu::runBenchPrompt(); // 进入交互测试模式
         else
-            Ewhu::runFile(argv[1]); // 运行传入的脚本文件
-    else
+            Ewhu::runFile(argv[1]); // 进入脚本模式
+    }
+    else if (argc == 1)
         Ewhu::runPrompt(); // 进入交互模式
     return 0;
 }

@@ -178,6 +178,7 @@ public:
         : type(type), literal(literal), line(line) {}
 
     Token() : type(TokenType::ERR), literal(std::monostate()), line(0) {}
+
     // 返回 Token 的字符串表示
     std::string toString() const
     {
@@ -200,6 +201,7 @@ public:
         // 将 Token 的信息拼接成字符串
         return std::string("[") + std::to_string(type) + ": " + TokenTypeToString[type] + " " + literalStr + "]";
     }
+
     long long literalToLonglong()
     {
         if (std::holds_alternative<long long>(literal))
@@ -208,6 +210,7 @@ public:
         }
         return 0;
     }
+
     std::string literalToString()
     {
         if (std::holds_alternative<std::string>(literal))
