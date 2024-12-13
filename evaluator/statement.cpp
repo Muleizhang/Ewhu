@@ -61,11 +61,16 @@ std::shared_ptr<Object> Evaluator::eval_function_declaration(const std::shared_p
     return nullptr;
 }
 
-std::shared_ptr<Object> Evaluator::eval_if_statement(const std::shared_ptr<Node> &exp, const std::shared_ptr<Node> true_statement, Scope &scp)
+std::shared_ptr<Object> Evaluator::eval_if_statement(const std::shared_ptr<Node> &node, Scope &scp)
 {
-    if (eval(exp, scp)->m_int)
+    if (eval(node->m_expression, scp)->m_int)
     {
-        auto result = eval(true_statement, scp);
+        auto result = eval(node->m_true_statement, scp);
+        return result;
+    }
+    else if (node->m_false_statement)
+    {
+        auto result = eval(node->m_false_statement, scp);
         return result;
     }
     return nullptr;
@@ -180,3 +185,30 @@ std::shared_ptr<Object> Evaluator::eval_ast()
     return std::make_shared<Ob_String>(buffer.GetString());
     //std::cout << "\033[32m" << "AST output to ast.jsonヾ(✿ﾟ▽ﾟ)ノ" << "\033[0m" << std::endl;
 }*/
+void read(char *inpt)
+{
+    int len = 0;
+    char c = getchar();
+    while (c == ' ')
+        c = getchar();
+    inpt[len++] = c;
+    while (1)
+    {
+        c = getchar();
+        if (c == '\n')
+            break;
+        inpt[len++] = c;
+    }
+    inpt[len] = '\0';
+}
+
+std::shared_ptr<Object> Evaluator::eval_input(const std::shared_ptr<Node> &node, Scope &scp)
+{
+    if (node->m_initial_list.size() != 1)
+        return new_error("Evaluator:eval_function: function append arguments not match");
+    std::shared_ptr<Object> otpt = eval(node->m_initial_list[0], scp);
+    std::cout << (otpt->m_string);
+    char inpt[1024];
+    read(inpt);
+    return std::make_shared<Ob_String>(inpt);
+}

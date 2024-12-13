@@ -2,6 +2,7 @@
 #include <memory>
 #include <unordered_map>
 #include <iostream>
+#include <string>
 #include "../lexer/token.h"
 #include "../rapidjson/include/rapidjson/document.h"
 #include "../rapidjson/include/rapidjson/writer.h"
@@ -68,6 +69,7 @@ public:
     // std::shared_ptr<Expression> m_expression;
     std::shared_ptr<Statement> m_true_statement;
     // std::shared_ptr<Statement> m_false_statement;
+    std::shared_ptr<Statement> m_false_statement;
 
     // std::shared_ptr<Expression> m_expression;
     std::shared_ptr<Statement> m_cycle_statement;

@@ -121,6 +121,10 @@ public:
         rapidjson::Value statements(rapidjson::kArrayType);
         json.AddMember("expression", m_expression->json(father), father.GetAllocator());
         json.AddMember("true_statement", m_true_statement->json(father), father.GetAllocator());
+        if(m_false_statement)
+        {
+            json.AddMember("false_statement", m_false_statement->json(father), father.GetAllocator());
+        }
         // json.AddMember("false_statement", m_true_statement->json(father), father.GetAllocator());
         return json;
     }

@@ -72,7 +72,16 @@ std::shared_ptr<Object> Evaluator::eval_function(const std::shared_ptr<Node> &no
             }
             return new_error("Evaluator:eval_function: function len arguments not match");
         }
-        return new_error("Evaluator::eval_function: function %d not found", node->m_name);
+        if (node->m_name == "input")
+        {
+            return eval_input(node, scp);
+        }
+
+        if (node->m_name == "__ast__")
+        {
+            // return eval_ast();
+        }
+        return new_error("Evaluator::eval_function: function %s not found", node->m_name.c_str());
     }
     return eval_function_block(it->second, node, scp);
 }
