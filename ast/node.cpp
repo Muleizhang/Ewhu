@@ -21,6 +21,8 @@ std::unordered_map<Node::Type, std::string> Node::m_names = {
     {Node::NODE_ARRAY, "Array"},
 };
 
+std::vector<std::string *> Node::str_vector = std::vector<std::string *>();
+
 // return the string of the node type
 std::string Node::name() const
 {

@@ -5,7 +5,7 @@ class Identifier : public Expression
 {
 public:
     Identifier() : Expression(Type::NODE_IDENTIFIER) {}
-    ~Identifier(){};
+    ~Identifier() {};
 
     virtual rapidjson::Value json(rapidjson::Document &father)
     {
@@ -14,6 +14,8 @@ public:
         *typeStr = name();
         std::string *valueStr = new std::string;
         *valueStr = m_name;
+        str_vector.push_back(typeStr);
+        str_vector.push_back(valueStr);
         json.AddMember("type", rapidjson::StringRef(typeStr->c_str()), father.GetAllocator());
         json.AddMember("value", rapidjson::StringRef(valueStr->c_str()), father.GetAllocator());
         return json;
@@ -26,7 +28,7 @@ class Integer : public Expression
 {
 public:
     Integer() : Expression(Type::NODE_INTEGER) {}
-    ~Integer(){};
+    ~Integer() {};
 
     virtual rapidjson::Value json(rapidjson::Document &father)
     {
@@ -35,6 +37,8 @@ public:
         *typeStr = name();
         std::string *valueStr = new std::string;
         *valueStr = std::to_string(m_value);
+        str_vector.push_back(typeStr);
+        str_vector.push_back(valueStr);
         json.AddMember("type", rapidjson::StringRef(typeStr->c_str()), father.GetAllocator());
         json.AddMember("value", rapidjson::StringRef(valueStr->c_str()), father.GetAllocator());
         return json;
@@ -47,7 +51,7 @@ class Boolean : public Expression
 {
 public:
     Boolean() : Expression(Type::NODE_BOOLEAN) {}
-    ~Boolean(){};
+    ~Boolean() {};
 
     virtual rapidjson::Value json(rapidjson::Document &father)
     {
@@ -56,6 +60,8 @@ public:
         *typeStr = name();
         std::string *valueStr = new std::string;
         *valueStr = m_bool ? "true" : "false";
+        str_vector.push_back(typeStr);
+        str_vector.push_back(valueStr);
         json.AddMember("type", rapidjson::StringRef(typeStr->c_str()), father.GetAllocator());
         json.AddMember("value", rapidjson::StringRef(valueStr->c_str()), father.GetAllocator());
         return json;
@@ -68,7 +74,7 @@ class String : public Expression
 {
 public:
     String() : Expression(Type::NODE_STRING) {}
-    ~String(){};
+    ~String() {};
 
     virtual rapidjson::Value json(rapidjson::Document &father)
     {
@@ -77,6 +83,8 @@ public:
         *typeStr = name();
         std::string *valueStr = new std::string;
         *valueStr = m_string;
+        str_vector.push_back(typeStr);
+        str_vector.push_back(valueStr);
         json.AddMember("type", rapidjson::StringRef(typeStr->c_str()), father.GetAllocator());
         json.AddMember("value", rapidjson::StringRef(valueStr->c_str()), father.GetAllocator());
         return json;
@@ -96,6 +104,7 @@ public:
         rapidjson::Value json(rapidjson::kObjectType);
         std::string *typeStr = new std::string;
         *typeStr = name();
+        str_vector.push_back(typeStr);
         if (TokenTypeToString.find(m_operator) == TokenTypeToString.end())
         {
             json.AddMember("operator", "err", father.GetAllocator());
@@ -125,6 +134,7 @@ public:
         rapidjson::Value json(rapidjson::kObjectType);
         std::string *typeStr = new std::string;
         *typeStr = name();
+        str_vector.push_back(typeStr);
         switch (m_operator)
         {
         case TokenType::PLUS:
@@ -156,7 +166,7 @@ class FunctionIdentifier : public Expression // 函数的调用
 {
 public:
     FunctionIdentifier() : Expression(Type::NODE_FUNCTION_IDENTIFIER) {}
-    ~FunctionIdentifier(){};
+    ~FunctionIdentifier() {};
 
     virtual rapidjson::Value json(rapidjson::Document &father)
     {
@@ -165,6 +175,8 @@ public:
         *typeStr = name();
         std::string *valueStr = new std::string;
         *valueStr = m_name;
+        str_vector.push_back(typeStr);
+        str_vector.push_back(valueStr);
         rapidjson::Value args(rapidjson::kArrayType);
         json.AddMember("type", rapidjson::StringRef(typeStr->c_str()), father.GetAllocator());
         for (auto &arg : m_initial_list)
@@ -182,14 +194,15 @@ public:
 class Array : public Expression // 数组
 {
 public:
-    Array() : Expression(Type::NODE_ARRAY){};
-    ~Array(){};
-    
+    Array() : Expression(Type::NODE_ARRAY) {};
+    ~Array() {};
+
     virtual rapidjson::Value json(rapidjson::Document &father)
     {
         rapidjson::Value json(rapidjson::kObjectType);
         std::string *typeStr = new std::string;
         *typeStr = name();
+        str_vector.push_back(typeStr);
         json.AddMember("type", rapidjson::StringRef(typeStr->c_str()), father.GetAllocator());
 
         rapidjson::Value args(rapidjson::kArrayType);
@@ -198,9 +211,10 @@ public:
             args.PushBack(arg->json(father), father.GetAllocator());
         }
         json.AddMember("array", args, father.GetAllocator());
-       
+
         return json;
     }
+
 public:
     std::vector<std::shared_ptr<Expression>> m_array;
 };

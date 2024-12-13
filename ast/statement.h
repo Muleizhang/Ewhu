@@ -1,6 +1,7 @@
 #pragma once
 #include "node.h"
 #include "infix.h"
+#include <fstream>
 
 class StatementBlock : public Statement
 {
@@ -13,6 +14,7 @@ public:
         rapidjson::Value json(rapidjson::kObjectType);
         std::string *typeStr = new std::string;
         *typeStr = name();
+        str_vector.push_back(typeStr);
         json.AddMember("type", rapidjson::StringRef(typeStr->c_str()), father.GetAllocator());
         rapidjson::Value statements(rapidjson::kArrayType);
         for (auto &stat : m_statements)
@@ -37,6 +39,7 @@ public:
         rapidjson::Value json(rapidjson::kObjectType);
         std::string *typeStr = new std::string;
         *typeStr = name();
+        str_vector.push_back(typeStr);
         json.AddMember("type", rapidjson::StringRef(typeStr->c_str()), father.GetAllocator());
 
         rapidjson::Value args(rapidjson::kArrayType);
@@ -65,6 +68,7 @@ public:
         rapidjson::Value json(rapidjson::kObjectType);
         std::string *typeStr = new std::string;
         *typeStr = name();
+        str_vector.push_back(typeStr);
         json.AddMember("type", rapidjson::StringRef(typeStr->c_str()), father.GetAllocator());
         rapidjson::Value statements(rapidjson::kArrayType);
         for (auto &stat : m_statements)
@@ -84,6 +88,19 @@ public:
         }
         return json;
     }
+    void jsonOutput()
+    {
+        rapidjson::Document root;
+        root.SetObject();
+        root.AddMember("program", json(root), root.GetAllocator());
+        rapidjson::StringBuffer buffer;
+        rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+        root.Accept(writer);
+        std::ofstream ofs("ast.json");
+        ofs << buffer.GetString();
+        deallocate();
+        ofs.close();
+    }
 
 public:
     std::unordered_map<int, std::string> *identifier_map; // 标识符反映射
@@ -101,6 +118,7 @@ public:
         rapidjson::Value json(rapidjson::kObjectType);
         std::string *typeStr = new std::string;
         *typeStr = name();
+        str_vector.push_back(typeStr);
         json.AddMember("type", rapidjson::StringRef(typeStr->c_str()), father.GetAllocator());
         json.AddMember("expression", m_expression->json(father), father.GetAllocator());
         return json;
@@ -119,6 +137,7 @@ public:
         rapidjson::Value json(rapidjson::kObjectType);
         std::string *typeStr = new std::string;
         *typeStr = name();
+        str_vector.push_back(typeStr);
         json.AddMember("type", rapidjson::StringRef(typeStr->c_str()), father.GetAllocator());
         rapidjson::Value statements(rapidjson::kArrayType);
         json.AddMember("expression", m_expression->json(father), father.GetAllocator());
@@ -144,6 +163,7 @@ public:
         rapidjson::Value json(rapidjson::kObjectType);
         std::string *typeStr = new std::string;
         *typeStr = name();
+        str_vector.push_back(typeStr);
         json.AddMember("type", rapidjson::StringRef(typeStr->c_str()), father.GetAllocator());
         rapidjson::Value statements(rapidjson::kArrayType);
         json.AddMember("expression", m_expression->json(father), father.GetAllocator());
@@ -164,6 +184,7 @@ public:
         rapidjson::Value json(rapidjson::kObjectType);
         std::string *typeStr = new std::string;
         *typeStr = name();
+        str_vector.push_back(typeStr);
         json.AddMember("type", rapidjson::StringRef(typeStr->c_str()), father.GetAllocator());
         return json;
     }
@@ -179,6 +200,7 @@ public:
         rapidjson::Value json(rapidjson::kObjectType);
         std::string *typeStr = new std::string;
         *typeStr = name();
+        str_vector.push_back(typeStr);
         json.AddMember("type", rapidjson::StringRef(typeStr->c_str()), father.GetAllocator());
         return json;
     }
@@ -194,6 +216,7 @@ public:
         rapidjson::Value json(rapidjson::kObjectType);
         std::string *typeStr = new std::string;
         *typeStr = name();
+        str_vector.push_back(typeStr);
         json.AddMember("type", rapidjson::StringRef(typeStr->c_str()), father.GetAllocator());
         json.AddMember("return expression", m_expression_statement->json(father), father.GetAllocator());
         return json;

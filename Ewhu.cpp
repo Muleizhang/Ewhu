@@ -104,7 +104,7 @@ public:
         Parser parser;
         Evaluator evaluator;
 
-        int lineNum = 1;
+        int lineNum = 0;
         while (true)
         {
             std::cout << ++lineNum << " > ";
@@ -245,7 +245,8 @@ public:
             tokens.clear();
 
             auto &program = parser.m_program;
-            jsonOutput(program);
+            program->jsonOutput();
+            printGreen("AST output to ast.json");
 
             printGreen("evaluatingヾ(✿ﾟ▽ﾟ)ノ");
             static Scope global_scp;
@@ -253,20 +254,6 @@ public:
             if (evaluated)
                 std::cout << evaluated->str() << std::endl;
         }
-    }
-
-    static void jsonOutput(std::shared_ptr<Program> program)
-    {
-        rapidjson::Document root;
-        root.SetObject();
-        root.AddMember("program", program->json(root), root.GetAllocator());
-        rapidjson::StringBuffer buffer;
-        rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
-        root.Accept(writer);
-        std::ofstream ofs("ast.json");
-        ofs << buffer.GetString();
-        ofs.close();
-        printGreen("AST output to ast.json");
     }
 };
 

@@ -8,6 +8,8 @@
 #include "../rapidjson/include/rapidjson/writer.h"
 #include "../rapidjson/include/rapidjson/stringbuffer.h"
 
+#include <vector>
+
 class Identifier;
 class StatementBlock;
 class Function;
@@ -17,6 +19,7 @@ class Expression;
 
 class Node
 {
+
 public:
     enum Type
     {
@@ -48,6 +51,18 @@ public:
     Type type() { return m_type; }
     std::string name() const;
     virtual rapidjson::Value json(rapidjson::Document &father) = 0;
+
+    void deallocate()
+    {
+        for (auto &str : str_vector)
+        {
+            delete str;
+        }
+        str_vector.clear();
+    }
+
+public:
+    static std::vector<std::string *> str_vector;
 
 public:
     Type m_type;
