@@ -12,18 +12,17 @@ class Evaluator
 {
 private:
     Scope scope;
+    std::unordered_map<int, std::string> *identifier_map; // 标识符反映射
+    std::unordered_map<int, std::string> *function_map;   // 函数反映射
 
 public:
     Evaluator() {}
     ~Evaluator() {}
 
-    bool is_error(const std::shared_ptr<Object> &obj);          // 是否是错误
-    std::shared_ptr<Object> new_error(const char *format, ...); // 输出错误
+    std::shared_ptr<Object> eval(const std::shared_ptr<Node> &node, Scope &scp);                   // 求值
+    std::shared_ptr<Object> eval_program(const std::shared_ptr<Program> &node, Scope &global_scp); // 对根节点求值
 
-    std::shared_ptr<Object> eval(const std::shared_ptr<Node> &node, Scope &scp); // 求值
-    // std::shared_ptr<Object> eval_left(const std::shared_ptr<Node> &node, Scope &scp);                             // 对左值特殊处理
-    std::shared_ptr<Object> eval_program(const std::vector<std::shared_ptr<Node>> &node, Scope &global_scp); // 对根节点求值
-
+private:
     std::shared_ptr<Object> eval_statement_block(const std::vector<std::shared_ptr<Node>> &stmts, Scope &scp); // 对语句块求值
     std::shared_ptr<Object> eval_function_block(const std::shared_ptr<Node> function,
                                                 std::shared_ptr<Node> node, Scope &scp); // 对函数语句块求值

@@ -4,12 +4,6 @@ std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node, Scope
 {
     switch (node->type())
     {
-    case Node::NODE_PROGRAM:
-    {
-        if (node->m_statements.empty())
-            return nullptr;
-        return eval_program(node->m_statements, scp);
-    }
     case Node::NODE_STATEMENTBLOCK:
     {
         return eval_statement_block(node->m_statements, scp);
@@ -46,7 +40,12 @@ std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node, Scope
     {
         if (node->m_operator == TokenType::EQUAL)
         {
-            if (node->m_left->type() != Node::NODE_IDENTIFIER)
+            if (node->m_left->type() == Node::NODE_IDENTIFIER)
+            {
+                auto name = node->m_left->m_name;
+                return eval_assign_expression(name, eval(node->m_right, scp), scp);
+            }
+            else
             {
                 if (node->m_left->type() == Node::NODE_INFIX && node->m_left->m_operator == TokenType::LEFT_BRACKET)
                 {
@@ -72,18 +71,10 @@ std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node, Scope
                     else
                     {
                         auto ay = eval_assign_array(node->m_left->m_left, scp);
-                        if (ay->type() == Object::OBJECT_ERROR)
-                            return ay;
                         return ay->m_array[idex] = eval(node->m_right, scp);
                     }
                 }
-                return new_error("Evaluator::eval_left: not an identifier: ");
-            }
-
-            else
-            {
-                auto name = node->m_left->m_name;
-                return eval_assign_expression(name, eval(node->m_right, scp), scp);
+                throw std::runtime_error("Evaluator::eval_left: not an identifier: ");
             }
         }
         else
@@ -115,49 +106,31 @@ std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node, Scope
     }
     case Node::NODE_RETURNSTATEMENT:
     {
-        auto returnvalue = std::make_shared<Ob_Return>();
-        returnvalue->m_expression = eval(node->m_expression_statement, scp);
-        return returnvalue;
+        return std::make_shared<Ob_Return>(eval(node->m_expression_statement, scp));
     }
     case Node::NODE_ARRAY:
     {
         auto ary = std::make_shared<Ob_Array>();
         for (auto ele : std::dynamic_pointer_cast<Array>(node)->m_array)
         {
-            ary->Object::m_array.push_back(eval(ele, scp));
+            ary->m_array.push_back(eval(ele, scp));
         }
         return ary;
     }
 
     default:
-    {
-        return new_error(("Evaluator: node type error: " + Node::m_names[node->type()]).c_str());
-        break;
-    }
+        throw std::invalid_argument("Evaluator: node type error: " + Node::m_names[node->type()]);
     }
 }
 
-bool Evaluator::is_error(const std::shared_ptr<Object> &obj)
+std::shared_ptr<Object> Evaluator::eval_program(const std::shared_ptr<Program> &node, Scope &global_scp)
 {
-    return obj->type() == Object::OBJECT_ERROR;
-}
+    function_map = node->function_map;
+    identifier_map = node->identifier_map;
 
-std::shared_ptr<Object> Evaluator::new_error(const char *format, ...)
-{
-    char buf[114514] = {0};
-    va_list arg_ptr;
-    va_start(arg_ptr, format);
-    vsnprintf(buf, sizeof(buf), format, arg_ptr);
-    va_end(arg_ptr);
-
-    auto obj = std::make_shared<Ob_Error>();
-    obj->m_messages = buf;
-    return obj;
-}
-
-std::shared_ptr<Object> Evaluator::eval_program(const std::vector<std::shared_ptr<Node>> &stmts, Scope &global_scp)
-{
-    std::shared_ptr<Object> result = eval(*(--stmts.end()), global_scp);
+    if (node->m_statements.empty())
+        throw std::runtime_error("Evaluator::eval: empty program");
+    std::shared_ptr<Object> result = eval(*(--node->m_statements.end()), global_scp);
     // for (auto &stat : stmts)
     // {
     //     result = eval(stat);
@@ -168,6 +141,7 @@ std::shared_ptr<Object> Evaluator::eval_program(const std::vector<std::shared_pt
     // }
     return result;
 }
+
 std::shared_ptr<Object> Evaluator::eval_assign_array(const std::shared_ptr<Node> node, Scope &scp)
 {
     if (node->type() == Node::NODE_IDENTIFIER)
@@ -188,7 +162,7 @@ std::shared_ptr<Object> Evaluator::eval_assign_array(const std::shared_ptr<Node>
                 return it->second;
             }
         }
-        return new_error("Evaluator::eval_assign_array: identifier %s not found", node->m_name);
+        throw std::runtime_error("Evaluator::eval_assign_arraaay: identifier not found");
     }
     if (node->type() == Node::NODE_INFIX && node->m_operator == TokenType::LEFT_BRACKET)
     {
@@ -211,7 +185,8 @@ std::shared_ptr<Object> Evaluator::eval_assign_array(const std::shared_ptr<Node>
                     return it->second->m_array[idex];
                 }
             }
-            return new_error("Evaluator::eval_assign_array: identifier %s not found", node->m_left->m_name);
+            // node->m_left->m_name
+            throw std::runtime_error("Evaluator::eval_assign_array: identifier  not found");
         }
         else
         {
@@ -221,6 +196,5 @@ std::shared_ptr<Object> Evaluator::eval_assign_array(const std::shared_ptr<Node>
             return array->m_array[idex];
         }
     }
-    else
-        return new_error("Evaluator: type error");
+    throw std::runtime_error("Evaluator::eval_assign_array: type error");
 }

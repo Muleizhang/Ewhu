@@ -70,18 +70,17 @@ std::shared_ptr<Object> Evaluator::eval_function(const std::shared_ptr<Node> &no
             {
                 return std::make_shared<Ob_Integer>(obj->m_array.size());
             }
-            return new_error("Evaluator:eval_function: function len arguments not match");
+            throw std::invalid_argument("Evaluator:eval_function: function len arguments not match");
         }
-        if (node->m_name == "input")
+        if (node->m_name == Parser::hash("input"))
         {
             return eval_input(node, scp);
         }
-
-        if (node->m_name == "__ast__")
+        if (node->m_name == Parser::hash("__ast__"))
         {
             // return eval_ast();
         }
-        return new_error("Evaluator::eval_function: function %s not found", node->m_name.c_str());
+        throw std::runtime_error("Evaluator::eval_function: function '" + function_map->find(node->m_name)->second + "' not found");
     }
     return eval_function_block(it->second, node, scp);
 }
@@ -142,7 +141,7 @@ std::shared_ptr<Object> Evaluator::eval_prefix(const TokenType &op, const std::s
     default:
         break;
     }
-    return new_error("Evaluator: unknown operator: %s %s", "operator", right->name());
+    throw std::runtime_error("Evaluator::eval_prefix unknown operator: '" + right->name() + "'");
 }
 
 std::shared_ptr<Object> Evaluator::eval_integer_prefix_expression(const TokenType &op, const std::shared_ptr<Object> &right)
@@ -160,43 +159,29 @@ std::shared_ptr<Object> Evaluator::eval_integer_prefix_expression(const TokenTyp
     {
         return std::make_shared<Ob_Integer>(++(r->m_int));
     }
-    else
-    {
-        return new_error("Evaluator::eval_integer_prefix_expression unknown operator: %s %s", TokenTypeToString[op], right->name());
-    }
+    throw std::runtime_error("Evaluator::eval_integer_prefix_expression unknown operation: " + TokenTypeToString[op] + " " + right->name());
 }
 
 std::shared_ptr<Object> Evaluator::eval_fraction_prefix_expression(const TokenType &op, const std::shared_ptr<Object> &right)
 {
-    auto r = std::dynamic_pointer_cast<Ob_Fraction>(right);
     if (op == TokenType::PLUS)
     {
-        std::shared_ptr<Ob_Fraction> s(new Ob_Fraction(r->num, r->den));
-        return s;
+        return std::make_shared<Ob_Fraction>(right->num, right->den);
     }
     else if (op == TokenType::MINUS)
     {
-        std::shared_ptr<Ob_Fraction> s(new Ob_Fraction(-r->num, r->den));
-        return s;
+        return std::make_shared<Ob_Fraction>(-right->num, right->den);
     }
-    else
-    {
-        return new_error("Evaluator: unknown operator: %s %s", TokenTypeToString[op], right->name());
-    }
+    throw std::runtime_error("Evaluator::eval_fraction_prefix_expression: unknown operation: " + TokenTypeToString[op] + " " + right->name());
 }
 
 std::shared_ptr<Object> Evaluator::eval_boolean_prefix_expression(const TokenType &op, const std::shared_ptr<Object> &right)
 {
-    auto r = std::dynamic_pointer_cast<Ob_Boolean>(right);
     if (op == TokenType::BANG || op == TokenType::MINUS)
     {
-        std::shared_ptr<Ob_Boolean> s(new Ob_Boolean(!r->m_int));
-        return s;
+        return std::make_shared<Ob_Boolean>(!right->m_int);
     }
-    else
-    {
-        return new_error("Evaluator: unknown operator: %s %s", TokenTypeToString[op], right->name());
-    }
+    throw std::runtime_error("Evaluator::eval_boolean_prefix_expression: unknown operation: " + TokenTypeToString[op] + " " + right->name());
 }
 /*
 std::shared_ptr<Object> Evaluator::eval_trignometry_prefix_expression(const TokenType &op, const std::shared_ptr<Object> &right)
@@ -243,7 +228,7 @@ std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, std::shared_pt
     if (op == TokenType::LEFT_BRACKET)
     {
         if (left->type() != Object::OBJECT_ARRAY)
-            return new_error("Evaluator: can not convert %s to Array", left->name());
+            throw std::runtime_error("Evaluator: can not convert '" + left->name() + "' to Array");
         return eval_index(left, right, scp);
     }
     // int(bool) op int(bool)
@@ -285,8 +270,8 @@ std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, std::shared_pt
         case TokenType::BANG_EQUAL:
             return std::make_shared<Ob_Boolean>(l != r);
         default:
-            return new_error("Evaluator::eval_infix unknown operation: %s %s %s", left->name(),
-                             TokenTypeToString[op], right->name());
+            throw std::runtime_error("Evaluator::eval_infix unknown operation: " + left->name() +
+                                     TokenTypeToString[op] + right->name());
         }
     }
     // string op int
@@ -305,10 +290,10 @@ std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, std::shared_pt
             if (r < l.length())
                 return std::make_shared<Ob_String>(l[r]);
             else
-                return new_error("Evaluator::eval_infix: index %d out of length %d", r, l.length());
+                throw std::runtime_error("Evaluator::eval_infix: index " + left->str() + " out of length " + std::to_string(l.length()));
         default:
-            return new_error("Evaluator::eval_infix unknown operation: %s %s %s", left->name(),
-                             TokenTypeToString[op], right->name());
+            throw std::runtime_error("Evaluator::eval_infix unknown operation: " + left->name() +
+                                     TokenTypeToString[op] + right->name());
         }
     }
     // array op array
@@ -322,8 +307,8 @@ std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, std::shared_pt
         case TokenType::EQUAL_EQUAL:
             return std::make_shared<Ob_Boolean>(left->m_array == right->m_array);
         default:
-            return new_error("Evaluator::eval_infix unknown operation: %s %s %s", left->name(),
-                             TokenTypeToString[op], right->name());
+            throw std::runtime_error("Evaluator::eval_infix unknown operation: " + left->name() +
+                                     TokenTypeToString[op] + right->name());
         }
     }
 
@@ -332,8 +317,8 @@ std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, std::shared_pt
     if (right->type() == Object::OBJECT_ERROR)
         return right;
 
-    return new_error("Evaluator::eval_infix unknown operation: %s %s %s", left->name(),
-                     TokenTypeToString[op], right->name());
+    throw std::runtime_error("Evaluator::eval_infix unknown operation: " + left->name() +
+                             TokenTypeToString[op] + right->name());
 }
 
 std::shared_ptr<Object> Evaluator::eval_integer_infix_expression(const TokenType &op, const std::shared_ptr<Object> &left,
@@ -356,7 +341,7 @@ std::shared_ptr<Object> Evaluator::eval_integer_infix_expression(const TokenType
         return left;
     case TokenType::SLASH:
         if (r == 0)
-            return new_error("ZeroDivisionError: division by zero");
+            throw std::runtime_error("ZeroDivisionError: division by zero");
         return std::make_shared<Ob_Fraction>(l, r);
     case TokenType::SLASH_SLASH:
         left->m_int = l / r;
@@ -418,7 +403,7 @@ std::shared_ptr<Object> Evaluator::eval_integer_infix_expression(const TokenType
         left->m_type = Object::OBJECT_BOOLEAN;
         return left;
     default:
-        return new_error("Evaluator::eval_integer_infix_expression unknown operation: %s %s %s", left->name(), TokenTypeToString[op], right->name());
+        throw std::runtime_error("Evaluator::eval_integer_infix_expression unknown operation: " + left->name() + TokenTypeToString[op] + right->name());
     }
 }
 
@@ -452,7 +437,7 @@ std::shared_ptr<Object> Evaluator::eval_fraction_infix_expression(const TokenTyp
     case TokenType::GREATER_EQUAL:
         return std::make_shared<Ob_Boolean>(l->greaterEqual(r));
     default:
-        return new_error("Evaluator::eval_fraction_infix_expression unknown operation: %s %s %s", left->name(), TokenTypeToString[op], right->name());
+        throw std::runtime_error("Evaluator::eval_fraction_infix_expression unknown operation: " + left->name() + TokenTypeToString[op] + right->name());
     }
 }
 
@@ -460,9 +445,7 @@ std::shared_ptr<Object> Evaluator::eval_index(std::shared_ptr<Object> &name,
                                               const std::shared_ptr<Object> &index, Scope &scp)
 {
     const int idx = index->m_int;
-    if (idx < 0)
-        return new_error("Evaluator::eval_index: index of %s can not be negative", name->name());
-    if (idx >= std::dynamic_pointer_cast<Ob_Array>(name)->m_array.size())
-        return new_error("Evaluator::eval_index: index of %s out of range", name->name());
+    if (idx < 0 || idx >= std::dynamic_pointer_cast<Ob_Array>(name)->m_array.size())
+        throw std::runtime_error("Evaluator::eval_index: index of " + std::to_string(idx) + " out of range");
     return std::dynamic_pointer_cast<Ob_Array>(name)->m_array[idx];
 }

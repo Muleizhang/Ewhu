@@ -234,8 +234,9 @@ void Lexer::scanToken(char inpt)
             tokens.push_back(tokenNumber(inpt));
             break;
         default:
-            std::cerr << "\033[31m" << "Error: unknown charactor: " << inpt << "\033[0m" << std::endl;
-            // tokens.push_back(Token(TokenType::ERR, std::monostate(), line));
+            // 如果使用↓，可以欣赏内存越界的美丽
+            // throw std::runtime_error("Error: unknown charactor: " + inpt);
+            throw std::runtime_error("Error: unknown charactor: " + std::string(1, inpt));
         }
     }
 }

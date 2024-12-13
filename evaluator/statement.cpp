@@ -3,32 +3,29 @@
 std::shared_ptr<Object> Evaluator::eval_statement_block(const std::vector<std::shared_ptr<Node>> &stmts, Scope &scp)
 {
     std::shared_ptr<Object> result = nullptr;
-
-    Scope temp_scope;
-    temp_scope.father = &scp;
+    Scope temp_scope(&scp);
     for (auto &stat : stmts)
     {
         result = eval(stat, temp_scope);
         if (result)
         {
             if (result->type() == Object::OBJECT_BREAK || result->type() == Object::OBJECT_CONTINUE ||
-                result->type() == Object::OBJECT_RETURN || is_error(result))
+                result->type() == Object::OBJECT_RETURN)
             {
                 return result;
             }
         }
     }
-
     return result;
 }
 
 std::shared_ptr<Object> Evaluator::eval_function_block(const std::shared_ptr<Node> function,
                                                        std::shared_ptr<Node> node, Scope &scp)
 {
-    Scope temp_scp(scp);
+    Scope temp_scp(&scp);
     if (function->m_initial_list.size() != node->m_initial_list.size())
     {
-        return new_error("Evaluator::eval_function: function %d arguments not match", node->m_name);
+        throw std::runtime_error("Evaluator::eval_function: function arguments not match");
     }
 
     for (int i = 0; i < function->m_initial_list.size(); i++)
@@ -46,7 +43,7 @@ std::shared_ptr<Object> Evaluator::eval_function_block(const std::shared_ptr<Nod
             {
                 return nullptr;
             }
-            if (result->type() == Object::OBJECT_RETURN || is_error(result))
+            if (result->type() == Object::OBJECT_RETURN)
             {
                 return std::dynamic_pointer_cast<Ob_Return>(result)->m_expression;
             }
@@ -93,7 +90,7 @@ std::shared_ptr<Object> Evaluator::eval_while_statement(const std::shared_ptr<No
             {
                 continue;
             }
-            if (result->type() == Object::OBJECT_RETURN || is_error(result))
+            if (result->type() == Object::OBJECT_RETURN)
             {
                 return result;
             }
@@ -106,15 +103,13 @@ std::shared_ptr<Object> Evaluator::eval_while_statement(const std::shared_ptr<No
 
 std::shared_ptr<Object> Evaluator::eval_return_statement(const std::shared_ptr<Node> &node, Scope &scp)
 {
-    std::shared_ptr<Ob_Return> e(new Ob_Return());
-    e->m_expression = eval(std::dynamic_pointer_cast<ReturnStatement>(node)->m_expression_statement, scp);
-    return e;
+    return std::make_shared<Ob_Return>(eval(std::dynamic_pointer_cast<ReturnStatement>(node)->m_expression_statement, scp));
 }
 
 std::shared_ptr<Object> Evaluator::eval_append(const std::shared_ptr<Node> &node, Scope &scp)
 {
     if (node->m_initial_list.size() != 2)
-        return new_error("Evaluator::eval_function: function append arguments not match");
+        throw std::invalid_argument("Evaluator:eval_function: function append arguments not match");
     else
     {
         auto ele = eval(node->m_initial_list[1], scp);
@@ -127,12 +122,12 @@ std::shared_ptr<Object> Evaluator::eval_append(const std::shared_ptr<Node> &node
 std::shared_ptr<Object> Evaluator::eval_pop(const std::shared_ptr<Node> &node, Scope &scp)
 {
     if (node->m_initial_list.size() != 1)
-        return new_error("Evaluator:eval_function: function append arguments not match");
+        throw std::invalid_argument("Evaluator:eval_function: function pop arguments not match");
     else
     {
         auto array = eval_assign_array(node->m_initial_list[0], scp);
         if (array->m_array.empty())
-            return new_error("Evaluator:eval_pop: pop from empty array");
+            throw std::runtime_error("Evaluator:eval_pop: pop from empty array");
         auto top = array->m_array.back();
         array->m_array.pop_back();
         return top;
@@ -142,7 +137,7 @@ std::shared_ptr<Object> Evaluator::eval_pop(const std::shared_ptr<Node> &node, S
 std::shared_ptr<Object> Evaluator::eval_int(const std::shared_ptr<Node> &node, Scope &scp)
 {
     if (node->m_initial_list.size() != 1)
-        return new_error("Evaluator:eval_function: function append arguments not match");
+        throw std::invalid_argument("Evaluator:eval_function: function append arguments not match");
     auto obj = eval(node->m_initial_list[0], scp);
     switch (obj->type())
     {
@@ -155,22 +150,10 @@ std::shared_ptr<Object> Evaluator::eval_int(const std::shared_ptr<Node> &node, S
     case Object::OBJECT_STRING:
     {
         std::shared_ptr<Ob_Integer> newint;
-        try
-        {
-            newint = std::make_shared<Ob_Integer>(std::stoll(obj->m_string));
-        }
-        catch (const std::invalid_argument &e)
-        {
-            return new_error("Evaluator:eval_function: invalid literal for int(): %s", obj->m_string.c_str());
-        }
-        catch (const std::out_of_range &e)
-        {
-            return new_error("Evaluator:eval_function: value out of range for int(): %s", obj->m_string.c_str());
-        }
-        return newint;
+        return std::make_shared<Ob_Integer>(std::stoll(obj->m_string));
     }
     default:
-        return new_error("Evaluator:eval_function: can not convert %s to Integer", obj->name().c_str());
+        throw std::runtime_error("Evaluator:eval_function: can not convert " + obj->name() + " to Integer");
     }
 }
 /*
@@ -205,7 +188,7 @@ void read(char *inpt)
 std::shared_ptr<Object> Evaluator::eval_input(const std::shared_ptr<Node> &node, Scope &scp)
 {
     if (node->m_initial_list.size() != 1)
-        return new_error("Evaluator:eval_function: function append arguments not match");
+        throw std::invalid_argument("Evaluator:eval_function: function append arguments not match");
     std::shared_ptr<Object> otpt = eval(node->m_initial_list[0], scp);
     std::cout << (otpt->m_string);
     char inpt[1024];
