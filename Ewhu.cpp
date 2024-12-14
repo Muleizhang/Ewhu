@@ -88,6 +88,7 @@ public:
                 }
                 catch (const std::exception &e)
                 {
+                    tokens.clear();
                     printError(lineNum, ": ", line);
                     printError(e.what());
                 }
@@ -121,6 +122,7 @@ public:
                 }
                 catch (const std::exception &e)
                 {
+                    tokens.clear();
                     printError(lineNum, ": ", line);
                     printError(e.what());
                 }

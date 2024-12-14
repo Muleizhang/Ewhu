@@ -257,7 +257,14 @@ void Lexer::addToken(TokenType type)
 
 inline char Lexer::nextChar()
 {
-    return source[current++];
+
+    unsigned char c = static_cast<unsigned char>(source[current++]);
+    if (c >= 0x80)
+    {
+        throw std::invalid_argument("Not Ascii Error: 我们也喜欢中文但是……╥)o");
+    }
+
+    return c;
 }
 
 inline bool Lexer::isEmpty(char inpt)

@@ -155,25 +155,21 @@ bool Parser::peek_token_is(TokenType ty)
     return m_peek.type == ty;
 }
 
-bool Parser::expect_peek_token(TokenType ty)
+void Parser::expect_peek_token(TokenType ty)
 {
     if (peek_token_is(ty))
     {
         next_token();
-        return true;
     }
     else
     {
         peek_error(ty);
-        return false;
     }
 }
 
 void Parser::peek_error(TokenType type)
 {
-    std::ostringstream oss;
-    oss << "Parser: expected next token to be " << TokenTypeToString[type] << ", got " << TokenTypeToString[m_peek.type] << " instead";
-    m_errors.push_back(oss.str());
+    throw std::invalid_argument("Parser: expected next token to be " + TokenTypeToString[type] + ", got " + TokenTypeToString[m_peek.type] + " instead");
 }
 
 int Parser::curr_token_precedence()
@@ -196,9 +192,7 @@ int Parser::peek_token_precedence()
 
 void Parser::no_prefix_parse_fn_error(TokenType type)
 {
-    std::ostringstream oss;
-    oss << "Parser: no prefix function for " << TokenTypeToString[type] << " found";
-    m_errors.push_back(oss.str());
+    throw std::invalid_argument("Parser: no prefix function for " + TokenTypeToString[type] + " found");
 }
 
 std::list<std::string> &Parser::errors()

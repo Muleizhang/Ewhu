@@ -4,10 +4,7 @@ std::shared_ptr<Expression> Parser::parse_group()
 {
     next_token();
     auto ele = parse_expression(LOWEST);
-    if (!expect_peek_token(TokenType::RIGHT_PAREN))
-    {
-        return nullptr;
-    }
+    expect_peek_token(TokenType::RIGHT_PAREN);
     return ele;
 }
 

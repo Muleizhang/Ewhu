@@ -86,7 +86,7 @@ std::shared_ptr<Statement> Parser::parse_if_statement()
     ele->m_expression = parse_expression(LOWEST);
     next_token();
     ele->m_true_statement = parse_statement();
-    //next_token();
+    // next_token();
     if (m_peek.type == TokenType::ELSE)
     {
         next_token();
@@ -129,8 +129,7 @@ std::shared_ptr<Statement> Parser::parse_function_declaration()
             auto arg = parse_identifier();
             if (arg->m_token.type != TokenType::IDENTIFIER)
             {
-                m_errors.push_back("Parser::Invalid Function Argument List");
-                return nullptr;
+                throw std::invalid_argument("Parser::Invalid Function Argument List");
             }
             fn->m_initial_list.push_back(std::dynamic_pointer_cast<Identifier>(arg));
             if (m_peek.type == TokenType::COMMA)
@@ -141,8 +140,7 @@ std::shared_ptr<Statement> Parser::parse_function_declaration()
     }
     else
     {
-        m_errors.push_back("Parser::Invalid Function Declaration");
-        return nullptr;
+        throw std::invalid_argument("Parser::Invalid Function Declaration");
     }
     std::shared_ptr<StatementBlock> stmt = std::dynamic_pointer_cast<StatementBlock>(parse_statement_block());
     if (stmt)

@@ -61,7 +61,7 @@ private:
     void next_token();                    // 读取下一个token
     bool curr_token_is(TokenType ty);     // 判断当前token是否是ty类型
     bool peek_token_is(TokenType ty);     // 判断下一个token是否是ty类型
-    bool expect_peek_token(TokenType ty); // 判断下一个token是否是期望类型&读取下一位token
+    void expect_peek_token(TokenType ty); // 判断下一个token是否是期望类型&读取下一位token
     void peek_error(TokenType type);      // 下一个token错误
 
     int curr_token_precedence(); // 返回当前token的优先级

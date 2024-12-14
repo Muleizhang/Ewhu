@@ -141,7 +141,7 @@ std::shared_ptr<Object> Evaluator::eval_prefix(const TokenType &op, const std::s
     default:
         break;
     }
-    throw std::runtime_error("Evaluator::eval_prefix unknown operator: '" + right->name() + "'");
+    throw std::runtime_error("Evaluator::eval_prefix unknown type for prefix: " + right->name());
 }
 
 std::shared_ptr<Object> Evaluator::eval_integer_prefix_expression(const TokenType &op, const std::shared_ptr<Object> &right)
@@ -270,8 +270,8 @@ std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, std::shared_pt
         case TokenType::BANG_EQUAL:
             return std::make_shared<Ob_Boolean>(l != r);
         default:
-            throw std::runtime_error("Evaluator::eval_infix unknown operation: " + left->name() +
-                                     TokenTypeToString[op] + right->name());
+            throw std::runtime_error("Evaluator::eval_infix unknown operation: " + left->name() + " " +
+                                     TokenTypeToString[op] + " " + right->name());
         }
     }
     // string op int

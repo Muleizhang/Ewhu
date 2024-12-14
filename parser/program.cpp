@@ -23,4 +23,5 @@ void Parser::parse_program(std::vector<Token> &tokens)
     }
     m_program->identifier_map = &identifier_map;
     m_program->function_map = &function_map;
+    m_errors.clear();
 }
