@@ -45,37 +45,13 @@ std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node, Scope
                 auto name = node->m_left->m_name;
                 return eval_assign_expression(name, eval(node->m_right, scp), scp);
             }
-            else
+            if (node->m_left->m_operator == TokenType::LEFT_BRACKET)
             {
-                if (node->m_left->type() == Node::NODE_INFIX && node->m_left->m_operator == TokenType::LEFT_BRACKET)
-                {
-                    int idex = eval(node->m_left->m_right, scp)->m_int;
-                    if (node->m_left->m_left->type() == Node::NODE_IDENTIFIER)
-                    {
-                        auto it = scp.m_var.find(node->m_left->m_left->m_name);
-                        if (it != scp.m_var.end())
-                            return (it->second)->m_array[idex] = eval(node->m_right, scp);
-
-                        auto current_scope = &scp;
-                        while (current_scope->father != nullptr)
-                        {
-                            current_scope = current_scope->father;
-                            auto it = current_scope->m_var.find(node->m_left->m_left->m_name);
-                            if (it != current_scope->m_var.end())
-                            {
-                                auto a = eval(node->m_right, scp);
-                                return (it->second)->m_array[idex] = a;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        auto ay = eval_array(node->m_left->m_left, scp);
-                        return ay->m_array[idex] = eval(node->m_right, scp);
-                    }
-                }
-                throw std::runtime_error("Evaluator::eval_left: not an identifier: ");
+                int idex = eval(node->m_left->m_right, scp)->m_int;
+                auto ay = eval_array(node->m_left->m_left, scp);
+                return ay->m_array[idex] = eval(node->m_right, scp);
             }
+            throw std::runtime_error("Evaluator::eval_left: not an identifier: ");
         }
         else
         {
