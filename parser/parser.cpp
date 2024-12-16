@@ -110,16 +110,6 @@ int Parser::hash(const std::string &str)
     return hash;
 }
 
-constexpr int Parser::hash_chars(const char *str)
-{
-    int hash = 0;
-    while (*str)
-    {
-        hash = hash * 31 + *str++;
-    }
-    return hash;
-}
-
 void Parser::next_token() // 读取下一个token
 {
     m_curr = m_peek;

@@ -7,6 +7,7 @@
 #include <stdarg.h>
 #include <stdexcept>
 #include <vector>
+
 class Object
 {
 public:

@@ -32,7 +32,7 @@ public:
     Parser(std::vector<Token>::iterator ptokens); // 构造函数，接受token列表的一个迭代器
     ~Parser();
     static int hash(const std::string &str);
-    static constexpr int hash_chars(const char *str);
+    constexpr static int hash_chars(const char *str);
 
     void parse_program(std::vector<Token> &tokens); // 解析程序
 
@@ -111,3 +111,13 @@ private:
     static std::unordered_map<TokenType, suffix_parse_fn> m_suffix_parse_fns;
     static std::unordered_map<TokenType, control_flow_fn> m_control_flow_fns;
 };
+
+constexpr int Parser::hash_chars(const char *str)
+{
+    int hash = 0;
+    while (*str)
+    {
+        hash = hash * 31 + *str++;
+    }
+    return hash;
+}

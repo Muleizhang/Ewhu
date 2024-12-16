@@ -18,6 +18,11 @@ std::shared_ptr<Object> Evaluator::eval_identifier(const std::shared_ptr<Node> &
             return it->second->clone();
         }
     }
+    auto itt = scp.m_func.find(node->m_name);
+    if (itt != scp.m_func.end())
+    {
+        return std::make_shared<Ob_Funtion>(itt->second);
+    }
     throw std::runtime_error("Evaluator::eval_identifier: identifier '" + identifier_map->find(node->m_name)->second + "' not found");
 }
 

@@ -8,6 +8,8 @@
 #include "../ast/infix.h"
 #include "../object/object.h"
 
+#include "../object/object_function.h"
+
 class Evaluator
 {
 private:

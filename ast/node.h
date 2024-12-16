@@ -7,7 +7,7 @@
 #include "../rapidjson/include/rapidjson/document.h"
 #include "../rapidjson/include/rapidjson/writer.h"
 #include "../rapidjson/include/rapidjson/stringbuffer.h"
-
+#include "../object/object.h"
 #include <vector>
 
 class Identifier;
@@ -96,6 +96,8 @@ public:
     long long m_value = 0;
     bool m_bool = false;
     std::string m_string = "";
+
+    std::shared_ptr<Ob_Integer> m_int;
 
     TokenType m_operator;                // 运算符
     std::shared_ptr<Expression> m_left;  // 左表达式
