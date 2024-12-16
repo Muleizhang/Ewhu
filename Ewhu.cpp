@@ -232,11 +232,6 @@ public:
     {
         lexer.scanTokens(source);
         std::vector<Token> new_tokens = lexer.scanTokens(source);
-        for (auto &token : new_tokens)
-        {
-            std::cout << token.toString() << " ";
-        }
-        std::cout << std::endl;
         tokens.insert(tokens.end(), new_tokens.begin(), new_tokens.end());
 
         if ((lexer.braceStatus == 0) &&

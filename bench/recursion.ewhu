@@ -1,0 +1,2 @@
+func f(a){print(a);return f(a+1);}
+f(1);
