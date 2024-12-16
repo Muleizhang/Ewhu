@@ -70,7 +70,7 @@ std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node, Scope
                     }
                     else
                     {
-                        auto ay = eval_assign_array(node->m_left->m_left, scp);
+                        auto ay = eval_array(node->m_left->m_left, scp);
                         return ay->m_array[idex] = eval(node->m_right, scp);
                     }
                 }
@@ -142,7 +142,7 @@ std::shared_ptr<Object> Evaluator::eval_program(const std::shared_ptr<Program> &
     return result;
 }
 
-std::shared_ptr<Object> Evaluator::eval_assign_array(const std::shared_ptr<Node> node, Scope &scp)
+std::shared_ptr<Object> Evaluator::eval_array(const std::shared_ptr<Node> node, Scope &scp)
 {
     if (node->type() == Node::NODE_IDENTIFIER)
     {
@@ -190,7 +190,7 @@ std::shared_ptr<Object> Evaluator::eval_assign_array(const std::shared_ptr<Node>
         }
         else
         {
-            auto array = eval_assign_array(node->m_left, scp);
+            auto array = eval_array(node->m_left, scp);
             if (array->type() == Object::OBJECT_ERROR)
                 return array;
             return array->m_array[idex];
