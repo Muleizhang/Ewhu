@@ -151,7 +151,7 @@ std::shared_ptr<Object> Evaluator::eval_int(const std::shared_ptr<Node> &node, S
     case Object::OBJECT_INTEGER:
         return obj;
     case Object::OBJECT_FRACTION:
-        return std::make_shared<Ob_Integer>(obj->m_integerPart);
+        return std::make_shared<Ob_Integer>(obj->m_int);
     case Object::OBJECT_BOOLEAN:
         return std::make_shared<Ob_Integer>(obj->m_int);
     case Object::OBJECT_STRING:

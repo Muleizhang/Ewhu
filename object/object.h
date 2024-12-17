@@ -7,6 +7,7 @@
 #include <stdarg.h>
 #include <stdexcept>
 #include <vector>
+
 class Object
 {
 public:
@@ -34,57 +35,31 @@ public:
     virtual ~Object() {};
 
     virtual std::shared_ptr<Object> clone() = 0;
+    virtual std::string str() const = 0;
 
     Type type() const { return m_type; }
     std::string name() const;
-    virtual std::string str() const = 0;
-    // virtual std::shared_ptr<Object> operator+() const = 0;
-
-    static std::shared_ptr<Object> new_error(const char *format, ...);
 
 public:
-    Type m_type;
     static std::unordered_map<Type, std::string> m_names;
 
+    Type m_type;
     // 字符串
     std::string m_string;
-    // 错误信息
-    std::string m_messages;
     // 变量名
     std::string m_name;
     // 指向变量的指针
     void *m_value;
     // 变量类型
     Object::Type m_value_type;
-    // 整数 or 布尔值
+    // 整数 or 布尔值 or 分数整数部分
     long long m_int;
-    // 分数整数部分
-    long long m_integerPart;
     // 分数分子
     long long num;
     // 分数分母
     long long den;
+    // 列表
     std::vector<std::shared_ptr<Object>> m_array;
-};
-
-class Ob_Error : public Object
-{
-public:
-    Ob_Error() : Object(Object::OBJECT_ERROR) {}
-    Ob_Error(const std::string &message) : Object(Object::OBJECT_ERROR) {}
-    Ob_Error(const Ob_Error &obj) : Object(Object::OBJECT_ERROR) { m_messages = obj.m_messages; }
-    ~Ob_Error() {}
-
-    virtual std::shared_ptr<Object> clone()
-    {
-        return std::make_shared<Ob_Error>(*this);
-    }
-    virtual std::string str() const
-    {
-        return m_messages;
-    }
-
-public:
 };
 
 class Ob_Identifier : public Object
@@ -159,13 +134,13 @@ class Ob_Fraction : public Object
 public:
     Ob_Fraction() : Object(Object::OBJECT_FRACTION)
     {
-        m_integerPart = (0);
+        m_int = (0);
         num = (0);
         den = (1);
     }
     Ob_Fraction(long long numerator, long long denominator) : Object(Object::OBJECT_FRACTION)
     {
-        m_integerPart = (0);
+        m_int = (0);
         num = (numerator);
         den = (denominator);
 
@@ -173,7 +148,7 @@ public:
     }
     Ob_Fraction(const Ob_Fraction &fraction) : Object(Object::OBJECT_FRACTION)
     {
-        m_integerPart = (fraction.m_integerPart);
+        m_int = (fraction.m_int);
         num = (fraction.num);
         den = (fraction.den);
     }
