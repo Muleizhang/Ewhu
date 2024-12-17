@@ -30,7 +30,7 @@ std::shared_ptr<Object> Evaluator::eval(const std::shared_ptr<Node> &node, Scope
     }
     case Node::NODE_INTEGER:
     {
-        return node->m_int;
+        return std::make_shared<Ob_Integer>(node->m_value);
     }
     case Node::NODE_STRING:
     {

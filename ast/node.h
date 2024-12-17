@@ -97,8 +97,6 @@ public:
     bool m_bool = false;
     std::string m_string = "";
 
-    std::shared_ptr<Ob_Integer> m_int;
-
     TokenType m_operator;                // 运算符
     std::shared_ptr<Expression> m_left;  // 左表达式
     std::shared_ptr<Expression> m_right; // 右表达式
