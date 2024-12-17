@@ -8,7 +8,7 @@ while(j<=10)
     {
         isprime=1;
         b=2;
-        while(b*b<=i)
+        while(b**2<=i)
         {
             if(i%b==0)isprime=0;
             ++b;

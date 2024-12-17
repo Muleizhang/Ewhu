@@ -347,6 +347,9 @@ std::shared_ptr<Object> Evaluator::eval_integer_infix_expression(const TokenType
     case TokenType::SLASH_SLASH:
         left->m_int = l / r;
         return left;
+    case TokenType::STAR_STAR:
+        left->m_int = std::pow(l, r);
+        return left;
     case TokenType::PERCENT:
         left->m_int = l % r;
         return left;
@@ -423,6 +426,10 @@ std::shared_ptr<Object> Evaluator::eval_fraction_infix_expression(const TokenTyp
         return std::make_shared<Ob_Fraction>(Ob_Fraction::mul(l, r));
     case TokenType::SLASH:
         return std::make_shared<Ob_Fraction>(Ob_Fraction::div(l, r));
+    case TokenType::SLASH_SLASH:
+        return std::make_shared<Ob_Integer>(Ob_Fraction::div(l, r).m_int);
+    case TokenType::STAR_STAR:
+        return std::make_shared<Ob_Fraction>(Ob_Fraction::pow(l, r));
     case TokenType::PERCENT:
         return std::make_shared<Ob_Fraction>(Ob_Fraction::mod(l, r));
     case TokenType::EQUAL_EQUAL:

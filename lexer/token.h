@@ -28,6 +28,7 @@ enum TokenType
     SLASH_SLASH,   // //
     BACK_SLASH,    // '\'
     STAR,          // *
+    STAR_STAR,     // **
     HASH,          // #
     AT,            // @
 

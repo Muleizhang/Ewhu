@@ -134,23 +134,26 @@ class Ob_Fraction : public Object
 public:
     Ob_Fraction() : Object(Object::OBJECT_FRACTION)
     {
-        m_int = (0);
         num = (0);
         den = (1);
     }
     Ob_Fraction(long long numerator, long long denominator) : Object(Object::OBJECT_FRACTION)
     {
-        m_int = (0);
         num = (numerator);
         den = (denominator);
-
         simplify();
     }
     Ob_Fraction(const Ob_Fraction &fraction) : Object(Object::OBJECT_FRACTION)
     {
-        m_int = (fraction.m_int);
         num = (fraction.num);
         den = (fraction.den);
+        simplify();
+    }
+    Ob_Fraction(float value) : Object(Object::OBJECT_FRACTION)
+    {
+        num = (value * 1000000);
+        den = (1000000);
+        simplify();
     }
     ~Ob_Fraction() {}
 
@@ -176,7 +179,10 @@ public:
         }
     }
 
-    //***********************************************************写三角函数！！！！！！！！！！！！！！！！！！！ */
+    float toFloat() const
+    {
+        return (float)num / den;
+    }
 
     virtual std::string realStr() const
     {
@@ -200,27 +206,31 @@ public:
 
     static Ob_Fraction add(const std::shared_ptr<Ob_Fraction> &left, const std::shared_ptr<Ob_Fraction> &right)
     {
-        return simplify(Ob_Fraction(left->num * right->den + right->num * left->den,
-                                    left->den * right->den));
+        return Ob_Fraction(left->num * right->den + right->num * left->den,
+                           left->den * right->den);
     }
     static Ob_Fraction sub(const std::shared_ptr<Ob_Fraction> &left, const std::shared_ptr<Ob_Fraction> &right)
     {
-        return simplify(Ob_Fraction(left->num * right->den - right->num * left->den,
-                                    left->den * right->den));
+        return Ob_Fraction(left->num * right->den - right->num * left->den,
+                           left->den * right->den);
     }
     static Ob_Fraction mul(const std::shared_ptr<Ob_Fraction> &left, const std::shared_ptr<Ob_Fraction> &right)
     {
-        return simplify(Ob_Fraction(left->num * right->num, left->den * right->den));
+        return Ob_Fraction(left->num * right->num, left->den * right->den);
     }
     static Ob_Fraction div(const std::shared_ptr<Ob_Fraction> &left, const std::shared_ptr<Ob_Fraction> &right)
     {
-        return simplify(Ob_Fraction(left->num * right->den, left->den * right->num));
+        return Ob_Fraction(left->num * right->den, left->den * right->num);
+    }
+    static Ob_Fraction pow(const std::shared_ptr<Ob_Fraction> &left, const std::shared_ptr<Ob_Fraction> &right)
+    {
+        return Ob_Fraction(std::pow(left->toFloat(), right->toFloat()));
     }
     static Ob_Fraction mod(const std::shared_ptr<Ob_Fraction> &left, const std::shared_ptr<Ob_Fraction> &right)
     {
         long long numerator = (left->num * right->den) % (left->den * right->num);
         long long denominator = left->den * right->den;
-        return simplify(Ob_Fraction(numerator, denominator));
+        return Ob_Fraction(numerator, denominator);
     }
     Ob_Boolean equal(const std::shared_ptr<Ob_Fraction> &right) const
     {

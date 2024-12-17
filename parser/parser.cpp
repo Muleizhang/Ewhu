@@ -29,6 +29,8 @@ std::map<TokenType, int> Parser::m_precedences =
         {TokenType::PERCENT, PRODUCT},
         {TokenType::SLASH_SLASH, PRODUCT},
 
+        {TokenType::STAR_STAR, POWER},
+
         {TokenType::SIN, TRIGNOMETRY},
         {TokenType::COS, TRIGNOMETRY},
         {TokenType::TAN, TRIGNOMETRY},
@@ -59,6 +61,7 @@ std::unordered_map<TokenType, Parser::infix_parse_fn> Parser::m_infix_parse_fns 
         {TokenType::PLUS, &Parser::parse_infix},
         {TokenType::MINUS, &Parser::parse_infix},
         {TokenType::STAR, &Parser::parse_infix},
+        {TokenType::STAR_STAR, &Parser::parse_infix},
         {TokenType::SLASH, &Parser::parse_infix},
         {TokenType::SLASH_SLASH, &Parser::parse_infix},
         {TokenType::PERCENT, &Parser::parse_infix},

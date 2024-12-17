@@ -144,7 +144,15 @@ void Lexer::scanToken(char inpt)
         addToken(BACK_SLASH);
         break;
     case '*':
-        addToken(STAR);
+        if (nextChar() == '*')
+        {
+            addToken(STAR_STAR);
+        }
+        else
+        {
+            current--;
+            addToken(STAR);
+        }
         break;
     case '#':
         addToken(HASH);
