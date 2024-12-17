@@ -36,34 +36,34 @@ std::shared_ptr<Object> Evaluator::eval_function(const std::shared_ptr<Node> &no
                 return eval_function_block(it->second, node, scp);
             }
         }
-        if (node->m_name == Parser::hash("print"))
+        if (node->m_name == Parser::prehash("print"))
         {
             std::cout << eval(node->m_initial_list[0], scp)->str() << std::endl;
             return nullptr;
         }
 
-        if (node->m_name == Parser::hash("eval"))
+        if (node->m_name == Parser::prehash("eval"))
         {
             return eval_eval(eval(node->m_initial_list[0], scp)->str(), scp);
         }
-        if (node->m_name == Parser::hash("scope"))
+        if (node->m_name == Parser::prehash("scope"))
         {
             scp.print();
             return nullptr;
         }
-        if (node->m_name == Parser::hash("append"))
+        if (node->m_name == Parser::prehash("append"))
         {
             return eval_append(node, scp);
         }
-        if (node->m_name == Parser::hash("pop"))
+        if (node->m_name == Parser::prehash("pop"))
         {
             return eval_pop(node, scp);
         }
-        if (node->m_name == Parser::hash("int"))
+        if (node->m_name == Parser::prehash("int"))
         {
             return eval_int(node, scp);
         }
-        if (node->m_name == Parser::hash("len"))
+        if (node->m_name == Parser::prehash("len"))
         {
             auto obj = eval(node->m_initial_list[0], scp);
             if (obj->type() == Object::OBJECT_ARRAY)
@@ -72,11 +72,11 @@ std::shared_ptr<Object> Evaluator::eval_function(const std::shared_ptr<Node> &no
             }
             throw std::invalid_argument("Evaluator:eval_function: function len arguments not match");
         }
-        if (node->m_name == Parser::hash("input"))
+        if (node->m_name == Parser::prehash("input"))
         {
             return eval_input(node, scp);
         }
-        if (node->m_name == Parser::hash("__ast__"))
+        if (node->m_name == Parser::prehash("__ast__"))
         {
             // return eval_ast();
         }
