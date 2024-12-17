@@ -24,16 +24,3 @@ std::string Object::name() const
     }
     return "UnknownType";
 }
-
-std::shared_ptr<Object> new_error(const char *format, ...)
-{
-    char buf[114514] = {0};
-    va_list arg_ptr;
-    va_start(arg_ptr, format);
-    vsnprintf(buf, sizeof(buf), format, arg_ptr);
-    va_end(arg_ptr);
-
-    std::shared_ptr<Ob_Error> obj(new Ob_Error());
-    obj->m_messages = buf;
-    return obj;
-}

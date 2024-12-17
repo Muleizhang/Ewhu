@@ -9,9 +9,9 @@
 class Scope
 {
 public:
-    Scope(std::unordered_map<int, std::shared_ptr<Object>> scp,
+    Scope(std::unordered_map<int, std::shared_ptr<Object>> var,
           std::unordered_map<int, std::shared_ptr<Node>> func)
-        : m_var(scp), m_func(func) {}
+        : m_var(var), m_func(func) {}
     Scope(Scope *father) : father(father) {}
 
     Scope() {}
@@ -23,17 +23,17 @@ public:
         }
         m_var.clear();
     };
-    void print()
+    void print(std::unordered_map<int, std::string> *var_map, std::unordered_map<int, std::string> *func_map)
     {
         std::cout << "Scope: " << std::endl;
         for (const auto &var : m_var)
         {
-            std::cout << "Variable: " << var.first << " = " << var.second->str() << std::endl;
+            std::cout << "Variable: " << var_map->find(var.first)->second << " = " << var.second->str() << std::endl;
         }
 
         for (const auto &func : m_func)
         {
-            std::cout << "Function: " << func.first << "(";
+            std::cout << "Function: " << func_map->find(func.first)->second << "(";
             for (int i = 0; i < func.second->m_initial_list.size() - 1; i++)
             {
                 std::cout << func.second->m_initial_list[i]->m_name << ", ";

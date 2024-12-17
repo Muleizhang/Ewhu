@@ -23,47 +23,26 @@ std::shared_ptr<Object> Evaluator::eval_eval(const std::string &line, Scope &scp
 
 std::shared_ptr<Object> Evaluator::eval_function(const std::shared_ptr<Node> &node, Scope &scp)
 {
-    auto it = scp.m_func.find(node->m_name);
+    auto name = node->m_name;
+    auto it = scp.m_func.find(name);
     if (it == scp.m_func.end())
     {
         auto current_scope = &scp;
         while (current_scope->father != nullptr)
         {
             current_scope = current_scope->father;
-            it = current_scope->m_func.find(node->m_name);
+            it = current_scope->m_func.find(name);
             if (it != current_scope->m_func.end())
             {
                 return eval_function_block(it->second, node, scp);
             }
         }
-        if (node->m_name == Parser::hash_chars("print"))
-        {
-            std::cout << eval(node->m_initial_list[0], scp)->str() << std::endl;
-            return nullptr;
-        }
 
-        if (node->m_name == Parser::hash_chars("eval"))
-        {
-            return eval_eval(eval(node->m_initial_list[0], scp)->str(), scp);
-        }
-        if (node->m_name == Parser::hash_chars("scope"))
-        {
-            scp.print();
-            return nullptr;
-        }
-        if (node->m_name == Parser::hash_chars("append"))
+        if (name == Parser::prehash("append"))
         {
             return eval_append(node, scp);
         }
-        if (node->m_name == Parser::hash_chars("pop"))
-        {
-            return eval_pop(node, scp);
-        }
-        if (node->m_name == Parser::hash_chars("int"))
-        {
-            return eval_int(node, scp);
-        }
-        if (node->m_name == Parser::hash_chars("len"))
+        if (name == Parser::prehash("len"))
         {
             auto obj = eval(node->m_initial_list[0], scp);
             if (obj->type() == Object::OBJECT_ARRAY)
@@ -72,15 +51,37 @@ std::shared_ptr<Object> Evaluator::eval_function(const std::shared_ptr<Node> &no
             }
             throw std::invalid_argument("Evaluator:eval_function: function len arguments not match");
         }
-        if (node->m_name == Parser::hash_chars("input"))
+        if (name == Parser::prehash("print"))
+        {
+            std::cout << eval(node->m_initial_list[0], scp)->str() << std::endl;
+            return nullptr;
+        }
+        if (name == Parser::prehash("eval"))
+        {
+            return eval_eval(eval(node->m_initial_list[0], scp)->str(), scp);
+        }
+        if (name == Parser::prehash("scope"))
+        {
+            scp.print(identifier_map, function_map);
+            return nullptr;
+        }
+        if (name == Parser::prehash("pop"))
+        {
+            return eval_pop(node, scp);
+        }
+        if (name == Parser::prehash("int"))
+        {
+            return eval_int(node, scp);
+        }
+        if (name == Parser::prehash("input"))
         {
             return eval_input(node, scp);
         }
-        if (node->m_name == Parser::hash_chars("__ast__"))
+        if (name == Parser::prehash("__ast__"))
         {
             // return eval_ast();
         }
-        throw std::runtime_error("Evaluator::eval_function: function '" + function_map->find(node->m_name)->second + "' not found");
+        throw std::runtime_error("Evaluator::eval_function: function '" + function_map->find(name)->second + "' not found");
     }
     return eval_function_block(it->second, node, scp);
 }
