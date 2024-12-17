@@ -37,6 +37,7 @@ std::shared_ptr<Object> Evaluator::eval_function(const std::shared_ptr<Node> &no
                 return eval_function_block(it->second, node, scp);
             }
         }
+
         if (name == Parser::prehash("append"))
         {
             return eval_append(node, scp);

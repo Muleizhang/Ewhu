@@ -42,6 +42,7 @@ std::shared_ptr<Expression> Parser::parse_integer()
     auto ele = std::make_shared<Integer>();
     ele->m_token = this->m_curr;
     ele->m_value = m_curr.literalToLonglong(); // 转换
+    ele->m_int = std::make_shared<Ob_Integer>(ele->m_value);
     return ele;
 }
 
