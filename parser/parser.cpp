@@ -31,10 +31,6 @@ std::map<TokenType, int> Parser::m_precedences =
 
         {TokenType::STAR_STAR, POWER},
 
-        {TokenType::SIN, TRIGNOMETRY},
-        {TokenType::COS, TRIGNOMETRY},
-        {TokenType::TAN, TRIGNOMETRY},
-
         {TokenType::DOT, DOT},
         {TokenType::LEFT_BRACKET, INDEX},
 };
