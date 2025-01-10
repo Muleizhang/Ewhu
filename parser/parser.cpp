@@ -51,10 +51,6 @@ std::unordered_map<TokenType, Parser::prefix_parse_fn> Parser::m_prefix_parse_fn
         {TokenType::BANG, &Parser::parse_prefix},
         {TokenType::IDENTIFIER, &Parser::parse_identifier},
         {TokenType::LEFT_BRACKET, &Parser::parse_array},
-        {TokenType::SIN, &Parser::parse_trignometry},
-        {TokenType::COS, &Parser::parse_trignometry},
-        {TokenType::TAN, &Parser::parse_trignometry}
-
 };
 std::unordered_map<TokenType, Parser::infix_parse_fn> Parser::m_infix_parse_fns =
     {

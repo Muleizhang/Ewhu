@@ -23,7 +23,6 @@ public:
         SUM,         // 加减
         PRODUCT,     // 乘除
         POWER,       // 乘方
-        TRIGNOMETRY, // 三角函数
         PRE_SIGN,    // 前缀正号负号
         DOT,         // 小数
         INDEX,       // 索引
