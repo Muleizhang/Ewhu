@@ -41,3 +41,5 @@ test.*
 ast.json
 callgrind.out.*
 temp.cpp
+out/
+UML.md
