@@ -243,8 +243,8 @@ void Lexer::scanToken(char inpt)
             break;
         default:
             // 如果使用↓，可以欣赏内存越界的美丽
-            // throw std::runtime_error("Error: unknown charactor: " + inpt);
-            throw std::runtime_error("Error: unknown charactor: " + std::string(1, inpt));
+            // throw std::runtime_error("Error: unknown character: " + inpt);
+            throw std::runtime_error("Error: unknown character: " + std::string(1, inpt));
         }
     }
 }
