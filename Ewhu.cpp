@@ -30,23 +30,31 @@ public:
         std::cerr << "Bench Prompt Usage: Ewhu -b" << std::endl;
         std::cerr << "Bench File Usage: Ewhu -b [script]" << "\033[0m" << std::endl;
     }
-    template <typename... Msgs>
-    inline static void printError(const Msgs &...msgs)
-    {
-        (std::cerr << "\033[31m" << ... << msgs) << "\033[0m" << std::endl;
-    }
 
     template <typename... Msgs>
-    inline static void printGreen(const Msgs &...msgs)
+    inline static void printError(const Msgs&... msgs)
     {
-        (std::cout << "\033[32m" << ... << msgs) << "\033[0m" << std::endl;
+        std::cerr << "\033[31m";
+        (std::cerr << ... << msgs);
+        std::cerr << "\033[0m" << std::endl;
+    }
+    
+    template <typename... Msgs>
+    inline static void printGreen(const Msgs&... msgs)
+    {
+        std::cout << "\033[32m";
+        (std::cout << ... << msgs);
+        std::cout << "\033[0m" << std::endl;
+    }
+    
+    template <typename... Msgs>
+    inline static void printBlue(const Msgs&... msgs)
+    {
+        std::cout << "\033[36m";
+        (std::cout << ... << msgs);
+        std::cout << "\033[0m" << std::endl;
     }
 
-    template <typename... Msgs>
-    inline static void printBlue(const Msgs &...msgs)
-    {
-        (std::cout << "\033[36m" << ... << msgs) << "\033[0m" << std::endl;
-    }
 
     template <typename T>
     inline static void bench(T Function, int times = 10000)
