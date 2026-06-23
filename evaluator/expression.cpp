@@ -345,12 +345,16 @@ std::shared_ptr<Object> Evaluator::eval_integer_infix_expression(const TokenType
             throw std::runtime_error("ZeroDivisionError: division by zero");
         return std::make_shared<Ob_Fraction>(l, r);
     case TokenType::SLASH_SLASH:
+        if (r == 0)
+            throw std::runtime_error("ZeroDivisionError: integer division by zero");
         left->m_int = l / r;
         return left;
     case TokenType::STAR_STAR:
         left->m_int = std::pow(l, r);
         return left;
     case TokenType::PERCENT:
+        if (r == 0)
+            throw std::runtime_error("ZeroDivisionError: modulo by zero");
         left->m_int = l % r;
         return left;
     case TokenType::DOT: // 分数
@@ -425,12 +429,18 @@ std::shared_ptr<Object> Evaluator::eval_fraction_infix_expression(const TokenTyp
     case TokenType::STAR:
         return std::make_shared<Ob_Fraction>(Ob_Fraction::mul(l, r));
     case TokenType::SLASH:
+        if (r->num == 0)
+            throw std::runtime_error("ZeroDivisionError: division by zero");
         return std::make_shared<Ob_Fraction>(Ob_Fraction::div(l, r));
     case TokenType::SLASH_SLASH:
+        if (r->num == 0)
+            throw std::runtime_error("ZeroDivisionError: integer division by zero");
         return std::make_shared<Ob_Integer>(Ob_Fraction::div(l, r).m_int);
     case TokenType::STAR_STAR:
         return std::make_shared<Ob_Fraction>(Ob_Fraction::pow(l, r));
     case TokenType::PERCENT:
+        if (r->num == 0)
+            throw std::runtime_error("ZeroDivisionError: modulo by zero");
         return std::make_shared<Ob_Fraction>(Ob_Fraction::mod(l, r));
     case TokenType::EQUAL_EQUAL:
         return std::make_shared<Ob_Boolean>(l->equal(r));
