@@ -3,6 +3,19 @@
 #include "../parser/parser.h"
 #include <cmath>
 
+namespace
+{
+const int BUILTIN_APPEND = Parser::hash("append");
+const int BUILTIN_LEN = Parser::hash("len");
+const int BUILTIN_PRINT = Parser::hash("print");
+const int BUILTIN_EVAL = Parser::hash("eval");
+const int BUILTIN_SCOPE = Parser::hash("scope");
+const int BUILTIN_POP = Parser::hash("pop");
+const int BUILTIN_INT = Parser::hash("int");
+const int BUILTIN_INPUT = Parser::hash("input");
+const int BUILTIN_AST = Parser::hash("__ast__");
+}
+
 std::shared_ptr<Object> Evaluator::eval_eval(const std::string &line, Scope &scp)
 {
     Lexer lexer;
@@ -38,11 +51,11 @@ std::shared_ptr<Object> Evaluator::eval_function(const std::shared_ptr<Node> &no
             }
         }
 
-        if (name == Parser::prehash("append"))
+        if (name == BUILTIN_APPEND)
         {
             return eval_append(node, scp);
         }
-        if (name == Parser::prehash("len"))
+        if (name == BUILTIN_LEN)
         {
             auto obj = eval(node->m_initial_list[0], scp);
             if (obj->type() == Object::OBJECT_ARRAY)
@@ -51,33 +64,33 @@ std::shared_ptr<Object> Evaluator::eval_function(const std::shared_ptr<Node> &no
             }
             throw std::invalid_argument("Evaluator:eval_function: function len arguments not match");
         }
-        if (name == Parser::prehash("print"))
+        if (name == BUILTIN_PRINT)
         {
             std::cout << eval(node->m_initial_list[0], scp)->str() << std::endl;
             return nullptr;
         }
-        if (name == Parser::prehash("eval"))
+        if (name == BUILTIN_EVAL)
         {
             return eval_eval(eval(node->m_initial_list[0], scp)->str(), scp);
         }
-        if (name == Parser::prehash("scope"))
+        if (name == BUILTIN_SCOPE)
         {
             scp.print(identifier_map, function_map);
             return nullptr;
         }
-        if (name == Parser::prehash("pop"))
+        if (name == BUILTIN_POP)
         {
             return eval_pop(node, scp);
         }
-        if (name == Parser::prehash("int"))
+        if (name == BUILTIN_INT)
         {
             return eval_int(node, scp);
         }
-        if (name == Parser::prehash("input"))
+        if (name == BUILTIN_INPUT)
         {
             return eval_input(node, scp);
         }
-        if (name == Parser::prehash("__ast__"))
+        if (name == BUILTIN_AST)
         {
             // return eval_ast();
         }
@@ -284,6 +297,7 @@ std::shared_ptr<Object> Evaluator::eval_infix(const TokenType op, std::shared_pt
         switch (op)
         {
         case TokenType::STAR:
+            result.reserve(l.size() * static_cast<std::size_t>(r > 0 ? r : 0));
             for (int i = 0; i < r; i++)
                 result += l;
             return std::make_shared<Ob_String>(result);

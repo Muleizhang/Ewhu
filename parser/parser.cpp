@@ -1,39 +1,41 @@
 #include "parser.h"
 
-std::map<TokenType, int> Parser::m_precedences =
-    {
-        {TokenType::EQUAL, ASSIGN},
+std::array<int, 256> Parser::m_precedences = [] {
+    std::array<int, 256> precedences{};
+    precedences.fill(LOWEST);
+    precedences[static_cast<unsigned char>(TokenType::EQUAL)] = ASSIGN;
 
-        {TokenType::AND, LOGICAL},
-        {TokenType::OR, LOGICAL},
-        {TokenType::XOR, LOGICAL},
+    precedences[static_cast<unsigned char>(TokenType::AND)] = LOGICAL;
+    precedences[static_cast<unsigned char>(TokenType::OR)] = LOGICAL;
+    precedences[static_cast<unsigned char>(TokenType::XOR)] = LOGICAL;
 
-        {TokenType::SHL, BIT},
-        {TokenType::SHR, BIT},
-        {TokenType::BIT_XOR, BIT},
-        {TokenType::BIT_AND, BIT},
-        {TokenType::BIT_OR, BIT},
+    precedences[static_cast<unsigned char>(TokenType::SHL)] = BIT;
+    precedences[static_cast<unsigned char>(TokenType::SHR)] = BIT;
+    precedences[static_cast<unsigned char>(TokenType::BIT_XOR)] = BIT;
+    precedences[static_cast<unsigned char>(TokenType::BIT_AND)] = BIT;
+    precedences[static_cast<unsigned char>(TokenType::BIT_OR)] = BIT;
 
-        {TokenType::EQUAL_EQUAL, EQUALS},
-        {TokenType::BANG_EQUAL, EQUALS},
-        {TokenType::LESS, EQUALS},
-        {TokenType::GREATER, EQUALS},
-        {TokenType::LESS_EQUAL, EQUALS},
-        {TokenType::GREATER_EQUAL, EQUALS},
+    precedences[static_cast<unsigned char>(TokenType::EQUAL_EQUAL)] = EQUALS;
+    precedences[static_cast<unsigned char>(TokenType::BANG_EQUAL)] = EQUALS;
+    precedences[static_cast<unsigned char>(TokenType::LESS)] = EQUALS;
+    precedences[static_cast<unsigned char>(TokenType::GREATER)] = EQUALS;
+    precedences[static_cast<unsigned char>(TokenType::LESS_EQUAL)] = EQUALS;
+    precedences[static_cast<unsigned char>(TokenType::GREATER_EQUAL)] = EQUALS;
 
-        {TokenType::MINUS, SUM},
-        {TokenType::PLUS, SUM},
+    precedences[static_cast<unsigned char>(TokenType::MINUS)] = SUM;
+    precedences[static_cast<unsigned char>(TokenType::PLUS)] = SUM;
 
-        {TokenType::STAR, PRODUCT},
-        {TokenType::SLASH, PRODUCT},
-        {TokenType::PERCENT, PRODUCT},
-        {TokenType::SLASH_SLASH, PRODUCT},
+    precedences[static_cast<unsigned char>(TokenType::STAR)] = PRODUCT;
+    precedences[static_cast<unsigned char>(TokenType::SLASH)] = PRODUCT;
+    precedences[static_cast<unsigned char>(TokenType::PERCENT)] = PRODUCT;
+    precedences[static_cast<unsigned char>(TokenType::SLASH_SLASH)] = PRODUCT;
 
-        {TokenType::STAR_STAR, POWER},
+    precedences[static_cast<unsigned char>(TokenType::STAR_STAR)] = POWER;
 
-        {TokenType::DOT, DOT},
-        {TokenType::LEFT_BRACKET, INDEX},
-};
+    precedences[static_cast<unsigned char>(TokenType::DOT)] = DOT;
+    precedences[static_cast<unsigned char>(TokenType::LEFT_BRACKET)] = INDEX;
+    return precedences;
+}();
 std::unordered_map<TokenType, Parser::prefix_parse_fn> Parser::m_prefix_parse_fns =
     {
         {TokenType::TRUE, &Parser::parse_boolean},
@@ -159,20 +161,12 @@ void Parser::peek_error(TokenType type)
 
 int Parser::curr_token_precedence()
 {
-    auto it = m_precedences.find(m_curr.type);
-    if (it != m_precedences.end())
-        return it->second;
-    else
-        return LOWEST;
+    return m_precedences[static_cast<unsigned char>(m_curr.type)];
 }
 
 int Parser::peek_token_precedence()
 {
-    auto it = m_precedences.find(m_peek.type);
-    if (it != m_precedences.end())
-        return it->second;
-    else
-        return LOWEST;
+    return m_precedences[static_cast<unsigned char>(m_peek.type)];
 }
 
 void Parser::no_prefix_parse_fn_error(TokenType type)
