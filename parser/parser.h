@@ -1,5 +1,5 @@
 #pragma once
-#include <map>
+#include <array>
 #include <list>
 #include <memory>
 #include <unordered_map>
@@ -105,7 +105,7 @@ private:
     Token m_peek;                    // 下一个token
     std::list<std::string> m_errors; // 存储错误的列表
 
-    static std::map<TokenType, int> m_precedences; // 一个从运算符TokenType类型到优先级类型的映射
+    static std::array<int, 256> m_precedences; // 一个从运算符TokenType类型到优先级类型的映射
     static std::unordered_map<TokenType, prefix_parse_fn> m_prefix_parse_fns;
     static std::unordered_map<TokenType, infix_parse_fn> m_infix_parse_fns;
     static std::unordered_map<TokenType, suffix_parse_fn> m_suffix_parse_fns;
