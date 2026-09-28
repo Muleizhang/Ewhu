@@ -5,15 +5,15 @@
 
 namespace
 {
-const int BUILTIN_APPEND = Parser::hash("append");
-const int BUILTIN_LEN = Parser::hash("len");
-const int BUILTIN_PRINT = Parser::hash("print");
-const int BUILTIN_EVAL = Parser::hash("eval");
-const int BUILTIN_SCOPE = Parser::hash("scope");
-const int BUILTIN_POP = Parser::hash("pop");
-const int BUILTIN_INT = Parser::hash("int");
-const int BUILTIN_INPUT = Parser::hash("input");
-const int BUILTIN_AST = Parser::hash("__ast__");
+constexpr int BUILTIN_APPEND = Parser::prehash("append");
+constexpr int BUILTIN_LEN = Parser::prehash("len");
+constexpr int BUILTIN_PRINT = Parser::prehash("print");
+constexpr int BUILTIN_EVAL = Parser::prehash("eval");
+constexpr int BUILTIN_SCOPE = Parser::prehash("scope");
+constexpr int BUILTIN_POP = Parser::prehash("pop");
+constexpr int BUILTIN_INT = Parser::prehash("int");
+constexpr int BUILTIN_INPUT = Parser::prehash("input");
+constexpr int BUILTIN_AST = Parser::prehash("__ast__");
 }
 
 std::shared_ptr<Object> Evaluator::eval_eval(const std::string &line, Scope &scp)
