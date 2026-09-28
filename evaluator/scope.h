@@ -15,14 +15,7 @@ public:
     Scope(Scope *father) : father(father) {}
 
     Scope() {}
-    ~Scope()
-    {
-        for (auto it : m_var)
-        {
-            it.second.reset();
-        }
-        m_var.clear();
-    };
+    ~Scope() = default;
     void print(std::unordered_map<int, std::string> *var_map, std::unordered_map<int, std::string> *func_map)
     {
         std::cout << "Scope: " << std::endl;

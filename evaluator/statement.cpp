@@ -31,13 +31,7 @@ std::shared_ptr<Object> Evaluator::eval_function_block(const std::shared_ptr<Nod
     for (int i = 0; i < function->m_initial_list.size(); i++)
     {
         auto name = function->m_initial_list[i]->m_name;
-
-        auto it = temp_scp.m_var.find(name);
-        if (it != temp_scp.m_var.end())
-        {
-            it->second = eval(node->m_initial_list[i], temp_scp);
-        }
-        temp_scp.m_var.insert(std::make_pair(name, eval(node->m_initial_list[i], temp_scp)));
+        temp_scp.m_var[name] = eval(node->m_initial_list[i], temp_scp);
     }
 
     std::shared_ptr<Object> result;

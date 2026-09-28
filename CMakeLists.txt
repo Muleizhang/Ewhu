@@ -10,12 +10,17 @@ set(CMAKE_BUILD_TYPE Release)
 
 set(BUILD_SHARED_LIBS OFF)
 set(CMAKE_C_FLAGS_RELEASE "-O3")
-set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -DNDEBUG")
 # set(CMAKE_VERBOSE_MAKEFILE ON)
+
+include(CheckIPOSupported)
+check_ipo_supported(RESULT IPO_SUPPORTED OUTPUT IPO_ERROR)
 
 if (MSVC)
     add_compile_options(/utf-8)
     set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2")
+else()
+    add_compile_options(-march=native)
 endif()
 
 
@@ -42,6 +47,9 @@ target_link_libraries(evaluator PUBLIC parser object)
 # Add the main executable
 add_executable(Ewhu Ewhu.cpp)
 target_compile_options(Ewhu PRIVATE -O3)
+if (IPO_SUPPORTED)
+    set_property(TARGET lexer object ast parser evaluator Ewhu PROPERTY INTERPROCEDURAL_OPTIMIZATION_RELEASE TRUE)
+endif()
 
 # Link the libraries to the executable
 target_link_libraries(Ewhu PUBLIC evaluator lexer object parser ast)

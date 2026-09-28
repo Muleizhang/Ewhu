@@ -437,8 +437,11 @@ public:
 
     std::shared_ptr<Object> add(const std::shared_ptr<Object> &obj)
     {
-        m_array.insert(m_array.end(), obj->m_array.begin(), obj->m_array.end());
-        return std::make_shared<Ob_Array>(*this);
+        auto result = std::make_shared<Ob_Array>();
+        result->m_array.reserve(m_array.size() + obj->m_array.size());
+        result->m_array.insert(result->m_array.end(), m_array.begin(), m_array.end());
+        result->m_array.insert(result->m_array.end(), obj->m_array.begin(), obj->m_array.end());
+        return result;
     }
     virtual std::string str() const
     {
